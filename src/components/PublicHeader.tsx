@@ -10,9 +10,8 @@ export default function PublicHeader() {
   return (
     <>
       <header className="absolute top-4 left-1/2 -translate-x-1/2 w-[calc(100%-48px)] max-w-[1200px] flex items-center justify-between px-6 py-3.5 bg-[#FAF8F4]/80 backdrop-blur-md border border-[#0D3D56]/10 rounded-[24px] z-50 transition-all">
-        <Link href="/" className="flex items-center gap-2 text-[#0D3D56] font-extrabold text-[1.4rem] italic tracking-tight font-sans">
-          <img src="https://i.ibb.co/wNLd8JwW/mediguard-logo.png" alt="MediGuard Logo" width={28} height={28} className="shrink-0" />
-          MediGuard
+        <Link href="/" className="flex items-center hover:opacity-90 transition-opacity shrink-0">
+          <img src="https://i.ibb.co/wNLd8JwW/mediguard-logo.png" alt="MediGuard Logo" className="h-10 sm:h-12 w-auto object-contain" />
         </Link>
         
         <div className="flex items-center gap-6">
