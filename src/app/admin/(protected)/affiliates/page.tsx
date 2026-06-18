@@ -7,7 +7,7 @@ export default async function AdminAffiliatesPage() {
     include: {
       user: true,
     },
-    orderBy: { createdAt: 'desc' }
+    orderBy: { joinedAt: 'desc' }
   });
 
   return (
