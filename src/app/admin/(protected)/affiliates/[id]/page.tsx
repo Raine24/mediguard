@@ -63,8 +63,8 @@ export default async function AffiliateDetailPage({ params }: { params: Promise<
                 <p className="text-gray-900">{affiliate.payoutMethod}: <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">{affiliate.payoutDetails}</span></p>
               </div>
               <div className="col-span-2">
-                <p className="text-sm font-medium text-gray-500 mb-1 flex items-center gap-2"><Calendar className="w-4 h-4"/> Applied On</p>
-                <p className="text-gray-900">{affiliate.createdAt.toLocaleString()}</p>
+                <p className="text-sm font-medium text-gray-500 mb-1 flex items-center gap-2"><Calendar className="w-4 h-4" /> Joined</p>
+                <p className="text-gray-900">{affiliate.joinedAt.toLocaleString()}</p>
               </div>
             </div>
           </div>
