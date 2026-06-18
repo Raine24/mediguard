@@ -39,9 +39,7 @@ export default function LoginPage() {
       <div className="min-h-screen bg-gray-50 flex flex-col justify-center pt-28 pb-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
-          <div className="w-12 h-12 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-2xl">
-            M
-          </div>
+          <img src="https://i.ibb.co/wNLd8JwW/mediguard-logo.png" alt="MediGuard Logo" width={48} height={48} />
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Sign in to your account

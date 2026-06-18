@@ -11,7 +11,7 @@ export default function PublicHeader() {
     <>
       <header className="absolute top-4 left-1/2 -translate-x-1/2 w-[calc(100%-48px)] max-w-[1200px] flex items-center justify-between px-6 py-3.5 bg-[#FAF8F4]/80 backdrop-blur-md border border-[#0D3D56]/10 rounded-[24px] z-50 transition-all">
         <Link href="/" className="flex items-center gap-2 text-[#0D3D56] font-extrabold text-[1.4rem] italic tracking-tight font-sans">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="shrink-0"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg>
+          <img src="https://i.ibb.co/wNLd8JwW/mediguard-logo.png" alt="MediGuard Logo" width={28} height={28} className="shrink-0" />
           MediGuard
         </Link>
         
