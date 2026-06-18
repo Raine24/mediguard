@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { CreditCard, CheckCircle2, Shield, Calendar, AlertTriangle } from "lucide-react";
 import { format, differenceInDays } from "date-fns";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { useRouter } from "navigation";
+import { useRouter } from "next/navigation";
 
 type SubscriptionProps = {
   planType: string;

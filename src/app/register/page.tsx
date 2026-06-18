@@ -12,7 +12,6 @@ export default function RegisterPage() {
     name: "",
     email: "",
     phone: "",
-    phone: "",
     password: "",
     confirmPassword: "",
   });

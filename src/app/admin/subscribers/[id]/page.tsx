@@ -140,7 +140,7 @@ export default function SubscriberProfile({ params }: { params: Promise<{ id: st
             <div>
               <div className="flex items-center gap-3">
                 <h1 className="text-2xl font-black text-gray-900">{user.name}</h1>
-                {user.whatsappVerified && <CheckCircle2 className="w-5 h-5 text-green-500" title="WhatsApp Verified" />}
+                {user.whatsappVerified && <span title="WhatsApp Verified"><CheckCircle2 className="w-5 h-5 text-green-500" /></span>}
               </div>
               <div className="flex flex-wrap items-center gap-3 mt-2">
                 <span className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 bg-gray-100 px-2.5 py-1 rounded-lg">
