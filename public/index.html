@@ -1892,9 +1892,14 @@
 
       .hero-headline .line-big,
       .hero-headline .line-accent { 
+        display: inline;
         white-space: normal; 
-        font-size: clamp(2.4rem, 10vw, 3.4rem); 
-        line-height: 1.1; 
+        font-size: clamp(1.8rem, 7.5vw, 3.4rem); 
+        line-height: 1.2; 
+      }
+      .hero-headline .line-accent::after {
+        bottom: -2px;
+        height: 4px;
       }
       .social-proof {
         flex-direction: column;
