@@ -46,6 +46,8 @@ export async function GET(req: Request) {
 
       const currentMins = localHour * 60 + localMin;
 
+      const userDateString = formatInTimeZone(now, userTimezone, 'yyyy-MM-dd');
+
       for (const medicine of user.medicines) {
         // TODO: Handle daysActive logic (Every Day, Weekdays, Weekends)
 
@@ -57,14 +59,15 @@ export async function GET(req: Request) {
           // and we are within a 60-minute window to avoid sending yesterday's reminders at midnight
           if (currentMins >= reminderMins && currentMins < reminderMins + 60) {
             
-            // Check if we already sent a reminder for this medicine within the last 60 minutes
+            // Construct a unique exact Date string for THIS reminder on THIS day
+            const expectedScheduledFor = new Date(`${userDateString}T${reminder.time}:00.000Z`);
+
+            // Check if we already sent THIS SPECIFIC reminder today
             const recentLog = await prisma.messageLog.findFirst({
               where: {
                 medicineId: medicine.id,
                 type: 'REMINDER',
-                sentAt: {
-                  gte: new Date(Date.now() - 60 * 60 * 1000)
-                }
+                scheduledFor: expectedScheduledFor
               }
             });
 
@@ -75,7 +78,7 @@ export async function GET(req: Request) {
                 [user.name, medicine.name, medicine.dosage || "1 dose"]
               );
               
-              // Log the message
+              // Log the message with the exact scheduledFor time to prevent duplicates
               await prisma.messageLog.create({
                 data: {
                   userId: user.id,
@@ -84,12 +87,12 @@ export async function GET(req: Request) {
                   channel: 'WHATSAPP',
                   status: waResponse.status !== 'failed' ? 'DELIVERED' : 'FAILED',
                   errorReason: waResponse.status !== 'failed' ? null : waResponse.error,
-                  scheduledFor: now,
+                  scheduledFor: expectedScheduledFor,
                   sentAt: now,
                 }
               });
 
-              messagesSent.push({ userId: user.id, medicine: medicine.name, success: waResponse.status !== 'failed' });
+              messagesSent.push({ userId: user.id, medicine: medicine.name, time: reminder.time, success: waResponse.status !== 'failed' });
             }
           }
         }
