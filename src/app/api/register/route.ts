@@ -16,13 +16,14 @@ export async function POST(req: Request) {
     const existingUser = await prisma.user.findFirst({
       where: {
         OR: [
-          { email },
+          { email: { equals: email, mode: 'insensitive' } },
           { phone }
         ]
       }
     });
 
     if (existingUser) {
+      console.log(`[Register] User already exists in DB. ID: ${existingUser.id}, Email: ${existingUser.email}, Phone: ${existingUser.phone}`);
       return NextResponse.json(
         { error: 'User with this email or phone already exists' },
         { status: 409 }
