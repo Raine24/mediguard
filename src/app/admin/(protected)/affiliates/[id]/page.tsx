@@ -4,9 +4,10 @@ import Link from "next/link";
 import { ArrowLeft, User, CreditCard, Calendar, BarChart3, Clock, CheckCircle2, XCircle } from "lucide-react";
 import AffiliateStatusClient from "./AffiliateStatusClient";
 
-export default async function AffiliateDetailPage({ params }: { params: { id: string } }) {
+export default async function AffiliateDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const affiliate = await prisma.affiliateProfile.findUnique({
-    where: { id: params.id },
+    where: { id },
     include: {
       user: true,
       affiliateConversions: {
