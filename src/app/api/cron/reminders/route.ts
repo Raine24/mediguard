@@ -62,7 +62,7 @@ export async function GET(req: Request) {
               where: {
                 medicineId: medicine.id,
                 type: 'REMINDER',
-                createdAt: {
+                sentAt: {
                   gte: new Date(Date.now() - 60 * 60 * 1000)
                 }
               }
