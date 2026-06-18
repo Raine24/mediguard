@@ -2036,6 +2036,12 @@
       align-self: flex-start;
       border-bottom-left-radius: 4px;
     }
+    .chat-msg.user {
+      background: var(--teal);
+      color: var(--white);
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
     
     .chat-input-area {
       padding: 12px;
@@ -3166,17 +3172,60 @@
       });
     }
 
-    /* ── Chat Bot Toggle ─────────────────────────────────── */
+    /* ── Chat Bot Toggle & Logic ─────────────────────────── */
     const chatBtn = document.getElementById('chat-btn');
     const chatWindow = document.getElementById('chat-window');
     const chatClose = document.getElementById('chat-close');
+    const chatInput = document.querySelector('.chat-input-area input');
+    const chatSendBtn = document.querySelector('.chat-input-area button');
+    const chatBody = document.querySelector('.chat-body');
     
-    if(chatBtn && chatWindow && chatClose) {
+    if(chatBtn && chatWindow && chatClose && chatInput && chatSendBtn && chatBody) {
       chatBtn.addEventListener('click', () => {
         chatWindow.classList.toggle('open');
       });
       chatClose.addEventListener('click', () => {
         chatWindow.classList.remove('open');
+      });
+
+      const appendMessage = (text, sender) => {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `chat-msg ${sender}`;
+        msgDiv.textContent = text;
+        chatBody.appendChild(msgDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+      };
+
+      const handleSend = () => {
+        const text = chatInput.value.trim();
+        if(!text) return;
+        
+        // Append user message
+        appendMessage(text, 'user');
+        chatInput.value = '';
+
+        // Simulate AI typing delay
+        setTimeout(() => {
+          let reply = "I'm a demo assistant! For actual support, please log in and use the Support tab in your dashboard, or email support@mediguard.co.ug.";
+          const lower = text.toLowerCase();
+          
+          if(lower.includes('price') || lower.includes('cost') || lower.includes('pay') || lower.includes('plan')) {
+            reply = "We have a Free plan to get started, a $4.99/mo Individual plan, and a $12.99/mo Family plan! Check our Pricing section for more details.";
+          } else if(lower.includes('how') || lower.includes('work')) {
+            reply = "You just add your medicines, set a schedule, and we'll send you reminders via WhatsApp or SMS. It's that simple!";
+          } else if(lower.includes('whatsapp') || lower.includes('sms') || lower.includes('message')) {
+            reply = "Yes! We support WhatsApp and SMS reminders. You just need to verify your phone number in the dashboard.";
+          } else if(lower.includes('hello') || lower.includes('hi ') || text.toLowerCase() === 'hi') {
+            reply = "Hello there! How can I help you with MediGuard today?";
+          }
+          
+          appendMessage(reply, 'bot');
+        }, 800);
+      };
+
+      chatSendBtn.addEventListener('click', handleSend);
+      chatInput.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') handleSend();
       });
     }
   </script>
