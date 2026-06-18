@@ -1,28 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { HelpCircle, X, Send, Phone } from "lucide-react";
+import { createUserTicket } from "@/actions/tickets";
 
 export default function SupportModal({ isOpen, onClose }: { isOpen: boolean, onClose: () => void }) {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+  const [isPending, startTransition] = useTransition();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("submitting");
 
-    // Simulate API call
-    setTimeout(() => {
+    startTransition(async () => {
+      const result = await createUserTicket(subject, message);
+      if (result.error) {
+        setStatus("error");
+        alert(result.error);
+        return;
+      }
+      
       setStatus("success");
       setSubject("");
       setMessage("");
-      // Automatically close after 3 seconds on success
+      
       setTimeout(() => {
         onClose();
         setStatus("idle");
       }, 3000);
-    }, 1000);
+    });
   };
 
   return (
