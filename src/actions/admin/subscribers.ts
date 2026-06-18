@@ -13,6 +13,7 @@ export async function addSubscriber(formData: FormData) {
     const phone = formData.get("phone") as string;
     const password = formData.get("password") as string;
     const planType = formData.get("plan") as "BASIC" | "STANDARD" | "FAMILY";
+    const timezone = formData.get("timezone") as string || "UTC";
 
     if (!name || !email || !phone || !password || !planType) {
       return { error: "All fields are required" };
@@ -27,6 +28,7 @@ export async function addSubscriber(formData: FormData) {
         email,
         phone,
         password: hashedPassword,
+        timezone,
         subscription: {
           create: {
             planType,

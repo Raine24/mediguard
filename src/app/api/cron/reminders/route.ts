@@ -35,41 +35,62 @@ export async function GET(req: Request) {
       const user = sub.user;
       const userTimezone = user.timezone || 'UTC';
 
-      // Get current time in the user's local timezone (HH:mm format)
-      let localTimeStr;
+      let localHour, localMin;
       try {
-        localTimeStr = formatInTimeZone(now, userTimezone, 'HH:mm');
+        localHour = parseInt(formatInTimeZone(now, userTimezone, 'HH'), 10);
+        localMin = parseInt(formatInTimeZone(now, userTimezone, 'mm'), 10);
       } catch (err) {
         console.error(`Invalid timezone for user ${user.id}: ${userTimezone}`);
         continue;
       }
 
+      const currentMins = localHour * 60 + localMin;
+
       for (const medicine of user.medicines) {
         // TODO: Handle daysActive logic (Every Day, Weekdays, Weekends)
 
         for (const reminder of medicine.reminders) {
-          if (reminder.time === localTimeStr) {
-            const waResponse = await sendWhatsAppTemplate(
-              user.phone, 
-              "medical_reminder_alert", 
-              [user.name, medicine.name, medicine.dosage || "1 dose"]
-            );
+          const [remHour, remMin] = reminder.time.split(':').map(Number);
+          const reminderMins = remHour * 60 + remMin;
+
+          // Check if the reminder is due (current time is >= reminder time)
+          // and we are within a 60-minute window to avoid sending yesterday's reminders at midnight
+          if (currentMins >= reminderMins && currentMins < reminderMins + 60) {
             
-            // Log the message
-            await prisma.messageLog.create({
-              data: {
-                userId: user.id,
+            // Check if we already sent a reminder for this medicine within the last 60 minutes
+            const recentLog = await prisma.messageLog.findFirst({
+              where: {
                 medicineId: medicine.id,
                 type: 'REMINDER',
-                channel: 'WHATSAPP',
-                status: waResponse.status !== 'failed' ? 'DELIVERED' : 'FAILED',
-                errorReason: waResponse.status !== 'failed' ? null : waResponse.error,
-                scheduledFor: now,
-                sentAt: now,
+                createdAt: {
+                  gte: new Date(Date.now() - 60 * 60 * 1000)
+                }
               }
             });
 
-            messagesSent.push({ userId: user.id, medicine: medicine.name, success: waResponse.status !== 'failed' });
+            if (!recentLog) {
+              const waResponse = await sendWhatsAppTemplate(
+                user.phone, 
+                "medical_reminder_alert", 
+                [user.name, medicine.name, medicine.dosage || "1 dose"]
+              );
+              
+              // Log the message
+              await prisma.messageLog.create({
+                data: {
+                  userId: user.id,
+                  medicineId: medicine.id,
+                  type: 'REMINDER',
+                  channel: 'WHATSAPP',
+                  status: waResponse.status !== 'failed' ? 'DELIVERED' : 'FAILED',
+                  errorReason: waResponse.status !== 'failed' ? null : waResponse.error,
+                  scheduledFor: now,
+                  sentAt: now,
+                }
+              });
+
+              messagesSent.push({ userId: user.id, medicine: medicine.name, success: waResponse.status !== 'failed' });
+            }
           }
         }
       }

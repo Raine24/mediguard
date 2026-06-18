@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, email, password, phone, country, planType } = body;
+    const { name, email, password, phone, country, planType, timezone } = body;
 
     // Basic validation
     if (!name || !email || !password || !phone) {
@@ -55,6 +55,7 @@ export async function POST(req: Request) {
         password: hashedPassword,
         phone,
         country: country || 'Unknown',
+        timezone: timezone || 'UTC',
         whatsappVerified: false,
         twoFactorSecret: payload,
         subscription: {

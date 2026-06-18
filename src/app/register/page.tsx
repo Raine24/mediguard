@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
@@ -14,7 +14,21 @@ export default function RegisterPage() {
     phone: "",
     password: "",
     confirmPassword: "",
+    timezone: "UTC",
   });
+
+  // Detect and set the user's local timezone
+  useEffect(() => {
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      if (tz) {
+        setFormData((prev) => ({ ...prev, timezone: tz }));
+      }
+    } catch (e) {
+      console.error("Failed to detect timezone", e);
+    }
+  }, []);
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [requiresOtp, setRequiresOtp] = useState(false);
