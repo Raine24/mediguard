@@ -89,3 +89,56 @@ export async function deleteMedicine(medicineId: string) {
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/medicines");
 }
+
+export async function editMedicine(
+  medicineId: string,
+  formData: {
+    name: string;
+    dosage: string;
+    daysActive: string;
+    note: string;
+    times: string[];
+  }
+) {
+  const session = await getServerSession(authOptions);
+  if (!session?.user?.id) throw new Error("Unauthorized");
+
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    include: { subscription: true },
+  });
+
+  if (!user) throw new Error("User not found");
+
+  // Plan Limit Enforcement for reminders (same as add)
+  const isBasic = user.subscription?.planType === "BASIC" || !user.subscription;
+  if (isBasic && formData.times.length > 3) {
+    throw new Error("PLAN_LIMIT_REACHED_REMINDERS");
+  }
+
+  // Ensure user owns this medicine
+  const med = await prisma.medicine.findFirst({
+    where: { id: medicineId, userId: session.user.id },
+  });
+
+  if (!med) throw new Error("Medicine not found");
+
+  // Delete existing reminders and create new ones
+  await prisma.medicine.update({
+    where: { id: medicineId },
+    data: {
+      name: formData.name,
+      dosage: formData.dosage || null,
+      daysActive: formData.daysActive,
+      note: formData.note || null,
+      reminders: {
+        deleteMany: {}, // Clear all existing reminders
+        create: formData.times.map((time) => ({ time })),
+      },
+    },
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath("/dashboard/medicines");
+  return { success: true };
+}

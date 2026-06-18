@@ -1,17 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { X, Plus, Clock, Info } from "lucide-react";
-import { addMedicine } from "@/app/dashboard/medicines/actions";
+import { addMedicine, editMedicine } from "@/app/dashboard/medicines/actions";
+
+export type MedicineProps = {
+  id: string;
+  name: string;
+  dosage: string | null;
+  daysActive: string;
+  note: string | null;
+  status: string;
+  reminders: { time: string }[];
+};
 
 export default function MedicineFormModal({ 
   isOpen, 
   onClose,
-  isBasicPlan
+  isBasicPlan,
+  medicineToEdit
 }: { 
   isOpen: boolean; 
   onClose: () => void;
   isBasicPlan: boolean;
+  medicineToEdit?: MedicineProps | null;
 }) {
   const [name, setName] = useState("");
   const [dosage, setDosage] = useState("");
@@ -23,6 +35,23 @@ export default function MedicineFormModal({
 
   const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    if (isOpen) {
+      if (medicineToEdit) {
+        setName(medicineToEdit.name);
+        setDosage(medicineToEdit.dosage || "");
+        setDaysActive(medicineToEdit.daysActive);
+        setNote(medicineToEdit.note || "");
+        setTimes(medicineToEdit.reminders.map(r => r.time));
+      } else {
+        setName(""); setDosage(""); setDaysActive("EVERY_DAY"); setNote(""); setTimes(["08:00"]);
+      }
+      setStatus("idle");
+      setErrorMsg("");
+      setNewTime("");
+    }
+  }, [isOpen, medicineToEdit]);
 
   const handleAddTime = () => {
     if (!newTime) return;
@@ -51,11 +80,11 @@ export default function MedicineFormModal({
     setErrorMsg("");
 
     try {
-      await addMedicine({ name, dosage, daysActive, note, times });
-      
-      // Reset form
-      setName(""); setDosage(""); setDaysActive("EVERY_DAY"); setNote(""); setTimes(["08:00"]);
-      setStatus("idle");
+      if (medicineToEdit) {
+        await editMedicine(medicineToEdit.id, { name, dosage, daysActive, note, times });
+      } else {
+        await addMedicine({ name, dosage, daysActive, note, times });
+      }
       onClose();
     } catch (error: any) {
       setStatus("error");
@@ -73,7 +102,7 @@ export default function MedicineFormModal({
     <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex flex-col justify-end md:items-center md:justify-center">
       <div className="bg-white w-full md:max-w-md md:rounded-2xl rounded-t-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
-          <h2 className="text-xl font-bold text-gray-900">Add Medicine</h2>
+          <h2 className="text-xl font-bold text-gray-900">{medicineToEdit ? "Edit Medicine" : "Add Medicine"}</h2>
           <button 
             onClick={onClose}
             className="p-2 text-gray-400 hover:text-gray-600 bg-gray-50 rounded-full transition-colors"
@@ -98,8 +127,8 @@ export default function MedicineFormModal({
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base"
-                placeholder="e.g. Lisinopril"
+                placeholder="e.g. Paracetamol"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none"
               />
             </div>
 
@@ -109,27 +138,30 @@ export default function MedicineFormModal({
                 type="text"
                 value={dosage}
                 onChange={(e) => setDosage(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base"
-                placeholder="e.g. 10mg or 2 tablets"
+                placeholder="e.g. 500mg, 1 tablet"
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Reminder Times *</label>
-              
-              <div className="flex flex-wrap gap-2 mb-3">
-                {times.map(t => (
-                  <div key={t} className="bg-teal-50 text-teal-700 border border-teal-200 px-3 py-1.5 rounded-lg flex items-center gap-2 text-sm font-medium">
-                    <Clock className="w-4 h-4 opacity-70" />
-                    {t}
-                    <button type="button" onClick={() => removeTime(t)} className="opacity-50 hover:opacity-100 focus:outline-none">
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
-              </div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
+              <select
+                value={daysActive}
+                onChange={(e) => setDaysActive(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none appearance-none bg-white"
+              >
+                <option value="EVERY_DAY">Every Day</option>
+                <option value="WEEKDAYS">Weekdays Only</option>
+                <option value="WEEKENDS">Weekends Only</option>
+              </select>
+            </div>
 
-              <div className="flex gap-2">
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-gray-700">Reminder Times *</label>
+                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">{times.length} {times.length === 1 ? 'time' : 'times'} set</span>
+              </div>
+              <div className="flex gap-2 mb-3">
                 <input
                   type="time"
                   value={newTime}

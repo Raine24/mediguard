@@ -24,6 +24,7 @@ export default function MedicinesClient({
 }) {
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [loadingId, setLoadingId] = useState<string | null>(null);
+  const [medicineToEdit, setMedicineToEdit] = useState<MedicineProps | null>(null);
 
   const handleToggle = async (id: string, currentStatus: string) => {
     setLoadingId(id);
@@ -71,7 +72,10 @@ export default function MedicinesClient({
             You haven't set up any reminders. Tap the button below to add your first medicine.
           </p>
           <button
-            onClick={() => setIsAddOpen(true)}
+            onClick={() => {
+              setMedicineToEdit(null);
+              setIsAddOpen(true);
+            }}
             className="bg-teal-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-teal-700 transition-colors inline-flex items-center gap-2"
           >
             <Plus className="w-5 h-5" />
@@ -136,6 +140,10 @@ export default function MedicinesClient({
 
                 <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
                   <button 
+                    onClick={() => {
+                      setMedicineToEdit(med);
+                      setIsAddOpen(true);
+                    }}
                     className="flex-1 flex items-center justify-center gap-2 py-2 text-sm font-semibold text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors"
                   >
                     <Edit2 className="w-4 h-4" />
@@ -159,7 +167,10 @@ export default function MedicinesClient({
       {/* Floating Action Button for Mobile / Fixed Bottom Right */}
       {medicines.length > 0 && (
         <button
-          onClick={() => setIsAddOpen(true)}
+          onClick={() => {
+            setMedicineToEdit(null);
+            setIsAddOpen(true);
+          }}
           className="fixed bottom-20 md:bottom-8 right-4 md:right-8 w-14 h-14 bg-teal-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-teal-700 hover:scale-105 transition-all z-20"
           aria-label="Add Medicine"
         >
@@ -169,8 +180,12 @@ export default function MedicinesClient({
 
       <MedicineFormModal 
         isOpen={isAddOpen} 
-        onClose={() => setIsAddOpen(false)} 
+        onClose={() => {
+          setIsAddOpen(false);
+          setMedicineToEdit(null);
+        }} 
         isBasicPlan={isBasicPlan}
+        medicineToEdit={medicineToEdit}
       />
     </div>
   );
