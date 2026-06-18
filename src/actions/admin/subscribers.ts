@@ -117,7 +117,7 @@ export async function getSubscribers(
   };
 }
 
-export async function bulkUpdateSubscriptions(userIds: string[], action: "ACTIVATE" | "DEACTIVATE" | "EXTEND", days: number = 0) {
+export async function bulkUpdateSubscriptions(userIds: string[], action: "ACTIVATE" | "DEACTIVATE" | "EXTEND" | "CHANGE_PLAN", value: string | number = 0) {
   try {
     if (action === "ACTIVATE") {
       await prisma.subscription.updateMany({
@@ -129,13 +129,18 @@ export async function bulkUpdateSubscriptions(userIds: string[], action: "ACTIVA
         where: { userId: { in: userIds } },
         data: { status: "INACTIVE" }
       });
+    } else if (action === "CHANGE_PLAN") {
+      await prisma.subscription.updateMany({
+        where: { userId: { in: userIds } },
+        data: { planType: value as any }
+      });
     } else if (action === "EXTEND") {
       // updateMany doesn't support incrementing dates directly, so we must loop
       const subs = await prisma.subscription.findMany({ where: { userId: { in: userIds } } });
       for (const sub of subs) {
         if (sub.expiryDate) {
           const newDate = new Date(sub.expiryDate);
-          newDate.setDate(newDate.getDate() + days);
+          newDate.setDate(newDate.getDate() + Number(value));
           await prisma.subscription.update({
             where: { id: sub.id },
             data: { expiryDate: newDate }

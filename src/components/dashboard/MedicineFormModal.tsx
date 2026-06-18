@@ -30,7 +30,7 @@ export default function MedicineFormModal({
   const [daysActive, setDaysActive] = useState("EVERY_DAY");
   const [note, setNote] = useState("");
   
-  const [times, setTimes] = useState<string[]>(["08:00"]);
+  const [times, setTimes] = useState<string[]>([]);
   const [newTime, setNewTime] = useState("");
 
   const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
@@ -45,7 +45,7 @@ export default function MedicineFormModal({
         setNote(medicineToEdit.note || "");
         setTimes(medicineToEdit.reminders.map(r => r.time));
       } else {
-        setName(""); setDosage(""); setDaysActive("EVERY_DAY"); setNote(""); setTimes(["08:00"]);
+        setName(""); setDosage(""); setDaysActive("EVERY_DAY"); setNote(""); setTimes([]);
       }
       setStatus("idle");
       setErrorMsg("");
@@ -65,7 +65,6 @@ export default function MedicineFormModal({
   };
 
   const removeTime = (t: string) => {
-    if (times.length <= 1) return; // Must have at least 1 time
     setTimes(times.filter(x => x !== t));
   };
 
@@ -177,6 +176,24 @@ export default function MedicineFormModal({
                   Add
                 </button>
               </div>
+              
+              {times.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {times.map((t) => (
+                    <div key={t} className="flex items-center gap-1.5 bg-teal-50 text-teal-700 border border-teal-200 px-3 py-1.5 rounded-lg text-sm font-medium">
+                      <Clock className="w-4 h-4" />
+                      {t}
+                      <button 
+                        type="button" 
+                        onClick={() => removeTime(t)}
+                        className="ml-1 text-teal-600 hover:text-teal-900 focus:outline-none"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div>

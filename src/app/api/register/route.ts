@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
 
@@ -47,6 +48,11 @@ export async function POST(req: Request) {
       expires: Date.now() + 10 * 60 * 1000 // 10 mins
     });
 
+    // Check for referral cookie
+    const cookieStore = cookies();
+    const refCookie = cookieStore.get('mediguard_ref');
+    const referredByCode = refCookie?.value || null;
+
     // Create user and subscription atomically
     const user = await prisma.user.create({
       data: {
@@ -58,6 +64,8 @@ export async function POST(req: Request) {
         timezone: timezone || 'UTC',
         whatsappVerified: false,
         twoFactorSecret: payload,
+        referredByCode,
+
         subscription: {
           create: {
             planType: planType || 'BASIC',

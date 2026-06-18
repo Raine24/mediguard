@@ -14,6 +14,10 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  if ((session.user as any).role === "AFFILIATE") {
+    redirect("/affiliate/dashboard");
+  }
+
   return (
     <DashboardShell user={session.user}>
       {children}

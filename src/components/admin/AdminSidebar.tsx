@@ -17,7 +17,8 @@ import {
   LogOut,
   Menu,
   X,
-  Shield
+  Shield,
+  Network
 } from "lucide-react";
 
 type Role = "SUPER_ADMIN" | "ADMIN" | "SUPPORT_AGENT";
@@ -25,6 +26,7 @@ type Role = "SUPER_ADMIN" | "ADMIN" | "SUPPORT_AGENT";
 const navigation = [
   { name: 'Overview Dashboard', href: '/admin', icon: LayoutDashboard, roles: ["SUPER_ADMIN", "ADMIN", "SUPPORT_AGENT"] },
   { name: 'Subscriber Management', href: '/admin/subscribers', icon: Users, roles: ["SUPER_ADMIN", "ADMIN", "SUPPORT_AGENT"] },
+  { name: 'Affiliates', href: '/admin/affiliates', icon: Network, roles: ["SUPER_ADMIN", "ADMIN"] },
   { name: 'Revenue & Billing', href: '/admin/revenue', icon: CreditCard, roles: ["SUPER_ADMIN", "ADMIN"] },
   { name: 'Message Centre', href: '/admin/messages', icon: MessageSquare, roles: ["SUPER_ADMIN", "ADMIN", "SUPPORT_AGENT"] },
   { name: 'Support Tickets', href: '/admin/tickets', icon: Ticket, roles: ["SUPER_ADMIN", "ADMIN", "SUPPORT_AGENT"] },

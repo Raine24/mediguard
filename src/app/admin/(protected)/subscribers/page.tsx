@@ -64,19 +64,28 @@ export default function SubscriberManagement() {
     setSelectedIds(newSet);
   };
 
-  const handleBulkAction = (action: "ACTIVATE" | "DEACTIVATE" | "EXTEND") => {
+  const handleBulkAction = (action: "ACTIVATE" | "DEACTIVATE" | "EXTEND" | "CHANGE_PLAN") => {
     if (selectedIds.size === 0) return;
     
-    let days = 0;
+    let value: string | number = 0;
+    
     if (action === "EXTEND") {
       const p = prompt("How many days to extend the renewal date by?");
       if (!p) return;
-      days = parseInt(p, 10);
-      if (isNaN(days)) return alert("Invalid number of days");
+      value = parseInt(p, 10);
+      if (isNaN(value)) return alert("Invalid number of days");
+    } else if (action === "CHANGE_PLAN") {
+      const p = prompt("Enter the new plan (BASIC, STANDARD, or FAMILY):");
+      if (!p) return;
+      const uppercaseP = p.toUpperCase();
+      if (!["BASIC", "STANDARD", "FAMILY"].includes(uppercaseP)) {
+        return alert("Invalid plan. Must be BASIC, STANDARD, or FAMILY.");
+      }
+      value = uppercaseP;
     }
 
     startTransition(async () => {
-      const res = await bulkUpdateSubscriptions(Array.from(selectedIds), action, days);
+      const res = await bulkUpdateSubscriptions(Array.from(selectedIds), action, value);
       if (res.error) alert(res.error);
       else {
         setSelectedIds(new Set());
@@ -189,6 +198,10 @@ export default function SubscriberManagement() {
 
               <button onClick={() => handleBulkAction("EXTEND")} disabled={isPending} className="flex items-center gap-1.5 px-3 py-1.5 bg-white text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-50 shrink-0">
                 <Calendar className="w-3.5 h-3.5" /> Extend Days
+              </button>
+
+              <button onClick={() => handleBulkAction("CHANGE_PLAN")} disabled={isPending} className="flex items-center gap-1.5 px-3 py-1.5 bg-white text-purple-700 border border-purple-200 rounded-lg text-xs font-bold hover:bg-purple-50 shrink-0">
+                <ArrowUpDown className="w-3.5 h-3.5" /> Change Plan
               </button>
 
               <button onClick={handleExportCSV} className="flex items-center gap-1.5 px-3 py-1.5 bg-white text-gray-700 border border-gray-200 rounded-lg text-xs font-bold hover:bg-gray-50 shrink-0">

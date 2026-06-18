@@ -40,6 +40,10 @@ model User {
   assignedTickets     SupportTicket[] @relation("TicketAssignee")
   ticketMessages      SupportTicketMessage[]
   auditLogs           AuditLog[]
+
+  // Affiliate Relations
+  referredByCode      String?
+  affiliateProfile    AffiliateProfile?
 }
 
 model Subscription {
@@ -196,3 +200,64 @@ model BroadcastMessage {
   sentAt        DateTime?
   createdAt     DateTime @default(now())
 }
+
+model AffiliateProfile {
+  id                    String   @id @default(cuid())
+  userId                String   @unique
+  user                  User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  refCode               String   @unique
+  status                String   @default("PENDING") // PENDING, ACTIVE, SUSPENDED
+  promotionMethod       String
+  payoutMethod          String   // PAYPAL, BANK
+  payoutDetails         String   // Email or bank details
+  commissionType        String   @default("RECURRING") // RECURRING, ONE_TIME
+  customCommissionRate  Float?   // Override default rate
+  totalEarnings         Float    @default(0)
+  pendingEarnings       Float    @default(0)
+  availableEarnings     Float    @default(0)
+  clicks                Int      @default(0)
+  conversions           Int      @default(0)
+  joinedAt              DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  affiliateClicks       AffiliateClick[]
+  affiliateConversions  AffiliateConversion[]
+  affiliatePayouts      AffiliatePayout[]
+}
+
+model AffiliateClick {
+  id          String   @id @default(cuid())
+  affiliateId String
+  affiliate   AffiliateProfile @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  ipAddress   String?
+  userAgent   String?
+  clickedAt   DateTime @default(now())
+}
+
+model AffiliateConversion {
+  id               String   @id @default(cuid())
+  affiliateId      String
+  affiliate        AffiliateProfile @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  referredUserId   String
+  planType         String
+  paymentAmount    Float
+  commissionAmount Float
+  status           String   @default("PENDING") // PENDING, CLEARED, PAID, CANCELLED
+  paymentId        String   @unique
+  createdAt        DateTime @default(now())
+  clearedAt        DateTime?
+}
+
+model AffiliatePayout {
+  id          String   @id @default(cuid())
+  affiliateId String
+  affiliate   AffiliateProfile @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
+  amount      Float
+  status      String   @default("PENDING") // PENDING, PAID
+  method      String
+  details     String
+  adminNote   String?
+  createdAt   DateTime @default(now())
+  paidAt      DateTime?
+}
+
