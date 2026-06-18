@@ -32,10 +32,12 @@ export async function registerAffiliate(formData: FormData) {
     const randomSuffix = Math.floor(100 + Math.random() * 900);
     const refCode = `${baseCode}${randomSuffix}`;
 
+    let userId = user?.id;
+
     if (!user) {
       // Create user if they don't exist
       const hashedPassword = await bcrypt.hash(password, 10);
-      user = await prisma.user.create({
+      const newUser = await prisma.user.create({
         data: {
           name,
           email: email.toLowerCase(),
@@ -45,10 +47,11 @@ export async function registerAffiliate(formData: FormData) {
           role: "AFFILIATE"
         }
       });
+      userId = newUser.id;
     } else {
       // Update existing user role to include affiliate
       await prisma.user.update({
-        where: { id: user.id },
+        where: { id: userId },
         data: { role: "AFFILIATE" }
       });
     }
@@ -65,7 +68,7 @@ export async function registerAffiliate(formData: FormData) {
     // Create the affiliate profile
     await prisma.affiliateProfile.create({
       data: {
-        userId: user.id,
+        userId: userId!,
         refCode,
         status: "PENDING",
         promotionMethod,
