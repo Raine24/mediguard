@@ -13,6 +13,7 @@ import {
   HelpCircle
 } from "lucide-react";
 import clsx from "clsx";
+import { signOut } from "next-auth/react";
 import SessionTimeout from "./SessionTimeout";
 import SupportModal from "./SupportModal";
 
@@ -78,8 +79,16 @@ export default function DashboardShell({
             Support
           </button>
           
-          <div className="flex items-center gap-3 px-4 py-3">
-            <div className="w-10 h-10 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center font-bold">
+          <button 
+            onClick={() => signOut({ callbackUrl: '/login' })}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 font-medium transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-out text-red-500"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+            Log out
+          </button>
+          
+          <div className="flex items-center gap-3 px-4 py-3 border-t border-gray-100 mt-2 pt-4">
+            <div className="w-10 h-10 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center font-bold shrink-0">
               {user?.name?.charAt(0) || "U"}
             </div>
             <div className="flex-1 min-w-0">
@@ -102,13 +111,22 @@ export default function DashboardShell({
           </div>
           <span className="text-lg font-bold text-gray-900">MediGuard</span>
         </div>
-        <button 
-          onClick={() => setIsSupportOpen(true)}
-          className="p-2 text-gray-600 hover:text-gray-900 bg-gray-100 rounded-full" 
-          aria-label="Support"
-        >
-          <HelpCircle className="w-5 h-5" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button 
+            onClick={() => setIsSupportOpen(true)}
+            className="p-2 text-gray-600 hover:text-gray-900 bg-gray-100 rounded-full" 
+            aria-label="Support"
+          >
+            <HelpCircle className="w-5 h-5" />
+          </button>
+          <button 
+            onClick={() => signOut({ callbackUrl: '/login' })}
+            className="p-2 text-red-600 hover:text-red-700 bg-red-50 rounded-full" 
+            aria-label="Log out"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+          </button>
+        </div>
       </header>
 
       {/* Main Content Area */}

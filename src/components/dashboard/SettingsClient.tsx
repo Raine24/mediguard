@@ -301,6 +301,30 @@ export default function SettingsClient({ user }: { user: UserProps }) {
         </div>
       </div>
 
+      {/* Account Access */}
+      <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-100 flex items-center gap-3 bg-gray-50/50">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-out text-gray-500"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+          <h2 className="text-lg font-bold text-gray-900">Account Access</h2>
+        </div>
+        
+        <div className="p-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div>
+              <h3 className="font-bold text-gray-900">Log Out</h3>
+              <p className="text-sm text-gray-500">Sign out of your account on this device.</p>
+            </div>
+            
+            <button
+              onClick={() => signOut({ callbackUrl: '/login' })}
+              className="bg-gray-100 text-gray-700 font-semibold py-2.5 px-6 rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2"
+            >
+              Log Out
+            </button>
+          </div>
+        </div>
+      </div>
+
       {/* Danger Zone */}
       <div className="bg-white rounded-3xl border border-red-200 overflow-hidden">
         <div className="px-6 py-4 border-b border-red-100 flex items-center gap-3 bg-red-50/50">
