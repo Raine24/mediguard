@@ -42,8 +42,13 @@ export async function addSubscriber(formData: FormData) {
     return { success: true, user };
   } catch (err: any) {
     if (err.code === "P2002") {
-      console.log(`[Admin Add] Unique constraint failed. A user with this email or phone already exists.`);
-      return { error: "A user with this email or phone already exists." };
+      const target = err.meta?.target || [];
+      if (target.includes("phone")) {
+        console.log(`[Admin Add] Unique constraint failed on phone.`);
+        return { error: "A user with this phone number already exists, please try a different phone number." };
+      }
+      console.log(`[Admin Add] Unique constraint failed on email.`);
+      return { error: "A user with this email already exists, please try a different email." };
     }
     return { error: "Failed to add subscriber" };
   }
