@@ -9,6 +9,7 @@ export default function PublicHeader() {
       </Link>
       
       <div className="flex items-center gap-6">
+        <Link href="/" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden md:block transition-colors">Home</Link>
         <Link href="/#how-it-works" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden md:block transition-colors">How it Works</Link>
         <Link href="/#pricing" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden md:block transition-colors">Pricing</Link>
         <div className="flex items-center gap-3 ml-2">
