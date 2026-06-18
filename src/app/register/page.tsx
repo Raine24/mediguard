@@ -6,6 +6,8 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import { Eye, EyeOff } from "lucide-react";
 
+import PublicHeader from "@/components/PublicHeader";
+
 export default function RegisterPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -120,16 +122,18 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center">
-          <div className="w-12 h-12 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-2xl">
-            M
+    <>
+      <PublicHeader />
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
+          <div className="flex justify-center">
+            <div className="w-12 h-12 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-2xl">
+              M
+            </div>
           </div>
-        </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Create your account
-        </h2>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Create your account
+          </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
           Already have an account?{" "}
           <Link href="/login" className="font-medium text-teal-600 hover:text-teal-500">
@@ -287,5 +291,6 @@ export default function RegisterPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

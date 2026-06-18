@@ -4,6 +4,7 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import PublicHeader from "@/components/PublicHeader";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -33,8 +34,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+    <>
+      <PublicHeader />
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+        <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <div className="w-12 h-12 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-2xl">
             M
@@ -118,5 +121,6 @@ export default function LoginPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }
