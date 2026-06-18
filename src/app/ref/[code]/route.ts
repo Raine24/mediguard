@@ -39,7 +39,8 @@ export async function GET(
           cookieDuration = parseInt(setting.value);
         }
 
-        cookies().set('mediguard_ref', code, {
+        const cookieStore = await cookies();
+        cookieStore.set('mediguard_ref', code, {
           maxAge: cookieDuration * 24 * 60 * 60,
           path: '/',
           httpOnly: true,

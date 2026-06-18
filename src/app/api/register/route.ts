@@ -49,7 +49,7 @@ export async function POST(req: Request) {
     });
 
     // Check for referral cookie
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const refCookie = cookieStore.get('mediguard_ref');
     const referredByCode = refCookie?.value || null;
 
