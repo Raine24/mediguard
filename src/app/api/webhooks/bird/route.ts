@@ -34,10 +34,10 @@ export async function POST(req: Request) {
       console.log(`[Webhook] User ${fromNumber} requested audio.`);
 
       // The exact filename placed in the public folder
-      const audioFileName = "ElevenLabs_2026-06-19T11_25_07_James - Professional British Male_pvc_sp100_s50_sb75_v3.mp3";
+      const audioFileName = "audio.mp3";
       
       // We need a stable absolute URL. If NEXT_PUBLIC_APP_URL is not set, fallback to vercel URL
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://mediguard.vercel.app");
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://mediguard-f3zn.vercel.app");
       const audioUrl = `${baseUrl}/${audioFileName}`;
 
       // Send the audio file back!
