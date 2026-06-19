@@ -20,15 +20,37 @@ export default function FamilyMedicineModal({
   
   const [times, setTimes] = useState<string[]>(["08:00"]);
   const [newTime, setNewTime] = useState("");
+  const [editingTimeIndex, setEditingTimeIndex] = useState<number | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
   const handleAddTime = () => {
     if (!newTime) return;
-    if (times.includes(newTime)) return;
-    setTimes([...times, newTime].sort());
+    
+    if (times.includes(newTime)) {
+      if (editingTimeIndex === null || times[editingTimeIndex] !== newTime) {
+        return;
+      }
+    }
+
+    if (editingTimeIndex !== null) {
+      const updatedTimes = [...times];
+      updatedTimes[editingTimeIndex] = newTime;
+      setTimes(updatedTimes.sort());
+      setEditingTimeIndex(null);
+      setIsEditMode(false);
+    } else {
+      setTimes([...times, newTime].sort());
+    }
     setNewTime("");
+  };
+
+  const handleSelectTime = (index: number) => {
+    if (!isEditMode) return;
+    setEditingTimeIndex(index);
+    setNewTime(times[index]);
   };
 
   const removeTime = (t: string) => {
@@ -52,6 +74,8 @@ export default function FamilyMedicineModal({
       // Reset form
       setName(""); setDosage(""); setDaysActive("EVERY_DAY"); setNote(""); setTimes(["08:00"]);
       setStatus("idle");
+      setEditingTimeIndex(null);
+      setIsEditMode(false);
       onClose();
     } catch (error: any) {
       setStatus("error");
@@ -110,45 +134,69 @@ export default function FamilyMedicineModal({
               <label className="block text-sm font-medium text-gray-700 mb-2">Reminder Times *</label>
               
               <div className="flex flex-wrap gap-2 mb-3">
-                {times.map(t => (
-                  <div key={t} className="bg-teal-50 text-teal-700 border border-teal-200 px-3 py-1.5 rounded-lg flex items-center gap-2 text-sm font-medium">
+                {times.map((t, index) => (
+                  <div 
+                    key={t} 
+                    onClick={() => handleSelectTime(index)}
+                    className={`flex items-center gap-1.5 border px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                      isEditMode ? 'cursor-pointer hover:ring-2 hover:ring-blue-300' : ''
+                    } ${
+                      editingTimeIndex === index 
+                        ? 'bg-blue-800 text-white border-blue-900' 
+                        : 'bg-teal-50 text-teal-700 border-teal-200'
+                    }`}
+                  >
                     <Clock className="w-4 h-4 opacity-70" />
                     {t}
-                    <button type="button" onClick={() => removeTime(t)} className="opacity-50 hover:opacity-100 focus:outline-none">
+                    <button 
+                      type="button" 
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        removeTime(t);
+                      }} 
+                      className={`ml-1 focus:outline-none ${editingTimeIndex === index ? 'text-blue-200 hover:text-white' : 'text-teal-600 hover:text-teal-900'}`}
+                    >
                       <X className="w-4 h-4" />
                     </button>
                   </div>
                 ))}
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="time"
                   value={newTime}
                   onChange={(e) => setNewTime(e.target.value)}
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base bg-white"
+                  className="w-full sm:flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base bg-white"
                 />
-                <button
-                  type="button"
-                  onClick={handleAddTime}
-                  className="px-4 py-3 bg-teal-50 text-teal-700 border border-teal-200 rounded-xl hover:bg-teal-100 font-semibold flex items-center gap-2 transition-colors"
-                >
-                  <Plus className="w-5 h-5" />
-                  Save Time
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (times.length > 0) {
-                      setNewTime(times[0]); // Load first time to edit for demo purposes
-                    }
-                  }}
-                  className="px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 font-medium flex items-center gap-2 transition-colors"
-                  title="Select a time below to edit"
-                >
-                  <Edit2 className="w-4 h-4" />
-                  Edit Time
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={handleAddTime}
+                    className="flex-1 sm:flex-none px-4 py-3 bg-teal-50 text-teal-700 border border-teal-200 rounded-xl hover:bg-teal-100 font-semibold flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Save Time
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEditMode(!isEditMode);
+                      if (isEditMode) {
+                        setEditingTimeIndex(null);
+                        setNewTime("");
+                      }
+                    }}
+                    className={`flex-1 sm:flex-none px-4 py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors ${
+                      isEditMode 
+                        ? "bg-blue-800 text-white border-blue-800 hover:bg-blue-900" 
+                        : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                    }`}
+                  >
+                    <Edit2 className="w-4 h-4" />
+                    {isEditMode ? "Cancel Edit" : "Edit Time"}
+                  </button>
+                </div>
               </div>
             </div>
 

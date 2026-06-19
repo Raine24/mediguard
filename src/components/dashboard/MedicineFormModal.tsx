@@ -32,6 +32,8 @@ export default function MedicineFormModal({
   
   const [times, setTimes] = useState<string[]>([]);
   const [newTime, setNewTime] = useState("");
+  const [editingTimeIndex, setEditingTimeIndex] = useState<number | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
@@ -50,18 +52,43 @@ export default function MedicineFormModal({
       setStatus("idle");
       setErrorMsg("");
       setNewTime("");
+      setEditingTimeIndex(null);
+      setIsEditMode(false);
     }
   }, [isOpen, medicineToEdit]);
 
   const handleAddTime = () => {
     if (!newTime) return;
-    if (times.includes(newTime)) return;
-    if (isBasicPlan && times.length >= 3) {
-      setErrorMsg("Basic plan is limited to 3 reminders per medicine.");
-      return;
+    
+    // Check if time already exists and we are not editing it
+    if (times.includes(newTime)) {
+      if (editingTimeIndex === null || times[editingTimeIndex] !== newTime) {
+        return;
+      }
     }
-    setTimes([...times, newTime].sort());
+
+    if (editingTimeIndex !== null) {
+      // Replace the selected time
+      const updatedTimes = [...times];
+      updatedTimes[editingTimeIndex] = newTime;
+      setTimes(updatedTimes.sort());
+      setEditingTimeIndex(null);
+      setIsEditMode(false);
+    } else {
+      // Add new time
+      if (isBasicPlan && times.length >= 3) {
+        setErrorMsg("Basic plan is limited to 3 reminders per medicine.");
+        return;
+      }
+      setTimes([...times, newTime].sort());
+    }
     setNewTime("");
+  };
+
+  const handleSelectTime = (index: number) => {
+    if (!isEditMode) return;
+    setEditingTimeIndex(index);
+    setNewTime(times[index]);
   };
 
   const removeTime = (t: string) => {
@@ -160,46 +187,66 @@ export default function MedicineFormModal({
                 <label className="block text-sm font-medium text-gray-700">Reminder Times *</label>
                 <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">{times.length} {times.length === 1 ? 'time' : 'times'} set</span>
               </div>
-              <div className="flex gap-2 mb-3">
+              <div className="flex flex-col sm:flex-row gap-2 mb-3">
                 <input
                   type="time"
                   value={newTime}
                   onChange={(e) => setNewTime(e.target.value)}
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base bg-white"
+                  className="w-full sm:flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base bg-white"
                 />
-                <button
-                  type="button"
-                  onClick={handleAddTime}
-                  className="px-4 py-3 bg-teal-50 text-teal-700 border border-teal-200 rounded-xl hover:bg-teal-100 font-semibold flex items-center gap-2 transition-colors"
-                >
-                  <Plus className="w-5 h-5" />
-                  Save Time
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (times.length > 0) {
-                      setNewTime(times[0]); // Load first time to edit for demo purposes
-                    }
-                  }}
-                  className="px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 font-medium flex items-center gap-2 transition-colors"
-                  title="Select a time below to edit"
-                >
-                  <Edit2 className="w-4 h-4" />
-                  Edit Time
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={handleAddTime}
+                    className="flex-1 sm:flex-none px-4 py-3 bg-teal-50 text-teal-700 border border-teal-200 rounded-xl hover:bg-teal-100 font-semibold flex items-center justify-center gap-2 transition-colors"
+                  >
+                    <Plus className="w-5 h-5" />
+                    Save Time
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsEditMode(!isEditMode);
+                      if (isEditMode) {
+                        setEditingTimeIndex(null);
+                        setNewTime("");
+                      }
+                    }}
+                    className={`flex-1 sm:flex-none px-4 py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors ${
+                      isEditMode 
+                        ? "bg-blue-800 text-white border-blue-800 hover:bg-blue-900" 
+                        : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                    }`}
+                  >
+                    <Edit2 className="w-4 h-4" />
+                    {isEditMode ? "Cancel Edit" : "Edit Time"}
+                  </button>
+                </div>
               </div>
               
               {times.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {times.map((t) => (
-                    <div key={t} className="flex items-center gap-1.5 bg-teal-50 text-teal-700 border border-teal-200 px-3 py-1.5 rounded-lg text-sm font-medium">
+                  {times.map((t, index) => (
+                    <div 
+                      key={t} 
+                      onClick={() => handleSelectTime(index)}
+                      className={`flex items-center gap-1.5 border px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                        isEditMode ? 'cursor-pointer hover:ring-2 hover:ring-blue-300' : ''
+                      } ${
+                        editingTimeIndex === index 
+                          ? 'bg-blue-800 text-white border-blue-900' 
+                          : 'bg-teal-50 text-teal-700 border-teal-200'
+                      }`}
+                    >
                       <Clock className="w-4 h-4" />
                       {t}
                       <button 
                         type="button" 
-                        onClick={() => removeTime(t)}
-                        className="ml-1 text-teal-600 hover:text-teal-900 focus:outline-none"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          removeTime(t);
+                        }}
+                        className={`ml-1 focus:outline-none ${editingTimeIndex === index ? 'text-blue-200 hover:text-white' : 'text-teal-600 hover:text-teal-900'}`}
                       >
                         <X className="w-4 h-4" />
                       </button>
