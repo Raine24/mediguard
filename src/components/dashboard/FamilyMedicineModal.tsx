@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Plus, Clock, Info } from "lucide-react";
+import { X, Plus, Clock, Info, Edit2 } from "lucide-react";
 import { addFamilyMedicine } from "@/app/dashboard/family/actions";
 
 export default function FamilyMedicineModal({ 
@@ -131,10 +131,23 @@ export default function FamilyMedicineModal({
                 <button
                   type="button"
                   onClick={handleAddTime}
-                  className="px-4 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 font-medium flex items-center gap-2"
+                  className="px-4 py-3 bg-teal-50 text-teal-700 border border-teal-200 rounded-xl hover:bg-teal-100 font-semibold flex items-center gap-2 transition-colors"
                 >
                   <Plus className="w-5 h-5" />
-                  Add
+                  Save Time
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (times.length > 0) {
+                      setNewTime(times[0]); // Load first time to edit for demo purposes
+                    }
+                  }}
+                  className="px-4 py-3 bg-white border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 font-medium flex items-center gap-2 transition-colors"
+                  title="Select a time below to edit"
+                >
+                  <Edit2 className="w-4 h-4" />
+                  Edit Time
                 </button>
               </div>
             </div>
