@@ -21,7 +21,8 @@ export async function POST(req: Request) {
     }
 
     // Extract the sender's phone number
-    const fromNumber = message.sender?.contacts?.[0]?.identifierValue;
+    // Bird API uses sender.contact (object) for inbound, but contacts (array) for outbound. Let's handle both safely.
+    const fromNumber = message.sender?.contact?.identifierValue || message.sender?.contacts?.[0]?.identifierValue;
     if (!fromNumber) {
       return NextResponse.json({ success: false, error: "Missing sender" });
     }
