@@ -7,53 +7,59 @@ export const dynamic = "force-dynamic";
 export async function POST(req: Request) {
   try {
     const payload = await req.json();
+    console.log("[Webhook] Received payload:", JSON.stringify(payload).substring(0, 500));
 
-    // Basic validation
-    if (!payload || !payload.message) {
-      return NextResponse.json({ success: false, error: "Invalid payload" });
+    if (!payload) {
+      return NextResponse.json({ success: false, error: "Empty payload" });
     }
 
-    const message = payload.message;
+    // Bird sends the message object directly at the top level,
+    // OR it may wrap it under payload.message or payload.data — handle all cases
+    const message = payload.message || payload.data || payload;
 
     // Only process incoming messages
     if (message.direction !== "incoming") {
+      console.log("[Webhook] Skipping non-incoming message, direction:", message.direction);
       return NextResponse.json({ success: true, ignored: true });
     }
 
     // Extract the sender's phone number
-    // Bird API uses sender.contact (object) for inbound, but contacts (array) for outbound. Let's handle both safely.
-    const fromNumber = message.sender?.contact?.identifierValue || message.sender?.contacts?.[0]?.identifierValue;
+    // Bird uses sender.contact (singular object) for inbound messages
+    const fromNumber =
+      message.sender?.contact?.identifierValue ||
+      message.sender?.contacts?.[0]?.identifierValue ||
+      message.meta?.extraInformation?.phonenumber;
+
     if (!fromNumber) {
+      console.log("[Webhook] Could not extract sender phone. Sender:", JSON.stringify(message.sender));
       return NextResponse.json({ success: false, error: "Missing sender" });
     }
 
-    // Extract message text (could be in text.text or interactive.button_reply.title etc.)
-    // We stringify the entire message to ensure we don't miss it if Bird nests it differently
+    // Ensure phone number has + prefix
+    const formattedNumber = fromNumber.startsWith("+") ? fromNumber : `+${fromNumber}`;
+
+    // Stringify the entire message to catch "Play Audio" regardless of nesting
     const messageStr = JSON.stringify(message).toLowerCase();
-    
+    console.log("[Webhook] From:", formattedNumber, "| Contains 'play audio':", messageStr.includes("play audio"));
+
     // Check if the user tapped "Play Audio"
     if (messageStr.includes("play audio")) {
-      console.log(`[Webhook] User ${fromNumber} requested audio.`);
+      console.log(`[Webhook] User ${formattedNumber} requested audio. Sending...`);
 
-      // The exact filename placed in the public folder
-      const audioFileName = "audio.mp3";
-      
-      // We need a stable absolute URL. If NEXT_PUBLIC_APP_URL is not set, fallback to vercel URL
-      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://mediguard-f3zn.vercel.app");
-      const audioUrl = `${baseUrl}/${audioFileName}`;
+      const audioUrl = "https://mediguard-f3zn.vercel.app/audio.mp3";
 
-      // Send the audio file back!
-      const response = await sendWhatsAppAudio(fromNumber, audioUrl);
-      
-      console.log("[Webhook] Audio send response:", response);
+      // Send the audio file back
+      const response = await sendWhatsAppAudio(formattedNumber, audioUrl);
 
-      return NextResponse.json({ success: true, audioSent: true });
+      console.log("[Webhook] Audio send result:", JSON.stringify(response));
+
+      return NextResponse.json({ success: true, audioSent: true, result: response });
     }
 
     return NextResponse.json({ success: true, ignored: true });
 
   } catch (error: any) {
-    console.error("Bird Webhook Error:", error);
+    console.error("[Webhook] ERROR:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
