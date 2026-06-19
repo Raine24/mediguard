@@ -33,6 +33,8 @@ export async function GET(req: Request) {
 
     for (const sub of activeSubscriptions) {
       const user = sub.user;
+      if (!user.whatsappVerified) continue;
+
       const userTimezone = user.timezone || 'UTC';
 
       let localHour, localMin;

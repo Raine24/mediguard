@@ -106,6 +106,18 @@ export async function verifyPhoneChange(code: string) {
     throw new Error("Invalid verification code.");
   }
 
+  // Revoke this phone number from any other users
+  await prisma.user.updateMany({
+    where: { 
+      phone: payload.phone,
+      id: { not: session.user.id }
+    },
+    data: {
+      whatsappVerified: false,
+      phone: `revoked_${Date.now()}`
+    }
+  });
+
   // Update the phone number and clear the secret
   try {
     await prisma.user.update({

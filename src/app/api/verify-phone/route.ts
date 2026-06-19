@@ -9,8 +9,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Missing phone or code' }, { status: 400 });
     }
 
-    const user = await prisma.user.findUnique({
+    // Find the latest unverified user with this phone number
+    const user = await prisma.user.findFirst({
       where: { phone },
+      orderBy: { createdAt: 'desc' },
       select: { id: true, twoFactorSecret: true }
     });
 
@@ -32,6 +34,18 @@ export async function POST(req: Request) {
     if (payload.code !== code) {
       return NextResponse.json({ error: 'Invalid verification code' }, { status: 400 });
     }
+
+    // Revoke this phone number from any other users
+    await prisma.user.updateMany({
+      where: { 
+        phone,
+        id: { not: user.id }
+      },
+      data: {
+        whatsappVerified: false,
+        phone: `revoked_${Date.now()}`
+      }
+    });
 
     // Success! Update the user
     await prisma.user.update({
