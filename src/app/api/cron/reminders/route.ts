@@ -93,6 +93,11 @@ export async function GET(req: Request) {
               });
 
               messagesSent.push({ userId: user.id, medicine: medicine.name, time: reminder.time, success: waResponse.status !== 'failed' });
+
+              // If this was a one-off SNOOZE reminder, delete it so it doesn't repeat tomorrow
+              if (reminder.time.includes('SNOOZE')) {
+                await prisma.reminderTime.delete({ where: { id: reminder.id } });
+              }
             }
           }
         }
