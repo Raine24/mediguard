@@ -16,21 +16,12 @@ export async function POST(req: Request) {
     // Check if user already exists
     const existingUser = await prisma.user.findFirst({
       where: {
-        OR: [
-          { email: { equals: email, mode: 'insensitive' } },
-          { phone }
-        ]
+        email: { equals: email, mode: 'insensitive' }
       }
     });
 
     if (existingUser) {
-      console.log(`[Register] User already exists in DB. ID: ${existingUser.id}, Email: ${existingUser.email}, Phone: ${existingUser.phone}`);
-      if (existingUser.phone === phone) {
-        return NextResponse.json(
-          { error: 'A user with this phone number already exists, please try a different phone number.' },
-          { status: 409 }
-        );
-      }
+      console.log(`[Register] User already exists in DB. ID: ${existingUser.id}, Email: ${existingUser.email}`);
       return NextResponse.json(
         { error: 'A user with this email already exists, please try a different email.' },
         { status: 409 }
