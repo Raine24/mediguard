@@ -1,127 +1,57 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
-import { sendWhatsAppMessage } from '@/lib/bird';
-import { formatInTimeZone } from 'date-fns-tz';
+import { NextResponse } from "next/server";
+import { sendWhatsAppAudio } from "@/lib/bird";
+
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const payloadString = JSON.stringify(body).toLowerCase();
+    const payload = await req.json();
+
+    // Basic validation
+    if (!payload || !payload.message) {
+      return NextResponse.json({ success: false, error: "Invalid payload" });
+    }
+
+    const message = payload.message;
+
+    // Only process incoming messages
+    if (message.direction !== "incoming") {
+      return NextResponse.json({ success: true, ignored: true });
+    }
+
+    // Extract the sender's phone number
+    const fromNumber = message.sender?.contacts?.[0]?.identifierValue;
+    if (!fromNumber) {
+      return NextResponse.json({ success: false, error: "Missing sender" });
+    }
+
+    // Extract message text (could be in text.text or interactive.button_reply.title etc.)
+    const bodyStr = JSON.stringify(message.body || {}).toLowerCase();
     
-    // Extract intent
-    let intent: 'SNOOZE' | 'STOP' | null = null;
-    if (payloadString.includes('"snooze"')) {
-      intent = 'SNOOZE';
-    } else if (payloadString.includes('"stop"')) {
-      intent = 'STOP';
-    }
+    // Check if the user tapped "Play Audio"
+    if (bodyStr.includes("play audio")) {
+      console.log(`[Webhook] User ${fromNumber} requested audio.`);
 
-    if (!intent) {
-      return NextResponse.json({ success: true, message: 'Ignored: No known intent' });
-    }
-
-    // Attempt to extract phone number (sender)
-    // Bird payload variations: 
-    // 1. body.contact.identifierValue
-    // 2. body.message.from
-    // 3. body.from
-    let senderPhone = body?.contact?.identifierValue 
-                   || body?.message?.from 
-                   || body?.from;
-
-    if (!senderPhone) {
-      // Deep search for a phone-like string in keys like 'from', 'identifierValue', 'phonenumber'
-      const match = payloadString.match(/"(?:from|identifiervalue|phonenumber)":"(\+?\d{8,15})"/i);
-      if (match && match[1]) {
-        senderPhone = match[1];
-      }
-    }
-
-    if (!senderPhone) {
-      console.warn("Bird Webhook: Could not extract sender phone", body);
-      return NextResponse.json({ success: true, message: 'Could not identify sender' });
-    }
-
-    // Normalize phone
-    let user = await prisma.user.findFirst({
-      where: { phone: senderPhone }
-    });
-
-    if (!user && !senderPhone.startsWith('+')) {
-      user = await prisma.user.findFirst({ where: { phone: `+${senderPhone}` } });
-    }
-    if (!user && senderPhone.startsWith('+')) {
-      user = await prisma.user.findFirst({ where: { phone: senderPhone.replace('+', '') } });
-    }
-
-    if (!user) {
-      console.warn("Bird Webhook: User not found for phone", senderPhone);
-      return NextResponse.json({ success: true, message: 'User not found' });
-    }
-
-    // Find the most recent message log to know WHICH medicine they are replying to
-    const lastLog = await prisma.messageLog.findFirst({
-      where: { 
-        userId: user.id,
-        type: 'REMINDER',
-        medicineId: { not: null }
-      },
-      orderBy: { sentAt: 'desc' },
-      include: { medicine: true }
-    });
-
-    if (!lastLog || !lastLog.medicine) {
-      return NextResponse.json({ success: true, message: 'No recent medicine context found' });
-    }
-
-    const medicine = lastLog.medicine;
-
-    if (intent === 'STOP') {
-      // Pause the medicine
-      await prisma.medicine.update({
-        where: { id: medicine.id },
-        data: { status: 'PAUSED' }
-      });
-
-      await sendWhatsAppMessage(
-        user.phone, 
-        `Okay! Reminders for ${medicine.name} have been PAUSED. You can resume them anytime from your dashboard.`
-      );
-
-      return NextResponse.json({ success: true, action: 'STOP', medicineId: medicine.id });
-    }
-
-    if (intent === 'SNOOZE') {
-      // Schedule for 15 mins in the future by adding a temporary ReminderTime.
-      // The cron job runs continuously. When it hits the new time, it will send the reminder.
-      const snoozeDate = new Date(Date.now() + 15 * 60000);
+      // The exact filename placed in the public folder
+      const audioFileName = "ElevenLabs_2026-06-19T11_25_07_James - Professional British Male_pvc_sp100_s50_sb75_v3.mp3";
       
-      const userTimezone = user.timezone || 'UTC';
-      let snoozeTimeStr;
-      try {
-        snoozeTimeStr = formatInTimeZone(snoozeDate, userTimezone, 'HH:mm');
-      } catch (e) {
-        snoozeTimeStr = formatInTimeZone(snoozeDate, 'UTC', 'HH:mm');
-      }
+      // We need a stable absolute URL. If NEXT_PUBLIC_APP_URL is not set, fallback to vercel URL
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://mediguard.vercel.app");
+      const audioUrl = `${baseUrl}/${audioFileName}`;
 
-      await prisma.reminderTime.create({
-        data: {
-          medicineId: medicine.id,
-          time: `${snoozeTimeStr}:SNOOZE`
-        }
-      });
+      // Send the audio file back!
+      const response = await sendWhatsAppAudio(fromNumber, audioUrl);
+      
+      console.log("[Webhook] Audio send response:", response);
 
-      await sendWhatsAppMessage(
-        user.phone, 
-        `Got it! I will remind you again to take ${medicine.name} in 15 minutes. ⏰`
-      );
-
-      return NextResponse.json({ success: true, action: 'SNOOZE', scheduled: snoozeTimeStr });
+      return NextResponse.json({ success: true, audioSent: true });
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, ignored: true });
+
   } catch (error: any) {
-    console.error('Bird Webhook Error:', error);
+    console.error("Bird Webhook Error:", error);
     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }

@@ -76,7 +76,7 @@ export async function GET(req: Request) {
             if (!recentLog) {
               const waResponse = await sendWhatsAppTemplate(
                 user.phone, 
-                "medical_reminder_alert", 
+                "mediguard_voice_alert_v1", 
                 [user.name, medicine.name, medicine.dosage || "1 dose"]
               );
               

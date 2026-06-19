@@ -87,7 +87,7 @@ export async function retryMessage(logId: string) {
     if (log.type === "REMINDER" && log.medicine) {
       waResponse = await sendWhatsAppTemplate(
         log.user.phone, 
-        "medical_reminder_alert", 
+        "mediguard_voice_alert_v1",
         [log.user.name, log.medicine.name, log.medicine.dosage || "1 dose"]
       );
     } else {
