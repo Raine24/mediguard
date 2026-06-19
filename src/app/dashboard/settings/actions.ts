@@ -107,14 +107,21 @@ export async function verifyPhoneChange(code: string) {
   }
 
   // Update the phone number and clear the secret
-  await prisma.user.update({
-    where: { id: session.user.id },
-    data: {
-      phone: payload.phone,
-      whatsappVerified: true,
-      twoFactorSecret: null
+  try {
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: {
+        phone: payload.phone,
+        whatsappVerified: true,
+        twoFactorSecret: null
+      }
+    });
+  } catch (error: any) {
+    if (error.code === 'P2002') {
+      throw new Error("This phone number is already registered to another account.");
     }
-  });
+    throw new Error("Failed to update phone number. Please try again.");
+  }
 
   revalidatePath("/dashboard");
   revalidatePath("/dashboard/settings");
