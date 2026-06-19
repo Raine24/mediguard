@@ -27,10 +27,11 @@ export async function POST(req: Request) {
     }
 
     // Extract message text (could be in text.text or interactive.button_reply.title etc.)
-    const bodyStr = JSON.stringify(message.body || {}).toLowerCase();
+    // We stringify the entire message to ensure we don't miss it if Bird nests it differently
+    const messageStr = JSON.stringify(message).toLowerCase();
     
     // Check if the user tapped "Play Audio"
-    if (bodyStr.includes("play audio")) {
+    if (messageStr.includes("play audio")) {
       console.log(`[Webhook] User ${fromNumber} requested audio.`);
 
       // The exact filename placed in the public folder
