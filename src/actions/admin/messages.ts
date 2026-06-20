@@ -87,8 +87,8 @@ export async function retryMessage(logId: string) {
     if (log.type === "REMINDER" && log.medicine) {
       waResponse = await sendWhatsAppTemplate(
         log.user.phone, 
-        "mediguard_voice_alert_v1",
-        [log.user.name || "User", log.medicine.name, log.medicine.dosage || "1 dose"]
+        "mediguard_voice_alert_v4",
+        [log.medicine.name, log.medicine.dosage || "1 dose"]
       );
     } else {
       // Fallback freeform text

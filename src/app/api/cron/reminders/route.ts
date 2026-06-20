@@ -76,8 +76,8 @@ export async function GET(req: Request) {
             if (!recentLog) {
               const waResponse = await sendWhatsAppTemplate(
                 user.phone, 
-                "mediguard_voice_alert_v1", 
-                [user.name || "User", medicine.name, medicine.dosage || "1 dose"]
+                "mediguard_voice_alert_v4", 
+                [medicine.name, medicine.dosage || "1 dose"]
               );
               
               // Log the message with the exact scheduledFor time to prevent duplicates

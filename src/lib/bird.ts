@@ -101,8 +101,8 @@ export async function sendWhatsAppTemplate(
             
             if (templateName === "verification_code") {
               varKey = "otp";
-            } else if (templateName === "mediguard_voice_alert_v1" || templateName === "medical_reminder_alert") {
-              const keys = ["first_name", "medicine_name", "dosage"];
+            } else if (templateName === "mediguard_voice_alert_v4" || templateName === "medical_reminder_alert") {
+              const keys = ["medicine_name", "dosage"];
               varKey = keys[index] || varKey;
             }
             
