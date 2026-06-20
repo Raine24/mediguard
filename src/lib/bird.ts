@@ -92,7 +92,7 @@ export async function sendWhatsAppTemplate(
           ]
         },
         template: {
-          projectId: namespace,
+          projectId: templateName === "mediguard_voice_alert_v4" ? "c9bb8f9a-1e7b-4a02-8a55-3059952be77c" : namespace,
           name: templateName,
           version: "latest",
           locale: "en",
