@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "MedicinTime | Dashboard",
-  description: "Manage your personalized WhatsApp medication and pill reminders.",
-  keywords: "WhatsApp medication reminder, pill reminder, medicine alert system",
+  description: "Manage your personalized automated medication and pill reminders.",
+  keywords: "medication reminder, pill reminder, medicine alert system",
 };
 
 import CookieConsent from "@/components/layout/CookieConsent";
