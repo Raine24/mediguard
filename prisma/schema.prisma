@@ -41,6 +41,12 @@ model User {
   ticketMessages      SupportTicketMessage[]
   auditLogs           AuditLog[]
 
+  // Referral Program
+  referralCode          String?        @unique
+  referralsMonthlyCount Int            @default(0)
+  referralsBiannualCount Int           @default(0)
+  referralsAnnualCount  Int            @default(0)
+
   // Affiliate Relations
   referredByCode      String?
   affiliateProfile    AffiliateProfile?

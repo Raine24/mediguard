@@ -14,7 +14,10 @@ export async function GET(
         where: { refCode: code }
       });
       
+      let isValidReferral = false;
+
       if (affiliate && affiliate.status === 'ACTIVE') {
+        isValidReferral = true;
         const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || '';
         const userAgent = request.headers.get('user-agent') || '';
         
@@ -30,7 +33,17 @@ export async function GET(
           where: { id: affiliate.id },
           data: { clicks: { increment: 1 } }
         });
-        
+      } else {
+        // Check if it's a regular user's referral code
+        const user = await prisma.user.findUnique({
+          where: { referralCode: code }
+        });
+        if (user) {
+          isValidReferral = true;
+        }
+      }
+
+      if (isValidReferral) {
         let cookieDuration = 30;
         const setting = await prisma.systemSetting.findUnique({
           where: { key: 'affiliate_cookie_duration' }

@@ -11,7 +11,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { orderID, planType } = await req.json();
+    const { orderID, planType, interval } = await req.json();
 
     if (!orderID || !planType) {
       return NextResponse.json({ error: "Missing orderID or planType" }, { status: 400 });
@@ -22,9 +22,16 @@ export async function POST(req: Request) {
     if (httpStatusCode >= 200 && httpStatusCode < 300 && jsonResponse.status === "COMPLETED") {
       const capturedAmount = jsonResponse.purchase_units[0]?.payments?.captures[0]?.amount?.value || "0";
 
-      // Extend subscription by 30 days
-      const newExpiryDate = new Date();
-      newExpiryDate.setDate(newExpiryDate.getDate() + 30);
+      // Extend subscription based on interval
+      const billingCycle = interval === 'biannual' ? 'BIANNUAL' : interval === 'annual' ? 'ANNUAL' : 'MONTHLY';
+      let daysToAdd = 30;
+      if (billingCycle === 'BIANNUAL') daysToAdd = 180;
+      if (billingCycle === 'ANNUAL') daysToAdd = 365;
+
+      const currentSub = await prisma.subscription.findUnique({ where: { userId: session.user.id } });
+      const baseDate = currentSub?.expiryDate && currentSub.expiryDate > new Date() ? currentSub.expiryDate : new Date();
+      
+      const newExpiryDate = new Date(baseDate.getTime() + daysToAdd * 24 * 60 * 60 * 1000);
 
       // 1. Update Subscription
       await prisma.subscription.upsert({
@@ -47,7 +54,7 @@ export async function POST(req: Request) {
         data: {
           userId: session.user.id,
           planType,
-          billingCycle: "MONTHLY",
+          billingCycle,
           amount: parseFloat(capturedAmount),
           method: "PayPal",
           gatewayId: orderID,
@@ -101,6 +108,72 @@ export async function POST(req: Request) {
                 pendingEarnings: { increment: commissionAmount },
                 totalEarnings: { increment: commissionAmount }
               }
+            });
+          }
+        } else {
+          // Process Referral Program Reward
+          const referrer = await prisma.user.findUnique({
+            where: { referralCode: user.referredByCode },
+            include: { subscription: true }
+          });
+
+          if (referrer && referrer.subscription) {
+            let updateData: any = {};
+            let shouldAddFreeTime = false;
+            let freeDays = 0;
+
+            if (billingCycle === 'MONTHLY') {
+              const newCount = referrer.referralsMonthlyCount + 1;
+              if (newCount >= 2) {
+                updateData = { referralsMonthlyCount: 0 };
+                shouldAddFreeTime = true;
+                freeDays = 30;
+              } else {
+                updateData = { referralsMonthlyCount: newCount };
+              }
+            } else if (billingCycle === 'BIANNUAL') {
+              const newCount = referrer.referralsBiannualCount + 1;
+              if (newCount >= 2) {
+                updateData = { referralsBiannualCount: 0 };
+                shouldAddFreeTime = true;
+                freeDays = 180;
+              } else {
+                updateData = { referralsBiannualCount: newCount };
+              }
+            } else if (billingCycle === 'ANNUAL') {
+              const newCount = referrer.referralsAnnualCount + 1;
+              if (newCount >= 2) {
+                updateData = { referralsAnnualCount: 0 };
+                shouldAddFreeTime = true;
+                freeDays = 365;
+              } else {
+                updateData = { referralsAnnualCount: newCount };
+              }
+            }
+
+            if (shouldAddFreeTime) {
+              const currentRefExpiry = referrer.subscription.expiryDate || new Date();
+              const newRefExpiry = currentRefExpiry > new Date() 
+                ? new Date(currentRefExpiry.getTime() + freeDays * 24 * 60 * 60 * 1000) 
+                : new Date(Date.now() + freeDays * 24 * 60 * 60 * 1000);
+
+              await prisma.subscription.update({
+                where: { id: referrer.subscription.id },
+                data: { expiryDate: newRefExpiry }
+              });
+
+              await prisma.auditLog.create({
+                data: {
+                  action: "REFERRAL_REWARD_APPLIED",
+                  targetId: referrer.id,
+                  details: `Added ${freeDays} free days for 2 successful referrals.`
+                }
+              });
+            }
+
+            await prisma.user.update({
+              where: { id: referrer.id },
+              data: updateData
             });
           }
         }

@@ -50,7 +50,7 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
       const response = await fetch("/api/paypal/capture-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderID: data.orderID, planType: loadingPlan }),
+        body: JSON.stringify({ orderID: data.orderID, planType: loadingPlan, interval }),
       });
 
       const orderData = await response.json();

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 
 export async function POST(req: Request) {
   try {
@@ -44,6 +45,8 @@ export async function POST(req: Request) {
     const refCookie = cookieStore.get('medicintime_ref');
     const referredByCode = refCookie?.value || null;
 
+    const referralCode = crypto.randomBytes(4).toString('hex').toUpperCase();
+
     // Create user and subscription atomically
     const user = await prisma.user.create({
       data: {
@@ -56,6 +59,7 @@ export async function POST(req: Request) {
         whatsappVerified: false,
         twoFactorSecret: payload,
         referredByCode,
+        referralCode,
 
         subscription: {
           create: {
