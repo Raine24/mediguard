@@ -15,7 +15,7 @@ export default async function AffiliateDashboardPage() {
   if (!affiliate) return null;
 
   const conversionRate = affiliate.clicks > 0 ? ((affiliate.conversions / affiliate.clicks) * 100).toFixed(1) : "0.0";
-  const refLink = `${process.env.NEXTAUTH_URL}/ref/${affiliate.refCode}`;
+  const refLink = `https://medicintime.com/ref/${affiliate.refCode}`;
 
   return (
     <div>
