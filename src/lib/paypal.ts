@@ -35,7 +35,7 @@ async function generateAccessToken(): Promise<string> {
  * Create an order to start the transaction.
  * @see https://developer.paypal.com/docs/api/orders/v2/#orders_create
  */
-export async function createOrder(amount: string, planType: string) {
+export async function createOrder(amount: string, planType: string, interval: string) {
   const accessToken = await generateAccessToken();
   const url = `${base}/v2/checkout/orders`;
   const payload = {
@@ -47,7 +47,7 @@ export async function createOrder(amount: string, planType: string) {
           currency_code: "USD",
           value: amount,
         },
-        description: `Mediguard ${planType} Plan - 1 Month`,
+        description: `MedicinTime ${planType} Plan - ${interval}`,
       },
     ],
   };

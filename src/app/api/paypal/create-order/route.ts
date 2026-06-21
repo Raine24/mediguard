@@ -10,21 +10,41 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { planType } = await req.json();
+    const { planType, interval = "monthly" } = await req.json();
 
     if (!["BASIC", "STANDARD", "FAMILY"].includes(planType)) {
       return NextResponse.json({ error: "Invalid plan type" }, { status: 400 });
     }
+    
+    if (!["monthly", "biannual", "annual"].includes(interval)) {
+      return NextResponse.json({ error: "Invalid interval" }, { status: 400 });
+    }
 
-    const priceMap: Record<string, string> = {
-      BASIC: "4.99",
-      STANDARD: "9.99",
-      FAMILY: "17.99"
+    const priceMap: Record<string, Record<string, string>> = {
+      BASIC: {
+        monthly: "2.00",
+        biannual: "8.00",
+        annual: "18.00"
+      },
+      STANDARD: {
+        monthly: "4.00",
+        biannual: "16.00",
+        annual: "36.00"
+      },
+      FAMILY: {
+        monthly: "8.00",
+        biannual: "32.00",
+        annual: "72.00"
+      }
     };
 
-    const amount = priceMap[planType];
+    const amount = priceMap[planType][interval];
 
-    const { jsonResponse, httpStatusCode } = await createOrder(amount, planType);
+    let intervalLabel = "1 Month";
+    if (interval === "biannual") intervalLabel = "6 Months";
+    if (interval === "annual") intervalLabel = "1 Year";
+
+    const { jsonResponse, httpStatusCode } = await createOrder(amount, planType, intervalLabel);
     
     return NextResponse.json(jsonResponse, { status: httpStatusCode });
   } catch (error) {

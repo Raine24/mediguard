@@ -15,6 +15,7 @@ type SubscriptionProps = {
 
 export default function BillingClient({ subscription }: { subscription: SubscriptionProps }) {
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [interval, setInterval] = useState<"monthly" | "biannual" | "annual">("monthly");
 
   const planType = subscription?.planType || "BASIC";
   const status = subscription?.status || "INACTIVE";
@@ -28,7 +29,7 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
       const response = await fetch("/api/paypal/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planType: plan }),
+        body: JSON.stringify({ planType: plan, interval }),
       });
 
       const orderData = await response.json();
@@ -164,7 +165,30 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
 
       {/* Pricing Table */}
       <div>
-        <h3 className="text-xl font-bold text-gray-900 mb-6">Available Plans</h3>
+        <div className="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+          <h3 className="text-xl font-bold text-gray-900">Available Plans</h3>
+          
+          <div className="flex bg-gray-100 p-1 rounded-lg self-start">
+            <button 
+              onClick={() => setInterval("monthly")}
+              className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${interval === "monthly" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+            >
+              Monthly
+            </button>
+            <button 
+              onClick={() => setInterval("biannual")}
+              className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${interval === "biannual" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+            >
+              6 Months
+            </button>
+            <button 
+              onClick={() => setInterval("annual")}
+              className={`px-4 py-2 rounded-md text-sm font-bold transition-all ${interval === "annual" ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"}`}
+            >
+              Annually
+            </button>
+          </div>
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Basic Plan */}
@@ -176,8 +200,10 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
             )}
             <h4 className="text-lg font-bold text-gray-900 uppercase">Basic</h4>
             <div className="my-4">
-              <span className="text-4xl font-extrabold text-gray-900">$4.99</span>
-              <span className="text-gray-500 font-medium">/month</span>
+              <span className="text-4xl font-extrabold text-gray-900">
+                ${interval === "monthly" ? "2.00" : interval === "biannual" ? "8.00" : "18.00"}
+              </span>
+              <span className="text-gray-500 font-medium">/{interval === "monthly" ? "month" : interval === "biannual" ? "6 months" : "year"}</span>
             </div>
             <ul className="space-y-3 mb-8 flex-1">
               <li className="flex items-start gap-2 text-sm text-gray-700">
@@ -240,8 +266,10 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
             )}
             <h4 className="text-lg font-bold text-teal-700 uppercase">Standard</h4>
             <div className="my-4">
-              <span className="text-4xl font-extrabold text-gray-900">$9.99</span>
-              <span className="text-gray-500 font-medium">/month</span>
+              <span className="text-4xl font-extrabold text-gray-900">
+                ${interval === "monthly" ? "4.00" : interval === "biannual" ? "16.00" : "36.00"}
+              </span>
+              <span className="text-gray-500 font-medium">/{interval === "monthly" ? "month" : interval === "biannual" ? "6 months" : "year"}</span>
             </div>
             <ul className="space-y-3 mb-8 flex-1">
               <li className="flex items-start gap-2 text-sm text-gray-700 font-medium">
@@ -300,8 +328,10 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
             )}
             <h4 className="text-lg font-bold text-teal-400 uppercase">Family</h4>
             <div className="my-4">
-              <span className="text-4xl font-extrabold text-white">$17.99</span>
-              <span className="text-gray-400 font-medium">/month</span>
+              <span className="text-4xl font-extrabold text-white">
+                ${interval === "monthly" ? "8.00" : interval === "biannual" ? "32.00" : "72.00"}
+              </span>
+              <span className="text-gray-400 font-medium">/{interval === "monthly" ? "month" : interval === "biannual" ? "6 months" : "year"}</span>
             </div>
             <ul className="space-y-3 mb-8 flex-1">
               <li className="flex items-start gap-2 text-sm text-gray-300">

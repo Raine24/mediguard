@@ -2348,13 +2348,10 @@
         <h2 class="section-title reveal delay-1" id="pricing-heading">Simple plans for <span class="accent">everyone.</span></h2>
         <p class="section-subtitle reveal delay-2" style="margin: 12px auto 0; text-align:center;">Cancel anytime. Try Basic free for 7 days.</p>
         
-        <div class="billing-toggle-wrap reveal delay-2">
-          <span class="toggle-label active" id="label-monthly">Monthly</span>
-          <label class="switch">
-            <input type="checkbox" id="billing-toggle">
-            <span class="slider"></span>
-          </label>
-          <span class="toggle-label" id="label-annual">Annually <span class="save-badge">Save ~3 mos</span></span>
+        <div class="billing-toggle-wrap reveal delay-2" style="display: flex; justify-content: center; gap: 8px; background: rgba(13,61,86,0.05); padding: 6px; border-radius: 8px; width: max-content; margin: 0 auto;">
+          <button class="toggle-btn active" data-interval="monthly" style="border: none; background: #fff; padding: 8px 20px; border-radius: 6px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; font-weight: bold; color: var(--charcoal); transition: all 0.2s;">Monthly</button>
+          <button class="toggle-btn" data-interval="biannual" style="border: none; background: transparent; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; color: var(--charcoal-soft); transition: all 0.2s;">6 Months</button>
+          <button class="toggle-btn" data-interval="annual" style="border: none; background: transparent; padding: 8px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; color: var(--charcoal-soft); transition: all 0.2s;">Annually</button>
         </div>
       </div>
 
@@ -2366,7 +2363,7 @@
           <p class="pricing-desc">Best for patients on a tight budget who just need simple daily reminders.</p>
           <div class="pricing-price">
             <span class="pricing-currency">$</span>
-            <span class="pricing-amount" data-monthly="4.99" data-annual="39.99">4.99</span>
+            <span class="pricing-amount" data-monthly="2.00" data-biannual="8.00" data-annual="18.00">2.00</span>
             <span class="pricing-period"> / month</span>
           </div>
           <div class="pricing-divider"></div>
@@ -2387,7 +2384,7 @@
           <p class="pricing-desc">Best for patients managing multiple conditions or medicines.</p>
           <div class="pricing-price">
             <span class="pricing-currency">$</span>
-            <span class="pricing-amount" data-monthly="9.99" data-annual="79.99">9.99</span>
+            <span class="pricing-amount" data-monthly="4.00" data-biannual="16.00" data-annual="36.00">4.00</span>
             <span class="pricing-period"> / month</span>
           </div>
           <div class="pricing-divider"></div>
@@ -2409,7 +2406,7 @@
           <p class="pricing-desc">Best for families managing medication for elderly parents or multiple members.</p>
           <div class="pricing-price">
             <span class="pricing-currency">$</span>
-            <span class="pricing-amount" data-monthly="17.99" data-annual="143.99">17.99</span>
+            <span class="pricing-amount" data-monthly="8.00" data-biannual="32.00" data-annual="72.00">8.00</span>
             <span class="pricing-period"> / month</span>
           </div>
           <div class="pricing-divider"></div>
@@ -2874,27 +2871,40 @@
     sections.forEach(s => sectionObs.observe(s));
 
     /* ── Pricing Toggle Logic ────────────────────────────── */
-    const toggle = document.getElementById('billing-toggle');
-    const labelMonthly = document.getElementById('label-monthly');
-    const labelAnnual = document.getElementById('label-annual');
+    const toggleBtns = document.querySelectorAll('.toggle-btn');
     const amounts = document.querySelectorAll('.pricing-amount');
     const periods = document.querySelectorAll('.pricing-period');
 
-    if(toggle) {
-      toggle.addEventListener('change', (e) => {
-        if(e.target.checked) {
-          labelMonthly.classList.remove('active');
-          labelAnnual.classList.add('active');
-          amounts.forEach(el => el.textContent = el.getAttribute('data-annual'));
-          periods.forEach(el => el.textContent = ' / year');
-        } else {
-          labelAnnual.classList.remove('active');
-          labelMonthly.classList.add('active');
-          amounts.forEach(el => el.textContent = el.getAttribute('data-monthly'));
-          periods.forEach(el => el.textContent = ' / month');
-        }
+    toggleBtns.forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        // Reset active classes
+        toggleBtns.forEach(b => {
+          b.classList.remove('active');
+          b.style.background = 'transparent';
+          b.style.boxShadow = 'none';
+          b.style.color = 'var(--charcoal-soft)';
+        });
+        
+        // Set active class on clicked
+        const target = e.currentTarget;
+        target.classList.add('active');
+        target.style.background = '#fff';
+        target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+        target.style.color = 'var(--charcoal)';
+        
+        const interval = target.getAttribute('data-interval');
+        
+        amounts.forEach(el => {
+          el.textContent = el.getAttribute(`data-${interval}`);
+        });
+        
+        periods.forEach(el => {
+          if(interval === 'monthly') el.textContent = ' / month';
+          if(interval === 'biannual') el.textContent = ' / 6 months';
+          if(interval === 'annual') el.textContent = ' / year';
+        });
       });
-    }
+    });
 
     /* ── Chat Bot Toggle & Logic ─────────────────────────── */
     const chatBtn = document.getElementById('chat-btn');
