@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import crypto from "crypto";
 import { Copy, CheckCircle, Gift, DollarSign } from "lucide-react";
+import CopyLinkButton from "@/components/dashboard/CopyLinkButton";
 
 export default async function PartnerProgramPage() {
   const session = await getServerSession(authOptions);
@@ -80,13 +81,7 @@ export default async function PartnerProgramPage() {
                   value={refLink} 
                   className="flex-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-amber-500 focus:ring-amber-500 sm:text-sm bg-white"
                 />
-                <button 
-                  // In a real app, you'd add a client-side onClick for clipboard copying
-                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500"
-                  onClick="navigator.clipboard.writeText('${refLink}')"
-                >
-                  <Copy className="w-4 h-4" />
-                </button>
+                <CopyLinkButton link={refLink} />
               </div>
             </div>
 
