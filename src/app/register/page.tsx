@@ -127,7 +127,7 @@ export default function RegisterPage() {
       <div className="min-h-screen bg-gray-50 flex flex-col justify-center pt-28 pb-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="flex justify-center">
-            <img src="https://i.ibb.co/wNLd8JwW/mediguard-logo.png" alt="MedicinTime Logo" className="h-16 sm:h-20 w-auto object-contain" />
+            <img src="https://i.ibb.co/hxJd2DwS/medicintime-logo.png" alt="MedicinTime Logo" className="h-16 sm:h-20 w-auto object-contain" />
           </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Create your account

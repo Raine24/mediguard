@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   title: "MedicinTime | Dashboard",
   description: "Manage your personalized automated medication and pill reminders.",
   keywords: "medication reminder, pill reminder, medicine alert system",
+  icons: {
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
+  },
 };
 
 import CookieConsent from "@/components/layout/CookieConsent";
