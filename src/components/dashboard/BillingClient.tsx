@@ -282,7 +282,7 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
               </li>
               <li className="flex items-start gap-2 text-sm text-gray-700">
                 <CheckCircle2 className="w-5 h-5 text-teal-500 shrink-0" />
-                WhatsApp + SMS fallback
+                Reliable WhatsApp delivery
               </li>
               <li className="flex items-start gap-2 text-sm text-gray-700">
                 <CheckCircle2 className="w-5 h-5 text-teal-500 shrink-0" />
@@ -344,7 +344,7 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
               </li>
               <li className="flex items-start gap-2 text-sm text-gray-300">
                 <CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0" />
-                WhatsApp + SMS fallback for all
+                Reliable WhatsApp delivery for all
               </li>
               <li className="flex items-start gap-2 text-sm text-gray-300">
                 <CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0" />
