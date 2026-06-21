@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     if (messageStr.includes("play audio")) {
       console.log(`[Webhook] User ${formattedNumber} requested audio. Sending...`);
 
-      const audioUrl = "https://mediguard-f3zn.vercel.app/audio.mp3";
+      const audioUrl = "https://medicintime-f3zn.vercel.app/audio.mp3";
 
       // Send the audio file back
       const response = await sendWhatsAppAudio(formattedNumber, audioUrl);

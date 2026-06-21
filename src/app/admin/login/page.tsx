@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
           <div className="w-16 h-16 bg-teal-500/10 rounded-full flex items-center justify-center mb-4">
             <Shield className="w-8 h-8 text-teal-400" />
           </div>
-          <h1 className="text-2xl font-bold text-white">MediGuard Admin</h1>
+          <h1 className="text-2xl font-bold text-white">MedicinTime Admin</h1>
           <p className="text-gray-400 text-sm mt-1">Secure Staff Portal</p>
         </div>
 
@@ -77,7 +77,7 @@ export default function AdminLoginPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full bg-gray-900 border border-gray-700 text-white rounded-xl pl-12 pr-4 py-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all outline-none"
-                    placeholder="you@mediguard.com"
+                    placeholder="you@medicintime.com"
                   />
                 </div>
               </div>

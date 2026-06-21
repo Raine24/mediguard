@@ -81,10 +81,10 @@ export default async function AffiliateDashboardPage() {
             </div>
             
             <div className="mt-6 flex gap-3">
-              <a href={`https://wa.me/?text=Get%20medication%20reminders%20on%20WhatsApp%20with%20MediGuard!%20Sign%20up%20here:%20${encodeURIComponent(refLink)}`} target="_blank" rel="noreferrer" className="text-sm bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-medium transition-colors">
+              <a href={`https://wa.me/?text=Get%20medication%20reminders%20on%20WhatsApp%20with%20MedicinTime!%20Sign%20up%20here:%20${encodeURIComponent(refLink)}`} target="_blank" rel="noreferrer" className="text-sm bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-medium transition-colors">
                 Share on WhatsApp
               </a>
-              <a href={`https://twitter.com/intent/tweet?text=Check%20out%20MediGuard!&url=${encodeURIComponent(refLink)}`} target="_blank" rel="noreferrer" className="text-sm bg-blue-100 text-blue-700 hover:bg-blue-200 px-4 py-2 rounded-lg font-medium transition-colors">
+              <a href={`https://twitter.com/intent/tweet?text=Check%20out%20MedicinTime!&url=${encodeURIComponent(refLink)}`} target="_blank" rel="noreferrer" className="text-sm bg-blue-100 text-blue-700 hover:bg-blue-200 px-4 py-2 rounded-lg font-medium transition-colors">
                 Share on Twitter
               </a>
             </div>

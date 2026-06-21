@@ -105,7 +105,7 @@ export default function OverviewDashboard() {
               const url = window.URL.createObjectURL(blob);
               const a = document.createElement('a');
               a.href = url;
-              a.download = `mediguard-report-${new Date().toISOString().split('T')[0]}.csv`;
+              a.download = `medicintime-report-${new Date().toISOString().split('T')[0]}.csv`;
               a.click();
             }} 
             className="flex items-center gap-2 px-4 py-2 bg-gray-50 text-gray-700 border border-gray-200 rounded-xl text-sm font-semibold hover:bg-gray-100 transition-colors">

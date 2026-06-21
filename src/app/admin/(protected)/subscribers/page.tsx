@@ -122,7 +122,7 @@ export default function SubscriberManagement() {
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `mediguard_subscribers_${new Date().toISOString().split('T')[0]}.csv`;
+    a.download = `medicintime_subscribers_${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
   };
 

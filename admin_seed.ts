@@ -5,7 +5,7 @@ import { authenticator } from 'otplib';
 const prisma = new PrismaClient();
 
 async function main() {
-  const email = 'superadmin@mediguard.com';
+  const email = 'superadmin@medicintime.com';
   const password = '12345superadmin';
   const hashedPassword = await bcrypt.hash(password, 10);
   

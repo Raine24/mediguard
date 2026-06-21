@@ -34,7 +34,7 @@ export default function QRCodeWrapper({ textToCopy, textForQR }: { textToCopy?: 
         )}
         <a 
           href={qrSrc} 
-          download="mediguard-qr.png"
+          download="medicintime-qr.png"
           className="mt-2 text-sm flex items-center text-teal-600 hover:text-teal-700 font-medium"
         >
           <Download className="w-4 h-4 mr-1" /> Download

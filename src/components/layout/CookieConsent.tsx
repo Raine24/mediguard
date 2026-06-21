@@ -8,7 +8,7 @@ export default function CookieConsent() {
   const [isClosing, setIsClosing] = useState(false);
 
   useEffect(() => {
-    const consent = localStorage.getItem("mediguard_cookie_consent");
+    const consent = localStorage.getItem("medicintime_cookie_consent");
     if (!consent) {
       // Delay showing the banner slightly for a smoother, less intrusive entry
       const timer = setTimeout(() => setShow(true), 1200);
@@ -21,7 +21,7 @@ export default function CookieConsent() {
   const handleAccept = () => {
     setIsClosing(true);
     setTimeout(() => {
-      localStorage.setItem("mediguard_cookie_consent", "accepted");
+      localStorage.setItem("medicintime_cookie_consent", "accepted");
       setShow(false);
     }, 400); // match animation duration
   };
@@ -29,7 +29,7 @@ export default function CookieConsent() {
   const handleDecline = () => {
     setIsClosing(true);
     setTimeout(() => {
-      localStorage.setItem("mediguard_cookie_consent", "essential_only");
+      localStorage.setItem("medicintime_cookie_consent", "essential_only");
       setShow(false);
     }, 400);
   };

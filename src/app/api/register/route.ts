@@ -41,7 +41,7 @@ export async function POST(req: Request) {
 
     // Check for referral cookie
     const cookieStore = await cookies();
-    const refCookie = cookieStore.get('mediguard_ref');
+    const refCookie = cookieStore.get('medicintime_ref');
     const referredByCode = refCookie?.value || null;
 
     // Create user and subscription atomically
