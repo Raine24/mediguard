@@ -64,9 +64,9 @@ export async function POST(req: Request) {
         subscription: {
           create: {
             planType: planType || 'BASIC',
-            status: 'ACTIVE', // 7-day free trial
+            status: 'ACTIVE', // 3-day free trial
             startDate: new Date(),
-            expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+            expiryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000)
           }
         }
       },
