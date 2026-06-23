@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
           <div className="w-16 h-16 bg-teal-500/10 rounded-full flex items-center justify-center mb-4">
             <Shield className="w-8 h-8 text-teal-400" />
           </div>
-          <h1 className="text-2xl font-bold text-white">MedicinTime Admin</h1>
+          <h1 className="text-2xl font-bold text-white">MedicINtime Admin</h1>
           <p className="text-gray-400 text-sm mt-1">Secure Staff Portal</p>
         </div>
 

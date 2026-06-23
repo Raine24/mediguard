@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MedicinTime | Dashboard",
+  title: "MedicINtime | Dashboard",
   description: "Manage your personalized automated medication and pill reminders.",
   keywords: "medication reminder, pill reminder, medicine alert system",
   icons: {

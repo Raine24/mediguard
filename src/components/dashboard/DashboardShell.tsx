@@ -48,7 +48,7 @@ export default function DashboardShell({
           <div className="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
             M
           </div>
-          <span className="text-xl font-bold text-gray-900 tracking-tight">MedicinTime</span>
+          <span className="text-xl font-bold text-gray-900 tracking-tight">MedicINtime</span>
         </div>
         
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -111,7 +111,7 @@ export default function DashboardShell({
           <div className="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold">
             M
           </div>
-          <span className="text-lg font-bold text-gray-900">MedicinTime</span>
+          <span className="text-lg font-bold text-gray-900">MedicINtime</span>
         </div>
         <div className="flex items-center gap-2">
           <button 

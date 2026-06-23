@@ -30,6 +30,6 @@ export async function sendWhatsAppMessage(to: string, message: string) {
 }
 
 export async function sendWelcomeMessage(to: string, name: string) {
-  const message = `Welcome to MedicinTime 💊 Your account is now active! Reply YES to confirm this is the right number for your reminders.`;
+  const message = `Welcome to MedicINtime 💊 Your account is now active! Reply YES to confirm this is the right number for your reminders.`;
   return sendWhatsAppMessage(to, message);
 }

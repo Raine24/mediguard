@@ -92,7 +92,7 @@ export async function retryMessage(logId: string) {
       );
     } else {
       // Fallback freeform text
-      waResponse = await sendWhatsAppMessage(log.user.phone, "This is a retry message from MedicinTime.");
+      waResponse = await sendWhatsAppMessage(log.user.phone, "This is a retry message from MedicINtime.");
     }
 
     const status = waResponse.status === "failed" ? "FAILED" : "DELIVERED";

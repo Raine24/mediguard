@@ -11,9 +11,9 @@ export default function AffiliateLandingPage() {
         {/* Hero Section */}
         <div className="bg-slate-900 text-white pt-32 pb-20 px-6">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">Partner with MedicinTime</h1>
+            <h1 className="text-4xl md:text-6xl font-bold mb-6">Partner with MedicINtime</h1>
             <p className="text-xl md:text-2xl text-slate-300 mb-10">
-              Join our affiliate program and earn a recurring 20% commission for every patient, family, or clinic you refer to MedicinTime.
+              Join our affiliate program and earn a recurring 20% commission for every patient, family, or clinic you refer to MedicINtime.
             </p>
             <Link 
               href="/affiliates/register" 
@@ -51,7 +51,7 @@ export default function AffiliateLandingPage() {
                   <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                 </div>
                 <h3 className="text-xl font-bold mb-3 text-slate-800">Help Save Lives</h3>
-                <p className="text-slate-600">By promoting MedicinTime, you are helping patients take their medication on time. It's a product you can be proud to recommend.</p>
+                <p className="text-slate-600">By promoting MedicINtime, you are helping patients take their medication on time. It's a product you can be proud to recommend.</p>
               </div>
             </div>
           </div>
@@ -75,7 +75,7 @@ export default function AffiliateLandingPage() {
                 <div className="w-16 h-16 shrink-0 bg-slate-900 text-white rounded-full flex items-center justify-center text-2xl font-bold">2</div>
                 <div>
                   <h3 className="text-2xl font-bold mb-2 text-slate-800">Share Your Link</h3>
-                  <p className="text-slate-600 text-lg">Use our ready-made marketing materials to promote MedicinTime to your audience via social media, blog posts, or directly to patients in clinics.</p>
+                  <p className="text-slate-600 text-lg">Use our ready-made marketing materials to promote MedicINtime to your audience via social media, blog posts, or directly to patients in clinics.</p>
                 </div>
               </div>
               
@@ -92,7 +92,7 @@ export default function AffiliateLandingPage() {
       </main>
 
       <footer className="bg-slate-900 text-slate-400 py-8 text-center text-sm">
-        <p>© {new Date().getFullYear()} MedicinTime Affiliate Program. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} MedicINtime Affiliate Program. All rights reserved.</p>
       </footer>
     </div>
   );

@@ -20,7 +20,7 @@ export default function MarketingPage() {
             <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 relative">
               <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">WhatsApp Message</h3>
               <p className="text-slate-700 text-sm whitespace-pre-line">
-                Hi! I've been using MedicinTime to make sure I never forget to take my medication. It sends me WhatsApp reminders when it's time for my pills. 💊 
+                Hi! I've been using MedicINtime to make sure I never forget to take my medication. It sends me WhatsApp reminders when it's time for my pills. 💊 
                 {"\n\n"}
                 If you or a family member struggle to remember meds, I highly recommend it. You can try it out for free here: [YOUR_LINK]
               </p>
@@ -29,7 +29,7 @@ export default function MarketingPage() {
             <div className="bg-slate-50 p-4 rounded-lg border border-slate-100 relative">
               <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Twitter / X</h3>
               <p className="text-slate-700 text-sm">
-                Never forget your medication again. 🕒 MedicinTime sends automated WhatsApp reminders right to your phone. Super helpful for managing family prescriptions too! Try it out: [YOUR_LINK] #Health #MedicinTime
+                Never forget your medication again. 🕒 MedicINtime sends automated WhatsApp reminders right to your phone. Super helpful for managing family prescriptions too! Try it out: [YOUR_LINK] #Health #MedicINtime
               </p>
             </div>
           </div>
@@ -79,7 +79,7 @@ export default function MarketingPage() {
                   <span className="font-bold">PDF</span>
                 </div>
                 <div>
-                  <h4 className="font-medium text-slate-800">MedicinTime Explainer Flyer</h4>
+                  <h4 className="font-medium text-slate-800">MedicINtime Explainer Flyer</h4>
                   <p className="text-xs text-slate-500">Print-ready A4 format</p>
                 </div>
               </div>

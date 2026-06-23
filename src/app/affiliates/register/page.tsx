@@ -36,7 +36,7 @@ export default function AffiliateRegisterPage() {
         <div className="max-w-xl w-full bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
           <div className="bg-slate-900 px-8 py-10 text-center">
             <h2 className="text-3xl font-extrabold text-white mb-2">Partner Application</h2>
-            <p className="text-slate-300">Join the MedicinTime Affiliate Network and earn recurring revenue.</p>
+            <p className="text-slate-300">Join the MedicINtime Affiliate Network and earn recurring revenue.</p>
           </div>
 
           <div className="px-8 py-10">
@@ -47,7 +47,7 @@ export default function AffiliateRegisterPage() {
                 </div>
                 <h3 className="text-2xl font-bold text-slate-800 mb-4">Application Received</h3>
                 <p className="text-slate-600 mb-8">
-                  Thank you for applying to become a MedicinTime partner. Our team will review your application and notify you via email once approved.
+                  Thank you for applying to become a MedicINtime partner. Our team will review your application and notify you via email once approved.
                 </p>
                 <button 
                   onClick={() => router.push('/')}
@@ -126,7 +126,7 @@ export default function AffiliateRegisterPage() {
                   
                   {/* Promotion Method */}
                   <div className="mb-6">
-                    <label className="block text-sm font-medium text-slate-700 mb-1">How do you plan to promote MedicinTime?</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">How do you plan to promote MedicINtime?</label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                         <Briefcase className="h-5 w-5" />

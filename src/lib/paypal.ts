@@ -47,7 +47,7 @@ export async function createOrder(amount: string, planType: string, interval: st
           currency_code: "USD",
           value: amount,
         },
-        description: `MedicinTime ${planType} Plan - ${interval}`,
+        description: `MedicINtime ${planType} Plan - ${interval}`,
       },
     ],
   };
