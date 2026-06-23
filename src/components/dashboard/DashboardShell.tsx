@@ -24,7 +24,7 @@ const navItems = [
   { name: "History", href: "/dashboard/history", icon: History },
   { name: "Family", href: "/dashboard/family", icon: Users },
   { name: "Billing", href: "/dashboard/billing", icon: CreditCard },
-  { name: "Partner Program", href: "/dashboard/partner", icon: Gift },
+  { name: "Affiliate Program", href: "/dashboard/partner", icon: Gift },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 

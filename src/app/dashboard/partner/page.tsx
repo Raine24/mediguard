@@ -36,7 +36,7 @@ export default async function PartnerProgramPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Partner Program</h1>
+        <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Affiliate Program</h1>
         <p className="mt-2 text-gray-600">Choose how you want to be rewarded for sharing MedicINtime with others.</p>
       </div>
 
