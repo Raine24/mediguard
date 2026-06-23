@@ -93,7 +93,7 @@ export default function SystemSettings() {
 
               <div className="pt-8 border-t border-gray-100">
                 <h2 className="text-lg font-bold text-gray-900 mb-1">SMS Fallback (Twilio)</h2>
-                <p className="text-sm text-gray-500 mb-6">Configure SMS delivery for Standard and Family plans.</p>
+                <p className="text-sm text-gray-500 mb-6">Configure SMS delivery for Standard and Caretaker plans.</p>
                 
                 <div className="space-y-5">
                   <div className="flex items-center justify-between bg-gray-50 p-4 rounded-xl border border-gray-200">

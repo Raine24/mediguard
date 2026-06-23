@@ -106,7 +106,7 @@ export default function RevenueAndBilling() {
   };
 
   const handleSwitchPlan = (subId: string) => {
-    const newPlan = prompt("Enter new plan (BASIC, STANDARD, FAMILY):");
+    const newPlan = prompt("Enter new plan (BASIC, STANDARD, CARETAKER):");
     if (!newPlan || !['BASIC', 'STANDARD', 'FAMILY'].includes(newPlan.toUpperCase())) return alert("Invalid plan");
     const reason = prompt("Enter reason for plan switch:");
     if (!reason) return;

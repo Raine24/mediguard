@@ -23,7 +23,7 @@ const navItems = [
   { name: "Home", href: "/dashboard", icon: Home },
   { name: "Medicines", href: "/dashboard/medicines", icon: Pill },
   { name: "History", href: "/dashboard/history", icon: History },
-  { name: "Family", href: "/dashboard/family", icon: Users },
+  { name: "Caretaker", href: "/dashboard/family", icon: Users },
   { name: "Billing", href: "/dashboard/billing", icon: CreditCard },
   { name: "Refer a Friend", href: "/dashboard/referrals", icon: UserPlus },
   { name: "Affiliate Program", href: "/dashboard/partner", icon: Gift },

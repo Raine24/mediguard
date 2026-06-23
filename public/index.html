@@ -2121,6 +2121,7 @@
       <a href="/" role="listitem">Home</a>
       <a href="#how-it-works" role="listitem">How It Works</a>
       <a href="#pricing" role="listitem">Pricing</a>
+      <a href="/login" role="listitem">Referral Program</a>
       <a href="/affiliates" role="listitem">Affiliate Program</a>
       <a href="#contact" role="listitem">Contact</a>
     </div>
@@ -2145,6 +2146,7 @@
     <a href="/" class="mobile-link" style="font-weight: 600; font-size: 1.1rem; color: var(--charcoal); text-decoration: none; border-bottom: 1px solid rgba(13,61,86,.05); padding-bottom: 12px;">Home</a>
     <a href="#how-it-works" class="mobile-link" style="font-weight: 600; font-size: 1.1rem; color: var(--charcoal); text-decoration: none; border-bottom: 1px solid rgba(13,61,86,.05); padding-bottom: 12px;">How It Works</a>
     <a href="#pricing" class="mobile-link" style="font-weight: 600; font-size: 1.1rem; color: var(--charcoal); text-decoration: none; border-bottom: 1px solid rgba(13,61,86,.05); padding-bottom: 12px;">Pricing</a>
+    <a href="/login" class="mobile-link" style="font-weight: 600; font-size: 1.1rem; color: var(--charcoal); text-decoration: none; border-bottom: 1px solid rgba(13,61,86,.05); padding-bottom: 12px;">Referral Program</a>
     <a href="/affiliates" class="mobile-link" style="font-weight: 600; font-size: 1.1rem; color: var(--charcoal); text-decoration: none; border-bottom: 1px solid rgba(13,61,86,.05); padding-bottom: 12px;">Affiliate Program</a>
     <a href="#contact" class="mobile-link" style="font-weight: 600; font-size: 1.1rem; color: var(--charcoal); text-decoration: none; padding-bottom: 8px;">Contact</a>
     <a href="/login" class="mobile-link" style="font-weight: 600; font-size: 1.1rem; color: var(--charcoal); text-decoration: none; border-bottom: 1px solid rgba(13,61,86,.05); padding-bottom: 12px;">Log In</a>
@@ -2424,7 +2426,7 @@
 
         <!-- FAMILY TIER -->
         <div class="pricing-card">
-          <div class="pricing-badge">Family</div>
+          <div class="pricing-badge">Caretaker</div>
           <p class="pricing-desc">Best for families managing medication for elderly parents or multiple members.</p>
           <div class="pricing-price">
             <span class="pricing-currency">$</span>
@@ -2432,12 +2434,12 @@
             <span class="pricing-period"> / month</span>
           </div>
           <div class="pricing-divider"></div>
-          <ul class="pricing-features" aria-label="Family plan features">
+          <ul class="pricing-features" aria-label="Caretaker plan features">
             <li class="pricing-feature"><div class="pricing-check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#1C1C1E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div><strong>Up to 4 patients (4 numbers)</strong></li>
             <li class="pricing-feature"><div class="pricing-check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#1C1C1E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Up to 10 medicines per person</li>
             <li class="pricing-feature"><div class="pricing-check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#1C1C1E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Unlimited reminders per person</li>
             <li class="pricing-feature"><div class="pricing-check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#1C1C1E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Reliable WhatsApp delivery for all</li>
-            <li class="pricing-feature"><div class="pricing-check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#1C1C1E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Family admin dashboard</li>
+            <li class="pricing-feature"><div class="pricing-check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#1C1C1E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Caretaker admin dashboard</li>
             <li class="pricing-feature"><div class="pricing-check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#1C1C1E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Priority support</li>
             <li class="pricing-feature"><div class="pricing-check" aria-hidden="true"><svg viewBox="0 0 10 10" fill="none"><path d="M2 5l2.5 2.5L8 3" stroke="#1C1C1E" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>Expiry reminders for all</li>
           </ul>
@@ -2665,6 +2667,7 @@
             <a href="#hero">Home</a>
             <a href="#how-it-works">How It Works</a>
             <a href="#pricing">Pricing</a>
+            <a href="/login">Referral Program</a>
             <a href="/affiliates">Affiliate Program</a>
             <a href="#contact">Contact</a>
           </nav>
@@ -2966,7 +2969,7 @@
           const lower = text.toLowerCase();
           
           if(lower.includes('price') || lower.includes('cost') || lower.includes('pay') || lower.includes('plan')) {
-            reply = "We have a Free trial to get started, a $2/mo Basic plan, and an $8/mo Family plan! Check our Pricing section for more details.";
+            reply = "We have a Free trial to get started, a $2/mo Basic plan, and an $8/mo Caretaker plan! Check our Pricing section for more details.";
           } else if(lower.includes('how') || lower.includes('work')) {
             reply = "You just add your medicines, set a schedule, and we'll send you reminders via WhatsApp or SMS. It's that simple!";
           } else if(lower.includes('whatsapp') || lower.includes('sms') || lower.includes('message')) {

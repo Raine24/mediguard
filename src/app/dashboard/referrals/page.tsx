@@ -58,7 +58,7 @@ export default async function ReferralsPage() {
   const nextTier = tiers[currentTierIndex] || tiers[2];
 
   return (
-    <DashboardShell user={session.user}>
+    <>
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Refer a Friend</h1>
@@ -223,6 +223,6 @@ export default async function ReferralsPage() {
 
         </div>
       </div>
-    </DashboardShell>
+    </>
   );
 }

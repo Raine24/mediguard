@@ -75,11 +75,11 @@ export default function SubscriberManagement() {
       value = parseInt(p, 10);
       if (isNaN(value)) return alert("Invalid number of days");
     } else if (action === "CHANGE_PLAN") {
-      const p = prompt("Enter the new plan (BASIC, STANDARD, or FAMILY):");
+      const p = prompt("Enter the new plan (BASIC, STANDARD, or CARETAKER):");
       if (!p) return;
       const uppercaseP = p.toUpperCase();
-      if (!["BASIC", "STANDARD", "FAMILY"].includes(uppercaseP)) {
-        return alert("Invalid plan. Must be BASIC, STANDARD, or FAMILY.");
+      if (!["BASIC", "STANDARD", "CARETAKER", "FAMILY"].includes(uppercaseP)) {
+        return alert("Invalid plan. Must be BASIC, STANDARD, or CARETAKER.");
       }
       value = uppercaseP;
     }
@@ -137,7 +137,7 @@ export default function SubscriberManagement() {
 
   const getPlanBadge = (plan: string) => {
     switch (plan.toUpperCase()) {
-      case "FAMILY": return <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-md text-[10px] font-bold uppercase tracking-wider">Family</span>;
+      case "FAMILY": return <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-md text-[10px] font-bold uppercase tracking-wider">Caretaker</span>;
       case "STANDARD": return <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-[10px] font-bold uppercase tracking-wider">Standard</span>;
       case "BASIC": return <span className="px-2 py-1 bg-slate-100 text-slate-700 rounded-md text-[10px] font-bold uppercase tracking-wider">Basic</span>;
       default: return <span className="px-2 py-1 bg-gray-100 text-gray-700 rounded-md text-[10px] font-bold uppercase tracking-wider">{plan}</span>;
@@ -173,7 +173,7 @@ export default function SubscriberManagement() {
               <option value="All">All Plans</option>
               <option value="Basic">Basic</option>
               <option value="Standard">Standard</option>
-              <option value="Family">Family</option>
+              <option value="Family">Caretaker</option>
             </select>
 
             <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)} className="bg-white border border-gray-300 rounded-xl px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-teal-500">

@@ -65,7 +65,7 @@ export async function getFinancialMetrics() {
   const planDistribution = [
     { name: 'Basic', value: basicCount || 1 }, // Fallback to 1 if empty for UI aesthetics if totally empty
     { name: 'Standard', value: standardCount || 1 },
-    { name: 'Family', value: familyCount || 1 },
+    { name: 'Caretaker', value: familyCount || 1 },
   ];
 
   // 6. MRR and ARR Calculation (Simple approximation based on active subs)

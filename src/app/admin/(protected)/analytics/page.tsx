@@ -355,7 +355,7 @@ export default function Analytics() {
                       <th className="px-6 py-4">Total Users</th>
                       <th className="px-6 py-4">Basic</th>
                       <th className="px-6 py-4">Standard</th>
-                      <th className="px-6 py-4">Family</th>
+                      <th className="px-6 py-4">Caretaker</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100">

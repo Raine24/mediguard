@@ -8,199 +8,186 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(cuid())
-  role     String @default("PATIENT") // PATIENT, SUPER_ADMIN, ADMIN, SUPPORT_AGENT
-  name     String
-  email    String @unique
-  password String
-  phone    String // WhatsApp number
-  country  String @default("Unknown")
-  timezone String @default("UTC")
-
-  // Admin & Security Fields
-  whatsappVerified    Boolean   @default(false)
-  twoFactorSecret     String?
-  twoFactorEnabled    Boolean   @default(false)
-  failedLoginAttempts Int       @default(0)
-  lockedUntil         DateTime?
-  lastLogin           DateTime?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  subscription  Subscription?
-  medicines     Medicine[]
-  familyMembers FamilyMember[]
-  messageLogs   MessageLog[]
-
-  // Admin relations
-  adminNotesGiven    AdminNote[]            @relation("NoteAuthor")
-  adminNotesReceived AdminNote[]            @relation("NoteTarget")
-  supportTickets     SupportTicket[]        @relation("TicketCreator")
-  assignedTickets    SupportTicket[]        @relation("TicketAssignee")
-  ticketMessages     SupportTicketMessage[]
-  auditLogs          AuditLog[]
-
-  // Referral Program
-  referralCode             String?    @unique
-  freeMonthsEarned         Int        @default(0)
-  freeMonthsApplied        Int        @default(0)
-  totalSuccessfulReferrals Int        @default(0)
-  referralsGiven           Referral[] @relation("ReferredUsers")
-  referralReceived         Referral?  @relation("ReferredBy")
-
-  // Affiliate Relations
-  referredByCode   String?
-  affiliateProfile AffiliateProfile?
+  id                       String                 @id @default(cuid())
+  role                     String                 @default("PATIENT")
+  name                     String
+  email                    String                 @unique
+  password                 String
+  phone                    String
+  country                  String                 @default("Unknown")
+  timezone                 String                 @default("UTC")
+  createdAt                DateTime               @default(now())
+  updatedAt                DateTime               @updatedAt
+  failedLoginAttempts      Int                    @default(0)
+  lastLogin                DateTime?
+  lockedUntil              DateTime?
+  twoFactorEnabled         Boolean                @default(false)
+  twoFactorSecret          String?
+  whatsappVerified         Boolean                @default(false)
+  referredByCode           String?
+  referralCode             String?                @unique
+  freeMonthsApplied        Int                    @default(0)
+  freeMonthsEarned         Int                    @default(0)
+  totalSuccessfulReferrals Int                    @default(0)
+  adminNotesGiven          AdminNote[]            @relation("NoteAuthor")
+  adminNotesReceived       AdminNote[]            @relation("NoteTarget")
+  affiliateProfile         AffiliateProfile?
+  auditLogs                AuditLog[]
+  familyMembers            FamilyMember[]
+  medicines                Medicine[]
+  messageLogs              MessageLog[]
+  referralReceived         Referral?              @relation("ReferredBy")
+  referralsGiven           Referral[]             @relation("ReferredUsers")
+  subscription             Subscription?
+  assignedTickets          SupportTicket[]        @relation("TicketAssignee")
+  supportTickets           SupportTicket[]        @relation("TicketCreator")
+  ticketMessages           SupportTicketMessage[]
 }
 
 model Subscription {
   id                   String    @id @default(cuid())
   userId               String    @unique
-  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  planType             String // BASIC, STANDARD, FAMILY
-  status               String    @default("INACTIVE") // ACTIVE, INACTIVE, EXPIRED, CANCELLED
+  planType             String
+  status               String    @default("INACTIVE")
   paypalSubscriptionId String?   @unique
   startDate            DateTime?
   expiryDate           DateTime?
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
+  user                 User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PaymentTransaction {
   id            String   @id @default(cuid())
   userId        String
   planType      String
-  billingCycle  String // MONTHLY, ANNUAL
+  billingCycle  String
   amount        Float
   currency      String   @default("USD")
-  method        String // e.g., "Visa 4242"
+  method        String
   gatewayId     String?  @unique
-  status        String // SUCCEEDED, FAILED, REFUNDED, DISPUTED
+  status        String
   failureReason String?
   receiptUrl    String?
   createdAt     DateTime @default(now())
 }
 
 model Medicine {
-  id             String        @id @default(cuid())
+  id             String         @id @default(cuid())
   userId         String
-  user           User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  familyMemberId String?
-  familyMember   FamilyMember? @relation(fields: [familyMemberId], references: [id], onDelete: Cascade)
   name           String
   dosage         String?
-  daysActive     String        @default("EVERY_DAY") // EVERY_DAY, WEEKDAYS, WEEKENDS, CUSTOM
+  daysActive     String         @default("EVERY_DAY")
   note           String?
-  status         String        @default("ACTIVE") // ACTIVE, PAUSED
-  createdAt      DateTime      @default(now())
-  updatedAt      DateTime      @updatedAt
-
-  reminders   ReminderTime[]
-  messageLogs MessageLog[]
+  status         String         @default("ACTIVE")
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  familyMemberId String?
+  familyMember   FamilyMember?  @relation(fields: [familyMemberId], references: [id], onDelete: Cascade)
+  user           User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messageLogs    MessageLog[]
+  reminders      ReminderTime[]
 }
 
 model ReminderTime {
   id         String   @id @default(cuid())
   medicineId String
+  time       String
   medicine   Medicine @relation(fields: [medicineId], references: [id], onDelete: Cascade)
-  time       String // Format: HH:mm (e.g. 09:00, 14:30)
 }
 
 model FamilyMember {
-  id              String   @id @default(cuid())
+  id              String     @id @default(cuid())
   accountHolderId String
-  accountHolder   User     @relation(fields: [accountHolderId], references: [id], onDelete: Cascade)
   name            String
   phone           String
   relationship    String
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-
-  medicines Medicine[]
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  accountHolder   User       @relation(fields: [accountHolderId], references: [id], onDelete: Cascade)
+  medicines       Medicine[]
 }
 
 model MessageLog {
   id           String    @id @default(cuid())
   userId       String
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  medicineId   String?
-  medicine     Medicine? @relation(fields: [medicineId], references: [id], onDelete: SetNull)
-  type         String // REMINDER, WELCOME, EXPIRY_WARNING, EXPIRY, POST_EXPIRY, NUMBER_VERIFICATION
-  channel      String // WHATSAPP, SMS
-  status       String // DELIVERED, FAILED, PENDING
+  type         String
+  channel      String
+  status       String
   errorReason  String?
   scheduledFor DateTime?
   sentAt       DateTime  @default(now())
+  medicineId   String?
+  medicine     Medicine? @relation(fields: [medicineId], references: [id])
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model SupportTicket {
-  id         String   @id @default(cuid())
+  id         String                 @id @default(cuid())
   userId     String
-  user       User     @relation("TicketCreator", fields: [userId], references: [id], onDelete: Cascade)
   assigneeId String?
-  assignee   User?    @relation("TicketAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
   subject    String
-  status     String   @default("OPEN") // OPEN, IN_PROGRESS, RESOLVED
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-
-  messages SupportTicketMessage[]
+  status     String                 @default("OPEN")
+  createdAt  DateTime               @default(now())
+  updatedAt  DateTime               @updatedAt
+  assignee   User?                  @relation("TicketAssignee", fields: [assigneeId], references: [id])
+  user       User                   @relation("TicketCreator", fields: [userId], references: [id], onDelete: Cascade)
+  messages   SupportTicketMessage[]
 }
 
 model SupportTicketMessage {
   id         String        @id @default(cuid())
   ticketId   String
-  ticket     SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
   senderId   String
-  sender     User          @relation(fields: [senderId], references: [id], onDelete: Cascade)
   message    String
   isInternal Boolean       @default(false)
   createdAt  DateTime      @default(now())
+  sender     User          @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  ticket     SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
 }
 
 model AdminNote {
   id        String   @id @default(cuid())
   patientId String
-  patient   User     @relation("NoteTarget", fields: [patientId], references: [id], onDelete: Cascade)
   adminId   String
-  admin     User     @relation("NoteAuthor", fields: [adminId], references: [id], onDelete: Cascade)
   note      String
   createdAt DateTime @default(now())
+  admin     User     @relation("NoteAuthor", fields: [adminId], references: [id], onDelete: Cascade)
+  patient   User     @relation("NoteTarget", fields: [patientId], references: [id], onDelete: Cascade)
 }
 
 model AuditLog {
   id        String   @id @default(cuid())
   adminId   String?
-  admin     User?    @relation(fields: [adminId], references: [id], onDelete: SetNull)
   ipAddress String?
   device    String?
-  action    String // e.g. "ACTIVATED_SUBSCRIPTION", "DELETED_USER", "LOGIN_FAILED"
-  targetId  String? // The ID of the record that was changed
-  details   String? // JSON string of changes
+  action    String
+  targetId  String?
+  details   String?
   createdAt DateTime @default(now())
+  admin     User?    @relation(fields: [adminId], references: [id])
 }
 
 model SystemSetting {
   id        String   @id @default(cuid())
   key       String   @unique
-  value     String // JSON string to support complex structures or simple text
+  value     String
   updatedAt DateTime @updatedAt
 }
 
 model MessageTemplate {
   id           String   @id @default(cuid())
   name         String   @unique
-  category     String // REMINDER, WELCOME, EXPIRY
+  category     String
   content      String
-  metaStatus   String   @default("PENDING") // APPROVED, PENDING, REJECTED
+  metaStatus   String   @default("PENDING")
   lastEditedBy String
   updatedAt    DateTime @updatedAt
 }
 
 model BroadcastMessage {
   id           String    @id @default(cuid())
-  audience     String // ALL_ACTIVE, SPECIFIC_PLAN, etc.
+  audience     String
   content      String
   sentCount    Int       @default(0)
   failureCount Int       @default(0)
@@ -210,75 +197,74 @@ model BroadcastMessage {
 }
 
 model AffiliateProfile {
-  id                   String   @id @default(cuid())
-  userId               String   @unique
-  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  refCode              String   @unique
-  status               String   @default("PENDING") // PENDING, ACTIVE, SUSPENDED
+  id                   String                @id @default(cuid())
+  userId               String                @unique
+  refCode              String                @unique
+  status               String                @default("PENDING")
   promotionMethod      String
-  payoutMethod         String // PAYPAL, BANK
-  payoutDetails        String // Email or bank details
-  commissionType       String   @default("RECURRING") // RECURRING, ONE_TIME
-  customCommissionRate Float? // Override default rate
-  totalEarnings        Float    @default(0)
-  pendingEarnings      Float    @default(0)
-  availableEarnings    Float    @default(0)
-  clicks               Int      @default(0)
-  conversions          Int      @default(0)
-  joinedAt             DateTime @default(now())
-  updatedAt            DateTime @updatedAt
-
+  payoutMethod         String
+  payoutDetails        String
+  commissionType       String                @default("RECURRING")
+  customCommissionRate Float?
+  totalEarnings        Float                 @default(0)
+  pendingEarnings      Float                 @default(0)
+  availableEarnings    Float                 @default(0)
+  clicks               Int                   @default(0)
+  conversions          Int                   @default(0)
+  joinedAt             DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
   affiliateClicks      AffiliateClick[]
   affiliateConversions AffiliateConversion[]
   affiliatePayouts     AffiliatePayout[]
+  user                 User                  @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model AffiliateClick {
   id          String           @id @default(cuid())
   affiliateId String
-  affiliate   AffiliateProfile @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
   ipAddress   String?
   userAgent   String?
   clickedAt   DateTime         @default(now())
+  affiliate   AffiliateProfile @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
 }
 
 model AffiliateConversion {
   id               String           @id @default(cuid())
   affiliateId      String
-  affiliate        AffiliateProfile @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
   referredUserId   String
   planType         String
   paymentAmount    Float
   commissionAmount Float
-  status           String           @default("PENDING") // PENDING, CLEARED, PAID, CANCELLED
+  status           String           @default("PENDING")
   paymentId        String           @unique
   createdAt        DateTime         @default(now())
   clearedAt        DateTime?
+  affiliate        AffiliateProfile @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
 }
 
 model AffiliatePayout {
   id          String           @id @default(cuid())
   affiliateId String
-  affiliate   AffiliateProfile @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
   amount      Float
-  status      String           @default("PENDING") // PENDING, PAID
+  status      String           @default("PENDING")
   method      String
   details     String
   adminNote   String?
   createdAt   DateTime         @default(now())
   paidAt      DateTime?
+  affiliate   AffiliateProfile @relation(fields: [affiliateId], references: [id], onDelete: Cascade)
 }
 
 model Referral {
   id                 String   @id @default(cuid())
   referrerId         String
-  referrer           User     @relation("ReferredUsers", fields: [referrerId], references: [id], onDelete: Cascade)
   referredUserId     String   @unique
-  referredUser       User     @relation("ReferredBy", fields: [referredUserId], references: [id], onDelete: Cascade)
-  status             String   @default("PENDING") // PENDING, PAID, REFUNDED
+  status             String   @default("PENDING")
   planType           String?
   billingCycle       String?
-  rewardContribution Float    @default(0) // Contribution logic for Tier 2 calculation
+  rewardContribution Float    @default(0)
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+  referredUser       User     @relation("ReferredBy", fields: [referredUserId], references: [id], onDelete: Cascade)
+  referrer           User     @relation("ReferredUsers", fields: [referrerId], references: [id], onDelete: Cascade)
 }

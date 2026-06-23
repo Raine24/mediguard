@@ -49,26 +49,26 @@ export default function ReferralLinkWidget({ link }: { link: string }) {
           Give your friends and family the gift of perfect medication adherence. Share your link directly or let them scan your QR code.
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 items-center w-full">
-          <div className="flex-1 bg-gray-50 border border-gray-300 rounded-lg py-3 px-4 text-gray-700 font-mono text-sm overflow-hidden text-ellipsis whitespace-nowrap w-full">
+        <div className="flex flex-col gap-3 w-full">
+          <div className="bg-gray-50 border border-gray-300 rounded-lg py-3 px-4 text-gray-700 font-mono text-sm overflow-hidden text-ellipsis whitespace-nowrap w-full text-center md:text-left">
             {link}
           </div>
-          <div className="flex gap-2 w-full sm:w-auto">
+          <div className="flex flex-col sm:flex-row gap-2 w-full">
             <button 
               onClick={handleCopy}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-teal-600 text-white px-5 py-3 rounded-lg font-medium hover:bg-teal-700 transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 bg-teal-600 text-white px-5 py-3 rounded-lg font-medium hover:bg-teal-700 transition-colors"
             >
-              <Copy className="w-4 h-4" />
+              <Copy className="w-4 h-4 shrink-0" />
               {copied ? "Copied!" : "Copy"}
             </button>
             <a 
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 bg-[#25D366] text-white px-5 py-3 rounded-lg font-medium hover:bg-[#1ebd5b] transition-colors"
+              className="flex-1 flex items-center justify-center gap-2 bg-[#25D366] text-white px-5 py-3 rounded-lg font-medium hover:bg-[#1ebd5b] transition-colors whitespace-nowrap"
             >
-              <MessageCircle className="w-4 h-4" />
-              WhatsApp
+              <MessageCircle className="w-4 h-4 shrink-0" />
+              Share via WhatsApp
             </a>
           </div>
         </div>

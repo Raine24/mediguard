@@ -326,7 +326,7 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
                 Current Plan
               </span>
             )}
-            <h4 className="text-lg font-bold text-teal-400 uppercase">Family</h4>
+            <h4 className="text-lg font-bold text-teal-400 uppercase">Caretaker</h4>
             <div className="my-4">
               <span className="text-4xl font-extrabold text-white">
                 ${interval === "monthly" ? "8.00" : interval === "biannual" ? "32.00" : "72.00"}
@@ -348,7 +348,7 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
               </li>
               <li className="flex items-start gap-2 text-sm text-gray-300">
                 <CheckCircle2 className="w-5 h-5 text-teal-400 shrink-0" />
-                Family admin dashboard
+                Caretaker admin dashboard
               </li>
             </ul>
             {loadingPlan === 'FAMILY' ? (
@@ -376,7 +376,7 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
                     : 'bg-white text-gray-900 hover:bg-gray-100'
                 }`}
               >
-                {planType === 'FAMILY' ? "Active" : "Upgrade to Family"}
+                {planType === 'FAMILY' ? "Active" : "Upgrade to Caretaker"}
               </button>
             )}
           </div>

@@ -320,7 +320,7 @@ export default function OverviewDashboard() {
                 <select name="plan" className="w-full border border-gray-300 rounded-xl px-4 py-2 focus:ring-2 focus:ring-teal-500 outline-none bg-white">
                   <option value="BASIC">Basic Plan</option>
                   <option value="STANDARD">Standard Plan</option>
-                  <option value="FAMILY">Family Plan</option>
+                  <option value="FAMILY">Caretaker Plan</option>
                 </select>
               </div>
 
