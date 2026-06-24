@@ -179,7 +179,7 @@ export default function AffiliateRegisterPage() {
                     )}
                   </button>
                   <p className="text-xs text-center text-slate-500 mt-4">
-                    By submitting this application, you agree to our Affiliate Terms & Conditions.
+                    By submitting this application, you agree to our <Link href="/terms" className="text-teal-600 hover:underline">Affiliate Terms & Conditions</Link>.
                   </p>
                 </div>
               </form>

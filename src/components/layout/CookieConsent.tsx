@@ -63,7 +63,7 @@ export default function CookieConsent() {
           </div>
           
           <p className="text-gray-600 text-[14px] leading-relaxed mb-6 font-medium">
-            We use strictly necessary cookies to ensure our platform functions securely. We also use optional cookies to improve your experience and manage our affiliate partnerships.
+            We use strictly necessary cookies to ensure our platform functions securely. We also use optional cookies to improve your experience and manage our affiliate partnerships. <a href="/cookies" className="text-teal-600 hover:underline">Read our Cookie Policy.</a>
           </p>
           
           <div className="flex flex-col sm:flex-row gap-3">

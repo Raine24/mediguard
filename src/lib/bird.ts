@@ -92,7 +92,11 @@ export async function sendWhatsAppTemplate(
           ]
         },
         template: {
-          projectId: templateName === "mediguard_voice_alert_v4" ? "c9bb8f9a-1e7b-4a02-8a55-3059952be77c" : namespace,
+          projectId: templateName === "mediguard_voice_alert_v4" 
+            ? "c9bb8f9a-1e7b-4a02-8a55-3059952be77c" 
+            : templateName === "medical_alert_reminder_update"
+              ? "f2b24a57-c1c5-4ba1-88b7-4b0a1ec43e0c"
+              : namespace,
           name: templateName,
           version: "latest",
           locale: "en",
@@ -101,7 +105,7 @@ export async function sendWhatsAppTemplate(
             
             if (templateName === "verification_code") {
               varKey = "otp";
-            } else if (templateName === "mediguard_voice_alert_v4" || templateName === "medical_reminder_alert") {
+            } else if (["mediguard_voice_alert_v4", "medical_reminder_alert", "medical_alert_reminder_update"].includes(templateName)) {
               const keys = ["medicine_name", "dosage"];
               varKey = keys[index] || varKey;
             }
