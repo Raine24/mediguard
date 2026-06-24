@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { registerAffiliate } from '@/actions/affiliates/register';
 import { Building2, User, Mail, Lock, Globe2, Briefcase, CreditCard, ArrowRight } from 'lucide-react';
 import PublicHeader from '@/components/PublicHeader';
