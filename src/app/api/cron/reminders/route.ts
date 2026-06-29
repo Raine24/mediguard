@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendWhatsAppTemplate } from '@/lib/bird';
+import { initiateVoiceReminderCall } from '@/lib/telnyx';
 import { formatInTimeZone } from 'date-fns-tz';
 
 export async function GET(req: Request) {
@@ -80,7 +81,14 @@ export async function GET(req: Request) {
                 [medicine.name, medicine.dosage || "1 dose"]
               );
               
-              // Log the message with the exact scheduledFor time to prevent duplicates
+              // Also trigger the Telnyx Voice Call Reminder
+              const voiceResponse = await initiateVoiceReminderCall(
+                user.phone,
+                medicine.name,
+                medicine.dosage || "1 dose"
+              );
+              
+              // Log the WhatsApp message
               await prisma.messageLog.create({
                 data: {
                   userId: user.id,
@@ -94,7 +102,27 @@ export async function GET(req: Request) {
                 }
               });
 
-              messagesSent.push({ userId: user.id, medicine: medicine.name, time: reminder.time, success: waResponse.status !== 'failed' });
+              // Log the Voice Call
+              await prisma.messageLog.create({
+                data: {
+                  userId: user.id,
+                  medicineId: medicine.id,
+                  type: 'REMINDER',
+                  channel: 'VOICE',
+                  status: voiceResponse.status !== 'failed' ? 'DELIVERED' : 'FAILED',
+                  errorReason: voiceResponse.status !== 'failed' ? null : voiceResponse.error,
+                  scheduledFor: expectedScheduledFor,
+                  sentAt: now,
+                }
+              });
+
+              messagesSent.push({ 
+                userId: user.id, 
+                medicine: medicine.name, 
+                time: reminder.time, 
+                waSuccess: waResponse.status !== 'failed',
+                voiceSuccess: voiceResponse.status !== 'failed' 
+              });
 
               // If this was a one-off SNOOZE reminder, delete it so it doesn't repeat tomorrow
               if (reminder.time.includes('SNOOZE')) {

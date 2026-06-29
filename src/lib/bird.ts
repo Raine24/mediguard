@@ -194,3 +194,57 @@ export async function sendWhatsAppAudio(to: string, audioUrl: string) {
     return { status: "failed", error: error.message || "Unknown error" };
   }
 }
+
+export async function sendVoiceReminder(to: string, medicineName: string, dosage: string) {
+  if (!BIRD_API_KEY) {
+    console.error("Missing Bird.com credentials for voice call.");
+    return { status: "failed", error: "Missing configuration" };
+  }
+
+  const workspaceId = process.env.BIRD_WORKSPACE_ID || "1ebab62d-e613-44e1-b4bb-0e46dc1de459";
+  // The user provided this channel ID for voice
+  const voiceChannelId = "dd4cb7af-a47d-4f50-a4cd-104c6e53f08d";
+
+  const messageText = `Hello! This is a medical alert from Medi Guard. It is time to take your medication: ${medicineName}, dosage: ${dosage}. Please take it now. Have a great day!`;
+
+  try {
+    const response = await fetch(`https://api.bird.com/workspaces/${workspaceId}/channels/${voiceChannelId}/calls`, {
+      method: "POST",
+      headers: {
+        "Authorization": `AccessKey ${BIRD_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        to: to,
+        callFlow: [
+          {
+            options: {
+              text: messageText,
+              voice: "female",
+              language: "en-US"
+            }
+          }
+        ]
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Bird.com Voice Call API Error:", data);
+      return { 
+        status: "failed", 
+        error: data?.message || data?.errors?.[0]?.description || "API request failed" 
+      };
+    }
+
+    return {
+      id: data.id,
+      status: data.status || "accepted"
+    };
+
+  } catch (error: any) {
+    console.error("Failed to send Voice Call via Bird.com:", error);
+    return { status: "failed", error: error.message || "Unknown error" };
+  }
+}

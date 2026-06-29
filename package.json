@@ -10,6 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@messagebird/sdk": "^0.2.0",
     "@noble/hashes": "^2.2.0",
     "@paypal/checkout-server-sdk": "^1.0.3",
     "@paypal/react-paypal-js": "^10.0.0",
@@ -29,6 +30,7 @@
     "react-dom": "19.2.4",
     "recharts": "^3.8.1",
     "tailwind-merge": "^3.6.0",
+    "telnyx": "^7.2.0",
     "twilio": "^6.0.2"
   },
   "devDependencies": {
