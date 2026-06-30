@@ -17,7 +17,13 @@ export async function GET(req: Request) {
 
     // 3. Fetch all active subscriptions with users, medicines, and reminders
     const activeSubscriptions = await prisma.subscription.findMany({
-      where: { status: 'ACTIVE' },
+      where: { 
+        status: 'ACTIVE',
+        OR: [
+          { expiryDate: { gt: now } },
+          { expiryDate: null }
+        ]
+      },
       include: {
         user: {
           include: {

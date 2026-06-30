@@ -113,10 +113,14 @@ export default async function DashboardHome() {
   }
 
   // Subscription logic
-  const isSubActive = user.subscription?.status === "ACTIVE";
-  const daysRemaining = user.subscription?.expiryDate 
+  let isSubActive = user.subscription?.status === "ACTIVE";
+  let daysRemaining = user.subscription?.expiryDate 
     ? differenceInDays(new Date(user.subscription.expiryDate), now)
     : 0;
+
+  if (isSubActive && user.subscription?.expiryDate && isAfter(now, new Date(user.subscription.expiryDate))) {
+    isSubActive = false;
+  }
 
   const showWarning = !isSubActive || daysRemaining <= 7;
 

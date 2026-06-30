@@ -2,6 +2,9 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import DashboardShell from "@/components/dashboard/DashboardShell";
+import SubscriptionGuard from "@/components/dashboard/SubscriptionGuard";
+import { prisma } from "@/lib/prisma";
+import { isAfter } from "date-fns";
 
 export default async function DashboardLayout({
   children,
@@ -10,7 +13,7 @@ export default async function DashboardLayout({
 }) {
   const session = await getServerSession(authOptions);
 
-  if (!session) {
+  if (!session?.user?.id) {
     redirect("/login");
   }
 
@@ -18,9 +21,24 @@ export default async function DashboardLayout({
     redirect("/affiliate/dashboard");
   }
 
+  const user = await prisma.user.findUnique({
+    where: { id: session.user.id },
+    include: { subscription: true }
+  });
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  const isSubActive = user.subscription?.status === "ACTIVE";
+  const expiryDate = user.subscription?.expiryDate ? new Date(user.subscription.expiryDate) : null;
+  const isExpired = !isSubActive || (expiryDate !== null && isAfter(new Date(), expiryDate));
+
   return (
     <DashboardShell user={session.user}>
-      {children}
+      <SubscriptionGuard isExpired={isExpired}>
+        {children}
+      </SubscriptionGuard>
     </DashboardShell>
   );
 }
