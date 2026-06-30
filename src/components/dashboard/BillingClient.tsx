@@ -136,23 +136,30 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
             
           </div>
 
-          {/* Progress Bar for Active Plans */}
-          {status === "ACTIVE" && subscription?.expiryDate && (
+          {/* Progress Bar for Plan Duration */}
+          {subscription?.expiryDate && (status === "ACTIVE" || status === "EXPIRED") && (
             <div className="mt-8 pt-8 border-t border-gray-100">
               <div className="flex justify-between items-end mb-2">
                 <span className="text-sm font-medium text-gray-600">Plan Duration</span>
-                <span className={`text-sm font-bold ${daysRemaining <= 7 ? 'text-amber-600' : 'text-teal-600'}`}>
-                  {daysRemaining} days remaining
+                <span className={`text-sm font-bold ${isExpired ? 'text-red-600' : daysRemaining <= 7 ? 'text-amber-600' : 'text-teal-600'}`}>
+                  {isExpired 
+                    ? `Expired on ${format(new Date(subscription.expiryDate), "MMM do, yyyy")}` 
+                    : `${daysRemaining} days remaining`}
                 </span>
               </div>
               <div className="w-full bg-gray-100 rounded-full h-2.5 overflow-hidden">
                 <div 
-                  className={`h-2.5 rounded-full transition-all duration-1000 ${daysRemaining <= 7 ? 'bg-amber-500' : 'bg-teal-500'}`}
+                  className={`h-2.5 rounded-full transition-all duration-1000 ${isExpired ? 'bg-red-500' : daysRemaining <= 7 ? 'bg-amber-500' : 'bg-teal-500'}`}
                   style={{ width: `${progress}%` }}
                 ></div>
               </div>
               
-              {daysRemaining <= 7 && (
+              {isExpired ? (
+                <div className="mt-4 flex items-start gap-2 text-sm text-red-800 bg-red-50 p-3 rounded-xl border border-red-100">
+                  <AlertTriangle className="w-5 h-5 shrink-0" />
+                  <p>Your subscription has expired. Please renew your plan to reactivate your medication reminders.</p>
+                </div>
+              ) : daysRemaining <= 7 && (
                 <div className="mt-4 flex items-start gap-2 text-sm text-amber-800 bg-amber-50 p-3 rounded-xl border border-amber-100">
                   <AlertTriangle className="w-5 h-5 shrink-0" />
                   <p>Your subscription is expiring soon. Renew now to avoid interruption to your medication reminders.</p>
