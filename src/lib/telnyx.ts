@@ -21,11 +21,18 @@ export async function initiateVoiceReminderCall(to: string, medicineName: string
     // We pass the medicine data as client_state so our webhook knows what to say
     const clientState = Buffer.from(JSON.stringify({ medicineName, dosage })).toString('base64');
 
+    // Ensure E.164 format
+    let formattedTo = to.trim().replace(/\s+/g, '');
+    if (!formattedTo.startsWith('+')) {
+      formattedTo = '+' + formattedTo;
+    }
+
     const call = await telnyx.calls.dial({
       connection_id: connectionId,
-      to: to,
+      to: formattedTo,
       from: fromNumber,
       client_state: clientState,
+      timeout_secs: 90, // Increased timeout for international routing
       // Our webhook will handle the events for this call
       webhook_url: "https://medicintime.com/api/webhooks/telnyx",
     });
