@@ -959,18 +959,12 @@
     }
     .how-steps {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 0;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
       position: relative;
     }
     .how-steps::before {
-      content: '';
-      position: absolute;
-      top: 68px; left: calc(16.66% + 48px);
-      right: calc(16.66% + 48px);
-      height: 2px;
-      background: repeating-linear-gradient(90deg, var(--sage-dark) 0, var(--sage-dark) 8px, transparent 8px, transparent 16px);
-      z-index: 0;
+      display: none;
     }
     .step-card {
       padding: 40px 40px;
@@ -2160,20 +2154,19 @@
     <div class="hero-inner">
       <!-- Left -->
       <div class="hero-left">
-
         <h1 class="hero-headline" id="hero-heading">
-          <span class="line-small">Finally, a reminder that</span>
-          <span class="line-big">Never Lets You Miss</span>
-          <span class="line-accent">A Dose.</span>
+          <span class="line-small">MedicineTime</span>
+          <span class="line-big">Medicine on time,</span>
+          <span class="line-accent">every time.</span>
         </h1>
 
         <p class="hero-body" id="hero-body">
-          MedicINtime sends warm, personalised WhatsApp alerts for every pill — at exactly the right time, every day. No app download. No login. Just open WhatsApp.
+          Never miss a dose again. MedicineTime sends gentle, personalised WhatsApp reminders to you — and the people you love most.
         </p>
 
         <div class="hero-ctas" id="hero-ctas">
           <a href="/register" class="btn-hero-primary" id="hero-cta-primary">
-            Get Started — $2/mo
+            Get Started Free
             <span class="arrow-wrap" aria-hidden="true">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
                 <path d="M2 6h8M6 2l4 4-4 4" stroke="#1C1C1E" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
@@ -2311,51 +2304,48 @@
     <div class="container">
       <div class="how-header">
         
-        <h2 class="section-title reveal delay-1" id="how-heading">Three steps to <span class="accent">zero missed doses</span></h2>
-        <p class="section-subtitle reveal delay-2" style="margin: 12px auto 0;">Set up once. Let MedicINtime handle the rest, every single day.</p>
+        <h2 class="section-title reveal delay-1" id="how-heading">Why People Choose <span class="accent">MedicineTime</span></h2>
       </div>
       <div class="how-steps">
         <div class="step-card reveal">
-          <div class="step-watermark" aria-hidden="true">01</div>
           <div class="step-icon">
-            <!-- Subscribe icon -->
             <svg viewBox="0 0 24 24" fill="none" stroke="#F4A300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="2" y="5" width="20" height="14" rx="3"/>
-              <path d="M2 10h20"/>
-              <path d="M6 15h4M14 15h4"/>
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
             </svg>
           </div>
-          <div class="step-number">Step 01</div>
-          <h3 class="step-title">Subscribe &amp; Set Up</h3>
-          <p class="step-body">Pay your monthly plan and enter your name and WhatsApp number. Your profile is live in less than 3 minutes — no app, no password, no hassle.</p>
-          <a href="#pricing" class="btn btn-amber" style="margin-top: 16px; padding: 10px 20px; font-size: 0.95rem; width: 100%; justify-content: center;">Add Medicine</a>
+          <h3 class="step-title">Never Forget a Dose</h3>
+          <p class="step-body">You might get busy. MedicineTime never does. Set your schedule once and let us handle the rest.</p>
         </div>
         <div class="step-card reveal delay-2">
-          <div class="step-watermark" aria-hidden="true">02</div>
           <div class="step-icon">
-            <!-- Schedule icon -->
-            <svg viewBox="0 0 24 24" fill="none" stroke="#F4A300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="18" rx="2"/>
-              <path d="M16 2v4M8 2v4M3 10h18"/>
-              <path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/>
-            </svg>
-          </div>
-          <div class="step-number">Step 02</div>
-          <h3 class="step-title">Build Your Schedule</h3>
-          <p class="step-body">Add each medicine, the dose, and the exact time you need your reminder. Morning insulin at 7 AM, blood pressure tablet at noon — you are in full control.</p>
-          <a href="#pricing" class="btn btn-amber" style="margin-top: 16px; padding: 10px 20px; font-size: 0.95rem; width: 100%; justify-content: center;">Save Time</a>
-        </div>
-        <div class="step-card reveal delay-4">
-          <div class="step-watermark" aria-hidden="true">03</div>
-          <div class="step-icon">
-            <!-- WhatsApp icon -->
             <svg viewBox="0 0 24 24" fill="none" stroke="#F4A300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
             </svg>
           </div>
-          <div class="step-number">Step 03</div>
-          <h3 class="step-title">Receive on WhatsApp</h3>
-          <p class="step-body">At exactly the right moment, MedicINtime messages you directly on WhatsApp — personalised with your name and a warm reminder. No app, no login, no friction.</p>
+          <h3 class="step-title">Delivered Where You Already Are</h3>
+          <p class="step-body">No new app to download, no notifications to set up. Just your regular WhatsApp, doing one more important job.</p>
+        </div>
+        <div class="step-card reveal delay-4">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#F4A300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/>
+              <circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 00-3-3.87"/>
+              <path d="M16 3.13a4 4 0 010 7.75"/>
+            </svg>
+          </div>
+          <h3 class="step-title">Care for Your Parents Too</h3>
+          <p class="step-body">Add your mom, dad, or any loved one to your account. Be the one who makes sure they never miss a dose — even when you can't be there.</p>
+        </div>
+        <div class="step-card reveal delay-6">
+          <div class="step-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#F4A300" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="4" width="18" height="18" rx="2"/>
+              <path d="M16 2v4M8 2v4M3 10h18"/>
+            </svg>
+          </div>
+          <h3 class="step-title">Set It Once, Relax Forever</h3>
+          <p class="step-body">Add your medicine, choose your times, and you're done. MedicineTime takes it from there, every single day.</p>
         </div>
       </div>
     </div>
