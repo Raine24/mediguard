@@ -143,7 +143,7 @@ export default function DashboardShell({
       {/* Mobile Bottom Navigation (Persistent) */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-40 pb-safe">
         <div className="flex items-center justify-around h-16 px-1">
-          {navItems.map((item) => {
+          {navItems.filter(item => item.name !== "Refer a Friend" && item.name !== "Affiliate Program").map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link 
@@ -155,7 +155,7 @@ export default function DashboardShell({
                 )}
               >
                 <item.icon className={clsx("w-6 h-6", isActive && "fill-teal-50")} />
-                <span className="text-[10px] font-medium leading-none">{item.name}</span>
+                <span className="text-[10px] font-medium leading-none truncate w-full text-center px-1">{item.name}</span>
               </Link>
             );
           })}

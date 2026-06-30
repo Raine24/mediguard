@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { format, isAfter, isSameDay, differenceInDays, parse } from "date-fns";
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
 import Link from "next/link";
-import { Plus, History, Users, AlertTriangle, CheckCircle2, XCircle, Clock } from "lucide-react";
+import { Plus, History, Users, AlertTriangle, CheckCircle2, XCircle, Clock, UserPlus, Gift } from "lucide-react";
 import NextReminderCard from "@/components/dashboard/NextReminderCard";
 import AutoRefresh from "@/components/dashboard/AutoRefresh";
 
@@ -190,6 +190,18 @@ export default async function DashboardHome() {
             <History className="w-5 h-5" />
           </div>
           <span className="text-sm font-semibold text-gray-900">History</span>
+        </Link>
+        <Link href="/dashboard/referrals" className="flex flex-col items-center justify-center p-4 bg-white border border-gray-200 rounded-2xl hover:border-teal-500 hover:shadow-md transition-all group">
+          <div className="w-10 h-10 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mb-2 group-hover:bg-teal-600 group-hover:text-white transition-colors">
+            <UserPlus className="w-5 h-5" />
+          </div>
+          <span className="text-sm font-semibold text-gray-900 text-center">Refer a Friend</span>
+        </Link>
+        <Link href="/dashboard/partner" className="flex flex-col items-center justify-center p-4 bg-white border border-gray-200 rounded-2xl hover:border-teal-500 hover:shadow-md transition-all group">
+          <div className="w-10 h-10 bg-teal-50 text-teal-600 rounded-full flex items-center justify-center mb-2 group-hover:bg-teal-600 group-hover:text-white transition-colors">
+            <Gift className="w-5 h-5" />
+          </div>
+          <span className="text-sm font-semibold text-gray-900 text-center">Affiliate Program</span>
         </Link>
         {user.subscription?.planType === "FAMILY" && (
           <Link href="/dashboard/family" className="flex flex-col items-center justify-center p-4 bg-white border border-gray-200 rounded-2xl hover:border-teal-500 hover:shadow-md transition-all group col-span-2 md:col-span-1">
