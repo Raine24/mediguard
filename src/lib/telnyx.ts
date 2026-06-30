@@ -1,13 +1,13 @@
 import Telnyx from 'telnyx';
 
-const apiKey = process.env.TELNYX_API_KEY || '';
-const telnyx = new Telnyx({ apiKey });
-
 export async function initiateVoiceReminderCall(to: string, medicineName: string, dosage: string) {
+  const apiKey = process.env.TELNYX_API_KEY || '';
   if (!apiKey) {
-    console.error("Missing Telnyx credentials for voice call.");
+    console.error("TELNYX_API_KEY is missing. Cannot initiate voice call.");
     return { status: "failed", error: "Missing configuration" };
   }
+
+  const telnyx = new Telnyx({ apiKey });
 
   const fromNumber = process.env.TELNYX_PHONE_NUMBER;
   const connectionId = process.env.TELNYX_CONNECTION_ID;

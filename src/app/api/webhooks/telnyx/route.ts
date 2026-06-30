@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
 import Telnyx from 'telnyx';
 
-const telnyx = new Telnyx({ apiKey: process.env.TELNYX_API_KEY || '' });
-
 export async function POST(req: Request) {
   try {
+    const apiKey = process.env.TELNYX_API_KEY || '';
+    const telnyx = new Telnyx({ apiKey });
+    
     const event = await req.json();
     
     // The event payload structure from Telnyx
