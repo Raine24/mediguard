@@ -108,7 +108,7 @@ export async function GET(req: Request) {
                 }
               });
 
-              // Log the Voice Call
+              // Log the Voice Call attempt
               await prisma.messageLog.create({
                 data: {
                   userId: user.id,
