@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
 import { sendWhatsAppTemplate } from '@/lib/bird';
 import { initiateVoiceReminderCall } from '@/lib/telnyx';
 import { formatInTimeZone } from 'date-fns-tz';
+import { Client } from 'pg';
+import { randomUUID } from 'crypto';
 
 export async function GET(req: Request) {
   try {
@@ -12,132 +13,124 @@ export async function GET(req: Request) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    // 2. Determine current time in UTC
     const now = new Date();
-
-    // 3. Fetch all active subscriptions with users, medicines, and reminders
-    const activeSubscriptions = await prisma.subscription.findMany({
-      where: { 
-        status: 'ACTIVE',
-        OR: [
-          { expiryDate: { gt: now } },
-          { expiryDate: null }
-        ]
-      },
-      include: {
-        user: {
-          include: {
-            medicines: {
-              where: { status: 'ACTIVE' },
-              include: { reminders: true }
-            }
-          }
-        }
-      }
-    });
-
     const messagesSent = [];
 
-    for (const sub of activeSubscriptions) {
-      const user = sub.user;
-      if (!user.whatsappVerified) continue;
+    // Use raw pg client instead of Prisma to bypass Neon DB connection pooling timeouts on Edge/Serverless environments
+    const client = new Client({
+      connectionString: process.env.DATABASE_URL,
+      ssl: { rejectUnauthorized: false }
+    });
 
-      const userTimezone = user.timezone || 'UTC';
+    await client.connect();
 
-      let localHour, localMin;
-      try {
-        localHour = parseInt(formatInTimeZone(now, userTimezone, 'HH'), 10);
-        localMin = parseInt(formatInTimeZone(now, userTimezone, 'mm'), 10);
-      } catch (err) {
-        console.error(`Invalid timezone for user ${user.id}: ${userTimezone}`);
-        continue;
-      }
+    try {
+      const query = `
+        SELECT 
+          u.id as "userId", u.phone, u.timezone, 
+          m.id as "medicineId", m.name as "medicineName", m.dosage, 
+          r.id as "reminderId", r.time as "reminderTime"
+        FROM "Subscription" s
+        JOIN "User" u ON s."userId" = u.id
+        JOIN "Medicine" m ON m."userId" = u.id
+        JOIN "ReminderTime" r ON r."medicineId" = m.id
+        WHERE s.status = 'ACTIVE' 
+          AND (s."expiryDate" > NOW() OR s."expiryDate" IS NULL)
+          AND u."whatsappVerified" = true
+          AND m.status = 'ACTIVE'
+      `;
+      const result = await client.query(query);
 
-      const currentMins = localHour * 60 + localMin;
+      for (const row of result.rows) {
+        const { userId, phone, timezone, medicineId, medicineName, dosage, reminderId, reminderTime } = row;
+        
+        const userTimezone = timezone || 'UTC';
+        let localHour, localMin;
+        try {
+          localHour = parseInt(formatInTimeZone(now, userTimezone, 'HH'), 10);
+          localMin = parseInt(formatInTimeZone(now, userTimezone, 'mm'), 10);
+        } catch (err) {
+          console.error(`Invalid timezone for user ${userId}: ${userTimezone}`);
+          continue;
+        }
 
-      const userDateString = formatInTimeZone(now, userTimezone, 'yyyy-MM-dd');
+        const currentMins = localHour * 60 + localMin;
+        const userDateString = formatInTimeZone(now, userTimezone, 'yyyy-MM-dd');
 
-      for (const medicine of user.medicines) {
-        // TODO: Handle daysActive logic (Every Day, Weekdays, Weekends)
+        const [remHour, remMin] = reminderTime.split(':').map(Number);
+        const reminderMins = remHour * 60 + remMin;
 
-        for (const reminder of medicine.reminders) {
-          const [remHour, remMin] = reminder.time.split(':').map(Number);
-          const reminderMins = remHour * 60 + remMin;
+        // Check if the reminder is due (current time is >= reminder time)
+        // and we are within a 60-minute window
+        if (currentMins >= reminderMins && currentMins < reminderMins + 60) {
+          const expectedScheduledFor = new Date(`${userDateString}T${reminderTime}:00.000Z`);
 
-          // Check if the reminder is due (current time is >= reminder time)
-          // and we are within a 60-minute window to avoid sending yesterday's reminders at midnight
-          if (currentMins >= reminderMins && currentMins < reminderMins + 60) {
+          // Check if we already sent THIS SPECIFIC reminder today
+          const checkLogQuery = `
+            SELECT id FROM "MessageLog" 
+            WHERE "medicineId" = $1 AND type = 'REMINDER' AND "scheduledFor" = $2
+            LIMIT 1
+          `;
+          const logRes = await client.query(checkLogQuery, [medicineId, expectedScheduledFor]);
+
+          if (logRes.rowCount === 0) {
+            const waResponse = await sendWhatsAppTemplate(
+              phone, 
+              "medical_alert_reminder_update", 
+              [medicineName, dosage || "1 dose"]
+            );
             
-            // Construct a unique exact Date string for THIS reminder on THIS day
-            const expectedScheduledFor = new Date(`${userDateString}T${reminder.time}:00.000Z`);
+            const voiceResponse = await initiateVoiceReminderCall(
+              phone,
+              medicineName,
+              dosage || "1 dose"
+            );
+            
+            // Log the WhatsApp message
+            await client.query(`
+              INSERT INTO "MessageLog" (id, "userId", "medicineId", type, channel, status, "errorReason", "scheduledFor", "sentAt")
+              VALUES ($1, $2, $3, 'REMINDER', 'WHATSAPP', $4, $5, $6, $7)
+            `, [
+              randomUUID(), 
+              userId, 
+              medicineId, 
+              waResponse.status !== 'failed' ? 'DELIVERED' : 'FAILED', 
+              waResponse.status !== 'failed' ? null : waResponse.error, 
+              expectedScheduledFor, 
+              now
+            ]);
 
-            // Check if we already sent THIS SPECIFIC reminder today
-            const recentLog = await prisma.messageLog.findFirst({
-              where: {
-                medicineId: medicine.id,
-                type: 'REMINDER',
-                scheduledFor: expectedScheduledFor
-              }
+            // Log the Voice Call attempt
+            await client.query(`
+              INSERT INTO "MessageLog" (id, "userId", "medicineId", type, channel, status, "errorReason", "scheduledFor", "sentAt")
+              VALUES ($1, $2, $3, 'REMINDER', 'VOICE', $4, $5, $6, $7)
+            `, [
+              randomUUID(), 
+              userId, 
+              medicineId, 
+              voiceResponse.status !== 'failed' ? 'DELIVERED' : 'FAILED', 
+              voiceResponse.status !== 'failed' ? null : voiceResponse.error, 
+              expectedScheduledFor, 
+              now
+            ]);
+
+            messagesSent.push({ 
+              userId, 
+              medicine: medicineName, 
+              time: reminderTime, 
+              waSuccess: waResponse.status !== 'failed',
+              voiceSuccess: voiceResponse.status !== 'failed' 
             });
 
-            if (!recentLog) {
-              const waResponse = await sendWhatsAppTemplate(
-                user.phone, 
-                "medical_alert_reminder_update", 
-                [medicine.name, medicine.dosage || "1 dose"]
-              );
-              
-              // Also trigger the Telnyx Voice Call Reminder
-              const voiceResponse = await initiateVoiceReminderCall(
-                user.phone,
-                medicine.name,
-                medicine.dosage || "1 dose"
-              );
-              
-              // Log the WhatsApp message
-              await prisma.messageLog.create({
-                data: {
-                  userId: user.id,
-                  medicineId: medicine.id,
-                  type: 'REMINDER',
-                  channel: 'WHATSAPP',
-                  status: waResponse.status !== 'failed' ? 'DELIVERED' : 'FAILED',
-                  errorReason: waResponse.status !== 'failed' ? null : waResponse.error,
-                  scheduledFor: expectedScheduledFor,
-                  sentAt: now,
-                }
-              });
-
-              // Log the Voice Call attempt
-              await prisma.messageLog.create({
-                data: {
-                  userId: user.id,
-                  medicineId: medicine.id,
-                  type: 'REMINDER',
-                  channel: 'VOICE',
-                  status: voiceResponse.status !== 'failed' ? 'DELIVERED' : 'FAILED',
-                  errorReason: voiceResponse.status !== 'failed' ? null : voiceResponse.error,
-                  scheduledFor: expectedScheduledFor,
-                  sentAt: now,
-                }
-              });
-
-              messagesSent.push({ 
-                userId: user.id, 
-                medicine: medicine.name, 
-                time: reminder.time, 
-                waSuccess: waResponse.status !== 'failed',
-                voiceSuccess: voiceResponse.status !== 'failed' 
-              });
-
-              // If this was a one-off SNOOZE reminder, delete it so it doesn't repeat tomorrow
-              if (reminder.time.includes('SNOOZE')) {
-                await prisma.reminderTime.delete({ where: { id: reminder.id } });
-              }
+            // If this was a one-off SNOOZE reminder, delete it so it doesn't repeat tomorrow
+            if (reminderTime.includes('SNOOZE')) {
+              await client.query(`DELETE FROM "ReminderTime" WHERE id = $1`, [reminderId]);
             }
           }
         }
       }
+    } finally {
+      await client.end();
     }
 
     return NextResponse.json({ success: true, processed: messagesSent.length, details: messagesSent });
