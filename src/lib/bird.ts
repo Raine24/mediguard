@@ -96,14 +96,16 @@ export async function sendWhatsAppTemplate(
             ? "c9bb8f9a-1e7b-4a02-8a55-3059952be77c" 
             : templateName === "medical_alert_reminder_update"
               ? "f2b24a57-c1c5-4ba1-88b7-4b0a1ec43e0c"
-              : namespace,
+              : templateName === "verification_code_update"
+                ? "e59bfed6-212c-4687-a2a1-8087c3da11a1"
+                : namespace,
           name: templateName,
           version: "latest",
           locale: "en",
           parameters: bodyVariables.map((val, index) => {
             let varKey = `var_${index + 1}`;
             
-            if (templateName === "verification_code") {
+            if (["verification_code", "verification_code_update"].includes(templateName)) {
               varKey = "otp";
             } else if (["mediguard_voice_alert_v4", "medical_reminder_alert", "medical_alert_reminder_update"].includes(templateName)) {
               const keys = ["medicine_name", "dosage"];

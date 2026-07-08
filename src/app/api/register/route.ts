@@ -80,7 +80,7 @@ export async function POST(req: Request) {
     
     try {
       // Expects an approved template named "verification_code" with 1 variable {{1}} for the OTP
-      const response = await sendWhatsAppTemplate(phone, "verification_code", [otp]);
+      const response = await sendWhatsAppTemplate(phone, "verification_code_update", [otp]);
       if (response.status === "failed") {
         console.error("Bird API Template Error:", response.error);
         return NextResponse.json({ error: response.error || "Failed to send WhatsApp verification code." }, { status: 400 });

@@ -69,7 +69,7 @@ export async function initiatePhoneChange(newPhone: string) {
 
   // Send the OTP using Bird.com Template
   const { sendWhatsAppTemplate } = await import('@/lib/bird');
-  const response = await sendWhatsAppTemplate(newPhone, "verification_code", [otp]);
+  const response = await sendWhatsAppTemplate(newPhone, "verification_code_update", [otp]);
 
   if (response.status === "failed") {
     throw new Error(response.error || "Failed to send WhatsApp template.");
