@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CreditCard, CheckCircle2, Shield, Calendar, AlertTriangle } from "lucide-react";
+import { CreditCard, CheckCircle2, Shield, Calendar, AlertTriangle, Download } from "lucide-react";
 import { format, differenceInDays } from "date-fns";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useRouter } from "next/navigation";
@@ -391,6 +391,38 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
         </div>
       </div>
       
+      {/* Invoice Section */}
+      <div className="pt-6">
+        <h3 className="text-xl font-bold text-gray-900 mb-6">Billing History</h3>
+        
+        <div className="bg-white rounded-3xl border border-gray-200 overflow-hidden">
+          <div className="p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-gray-100 rounded-xl bg-gray-50 transition-colors hover:bg-gray-100">
+              <div className="flex items-center gap-4 w-full sm:w-auto mb-4 sm:mb-0">
+                <div className="w-12 h-12 bg-blue-100 text-blue-700 flex flex-col items-center justify-center rounded-lg font-bold shrink-0">
+                  <span className="text-[10px] uppercase leading-none">Jul</span>
+                  <span className="text-lg leading-none mt-0.5">08</span>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900">Interserver</h4>
+                  <p className="text-sm text-gray-500">Website migration (ugxvideos.com) - 2026</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto">
+                <div className="text-right">
+                  <div className="font-bold text-gray-900">$45.00</div>
+                  <div className="text-[10px] font-bold px-2 py-0.5 bg-green-100 text-green-700 rounded uppercase tracking-wider mt-1 inline-block">Paid</div>
+                </div>
+                <button className="flex items-center gap-2 text-sm font-bold text-teal-600 hover:text-teal-700 transition-colors bg-teal-50 hover:bg-teal-100 px-3 py-2 rounded-lg" title="Download Invoice PDF">
+                  <Download className="w-4 h-4" />
+                  <span className="hidden sm:inline">PDF</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="flex items-center gap-2 text-sm text-gray-500 justify-center pt-8">
         <Shield className="w-4 h-4" />
         Payments are secured and encrypted.
