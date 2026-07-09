@@ -12,7 +12,8 @@ import {
   Settings, 
   HelpCircle,
   Gift,
-  UserPlus
+  UserPlus,
+  Ticket
 } from "lucide-react";
 import clsx from "clsx";
 import { signOut } from "next-auth/react";
@@ -27,6 +28,7 @@ const navItems = [
   { name: "Billing", href: "/dashboard/billing", icon: CreditCard },
   { name: "Refer a Friend", href: "/dashboard/referrals", icon: UserPlus },
   { name: "Affiliate Program", href: "/dashboard/partner", icon: Gift },
+  { name: "Support Tickets", href: "/dashboard/tickets", icon: Ticket },
   { name: "Settings", href: "/dashboard/settings", icon: Settings },
 ];
 

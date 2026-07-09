@@ -49,7 +49,7 @@ export default function AdminSidebar({ userRole, userName }: { userRole: string,
       <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-gray-900 z-50 flex items-center justify-between px-4 border-b border-gray-800 shadow-md">
         <div className="flex items-center gap-2">
           <Shield className="w-6 h-6 text-teal-400" />
-          <span className="text-white font-bold text-lg tracking-tight">Admin<span className="text-teal-400">Guard</span></span>
+          <span className="text-white font-bold text-lg tracking-tight">Interserver</span>
         </div>
         <button
           type="button"
@@ -86,7 +86,7 @@ export default function AdminSidebar({ userRole, userName }: { userRole: string,
         <div className="flex w-64 flex-col bg-gray-900 border-r border-gray-800 shadow-xl">
           <div className="flex h-16 items-center gap-2 px-6 border-b border-gray-800 bg-gray-900/50">
             <Shield className="w-7 h-7 text-teal-400" />
-            <span className="text-white font-bold text-xl tracking-tight">Admin<span className="text-teal-400">Guard</span></span>
+            <span className="text-white font-bold text-xl tracking-tight">Interserver</span>
           </div>
           <div className="flex flex-1 flex-col overflow-y-auto">
             <SidebarContent nav={filteredNav} pathname={pathname} />
