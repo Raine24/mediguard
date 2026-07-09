@@ -8,7 +8,7 @@ import {
 import { 
   CreditCard, TrendingUp, ArrowDownRight, ArrowUpRight, DollarSign, 
   Download, Filter, CheckCircle2, XCircle, RefreshCcw, Search, Calendar,
-  AlertTriangle, ShieldAlert, PlayCircle, Clock
+  AlertTriangle, ShieldAlert, PlayCircle, Clock, FileText
 } from "lucide-react";
 import { 
   getFinancialMetrics, getTransactions, getUpcomingRenewals, 
@@ -18,7 +18,7 @@ import {
 const COLORS = ['#94a3b8', '#3b82f6', '#a855f7'];
 
 export default function RevenueAndBilling() {
-  const [activeTab, setActiveTab] = useState<"overview" | "failed" | "renewals">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "failed" | "renewals" | "invoices">("overview");
   const [loading, setLoading] = useState(true);
   const [isPending, startTransition] = useTransition();
 
@@ -161,6 +161,7 @@ export default function RevenueAndBilling() {
           { id: "overview", label: "Overview & Ledger", icon: TrendingUp },
           { id: "failed", label: "Failed Payments", icon: AlertTriangle },
           { id: "renewals", label: "Upcoming Renewals", icon: Calendar },
+          { id: "invoices", label: "Interserver Invoices", icon: FileText },
         ].map(tab => (
           <button
             key={tab.id}
@@ -482,6 +483,41 @@ export default function RevenueAndBilling() {
                 )}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+      {activeTab === "invoices" && (
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden animate-in fade-in">
+          <div className="p-6 border-b border-gray-100 bg-blue-50/50">
+            <h2 className="text-lg font-bold text-blue-900 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-blue-600" />
+              Interserver Billing & Invoices
+            </h2>
+            <p className="text-sm text-blue-700 mt-1">Platform and infrastructure invoices from Interserver.</p>
+          </div>
+          <div className="p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-gray-100 rounded-xl bg-gray-50 transition-colors hover:bg-gray-100">
+              <div className="flex items-center gap-4 w-full sm:w-auto mb-4 sm:mb-0">
+                <div className="w-12 h-12 bg-blue-100 text-blue-700 flex flex-col items-center justify-center rounded-lg font-bold shrink-0">
+                  <span className="text-[10px] uppercase leading-none">Jul</span>
+                  <span className="text-lg leading-none mt-0.5">08</span>
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900">Interserver</h4>
+                  <p className="text-sm text-gray-500">Website migration (ugxvideos.com) - 2026</p>
+                </div>
+              </div>
+              <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto">
+                <div className="text-right">
+                  <div className="font-bold text-gray-900">$45.00</div>
+                  <div className="text-[10px] font-bold px-2 py-0.5 bg-green-100 text-green-700 rounded uppercase tracking-wider mt-1 inline-block">Paid</div>
+                </div>
+                <button className="flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg" title="Download Invoice PDF">
+                  <Download className="w-4 h-4" />
+                  <span className="hidden sm:inline">PDF</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}
