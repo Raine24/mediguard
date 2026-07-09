@@ -510,7 +510,7 @@ export default function RevenueAndBilling() {
               <div className="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto">
                 <div className="text-right">
                   <div className="font-bold text-gray-900">$45.00</div>
-                  <div className="text-[10px] font-bold px-2 py-0.5 bg-green-100 text-green-700 rounded uppercase tracking-wider mt-1 inline-block">Paid</div>
+                  <div className="text-[10px] font-bold px-2 py-0.5 bg-amber-100 text-amber-700 rounded uppercase tracking-wider mt-1 inline-block">Pending</div>
                 </div>
                 <button className="flex items-center gap-2 text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors bg-blue-50 hover:bg-blue-100 px-3 py-2 rounded-lg" title="Download Invoice PDF">
                   <Download className="w-4 h-4" />
