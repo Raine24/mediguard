@@ -24,6 +24,7 @@ export const metadata: Metadata = {
 };
 
 import CookieConsent from "@/components/layout/CookieConsent";
+import GoogleTranslate from "@/components/layout/GoogleTranslate";
 
 export default function RootLayout({
   children,
@@ -38,6 +39,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {children}
         <CookieConsent />
+        <GoogleTranslate />
       </body>
     </html>
   );
