@@ -164,19 +164,19 @@ export default function MedicinesClient({
         </div>
       )}
 
-      {/* Floating Action Button for Mobile / Fixed Bottom Right */}
-      {medicines.length > 0 && (
-        <button
-          onClick={() => {
-            setMedicineToEdit(null);
-            setIsAddOpen(true);
-          }}
-          className="fixed bottom-20 md:bottom-8 right-4 md:right-8 w-14 h-14 bg-teal-600 text-white rounded-full flex items-center justify-center shadow-lg hover:bg-teal-700 hover:scale-105 transition-all z-20"
-          aria-label="Add Medicine"
-        >
-          <Plus className="w-6 h-6" />
-        </button>
-      )}
+      {/* Floating Action Button for Mobile & Desktop */}
+      <button
+        type="button"
+        onClick={() => {
+          setMedicineToEdit(null);
+          setIsAddOpen(true);
+        }}
+        className="fixed bottom-20 md:bottom-8 right-5 md:right-8 w-14 h-14 bg-teal-600 text-white rounded-full flex items-center justify-center shadow-xl hover:bg-teal-700 active:scale-95 hover:scale-105 transition-all z-40 cursor-pointer"
+        aria-label="Add Medicine"
+        title="Add Medicine"
+      >
+        <Plus className="w-7 h-7 stroke-[2.5]" />
+      </button>
 
       <MedicineFormModal 
         isOpen={isAddOpen} 
