@@ -72,7 +72,7 @@ export default function RazorpayCheckout({
 
       // 2. Configure Razorpay modal
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_TJJk50H17PGSVj",
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_TJNiivg7TFetFD",
         amount: data.amount,
         currency: data.currency || "INR",
         name: "MedicINtime",
