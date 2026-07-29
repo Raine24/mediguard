@@ -74,7 +74,7 @@ export default function RazorpayCheckout({
       const options = {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_live_TJNiivg7TFetFD",
         amount: data.amount,
-        currency: data.currency || "INR",
+        currency: data.currency || "USD",
         name: "MedicINtime",
         description: `${planType} Plan (${interval})`,
         order_id: orderId,
