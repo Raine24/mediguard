@@ -111,11 +111,11 @@ export default function DashboardShell({
 
       {/* Mobile Top Header */}
       <header className="md:hidden bg-white border-b border-gray-200 sticky top-0 z-30 px-4 h-16 flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold">
+        <div className="flex items-center gap-2.5">
+          <div className="w-10 h-10 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-xl shadow-sm">
             M
           </div>
-          <span className="text-lg font-bold text-gray-900">MedicINtime</span>
+          <span className="text-xl font-extrabold text-gray-900 tracking-tight">MedicINtime</span>
         </div>
         <div className="flex items-center gap-2">
           <button 
