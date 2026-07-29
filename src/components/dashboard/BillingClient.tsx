@@ -5,6 +5,7 @@ import { CreditCard, CheckCircle2, Shield, Calendar, AlertTriangle, Download } f
 import { format, differenceInDays } from "date-fns";
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useRouter } from "next/navigation";
+import RazorpayCheckout from "./RazorpayCheckout";
 
 type SubscriptionProps = {
   planType: string;
@@ -231,8 +232,16 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
               </li>
             </ul>
             {loadingPlan === 'BASIC' ? (
-              <div className="w-full mt-8 flex flex-col items-center">
-                <span className="text-sm text-gray-500 mb-2 font-bold animate-pulse">Loading checkout...</span>
+              <div className="w-full mt-6 flex flex-col gap-3">
+                <RazorpayCheckout 
+                  planType="BASIC" 
+                  interval={interval} 
+                  buttonText="Pay with Razorpay"
+                  onCancel={() => setLoadingPlan(null)}
+                />
+                <div className="relative text-center my-1">
+                  <span className="bg-white px-2 text-xs font-semibold text-gray-400 uppercase">Or PayPal</span>
+                </div>
                 <div className="w-full relative z-0">
                   <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "test", currency: "USD" }}>
                     <PayPalButtons 
@@ -244,6 +253,12 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
                     />
                   </PayPalScriptProvider>
                 </div>
+                <button 
+                  onClick={() => setLoadingPlan(null)} 
+                  className="text-xs text-gray-500 hover:text-gray-700 underline text-center"
+                >
+                  Cancel
+                </button>
               </div>
             ) : (
               <button 
@@ -297,8 +312,16 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
               </li>
             </ul>
               {loadingPlan === 'STANDARD' ? (
-                <div className="w-full mt-8 flex flex-col items-center">
-                  <span className="text-sm text-gray-500 mb-2 font-bold animate-pulse">Loading secure checkout...</span>
+                <div className="w-full mt-6 flex flex-col gap-3">
+                  <RazorpayCheckout 
+                    planType="STANDARD" 
+                    interval={interval} 
+                    buttonText="Pay with Razorpay"
+                    onCancel={() => setLoadingPlan(null)}
+                  />
+                  <div className="relative text-center my-1">
+                    <span className="bg-white px-2 text-xs font-semibold text-gray-400 uppercase">Or PayPal</span>
+                  </div>
                   <div className="w-full relative z-0">
                     <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "test", currency: "USD" }}>
                       <PayPalButtons 
@@ -310,6 +333,12 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
                       />
                     </PayPalScriptProvider>
                   </div>
+                  <button 
+                    onClick={() => setLoadingPlan(null)} 
+                    className="text-xs text-gray-500 hover:text-gray-700 underline text-center"
+                  >
+                    Cancel
+                  </button>
                 </div>
               ) : (
                 <button 
@@ -359,8 +388,16 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
               </li>
             </ul>
             {loadingPlan === 'FAMILY' ? (
-              <div className="w-full mt-8 flex flex-col items-center">
-                <span className="text-sm text-gray-500 mb-2 font-bold animate-pulse">Loading checkout...</span>
+              <div className="w-full mt-6 flex flex-col gap-3">
+                <RazorpayCheckout 
+                  planType="FAMILY" 
+                  interval={interval} 
+                  buttonText="Pay with Razorpay"
+                  onCancel={() => setLoadingPlan(null)}
+                />
+                <div className="relative text-center my-1">
+                  <span className="bg-gray-900 px-2 text-xs font-semibold text-gray-500 uppercase">Or PayPal</span>
+                </div>
                 <div className="w-full relative z-0">
                   <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "test", currency: "USD" }}>
                     <PayPalButtons 
@@ -372,6 +409,12 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
                     />
                   </PayPalScriptProvider>
                 </div>
+                <button 
+                  onClick={() => setLoadingPlan(null)} 
+                  className="text-xs text-gray-400 hover:text-white underline text-center"
+                >
+                  Cancel
+                </button>
               </div>
             ) : (
               <button 
