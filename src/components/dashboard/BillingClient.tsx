@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { CreditCard, CheckCircle2, Shield, Calendar, AlertTriangle, Download } from "lucide-react";
+import { CreditCard, CheckCircle2, Shield, Calendar, AlertTriangle } from "lucide-react";
 import { format, differenceInDays } from "date-fns";
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { useRouter } from "next/navigation";
 import RazorpayCheckout from "./RazorpayCheckout";
 
 type SubscriptionProps = {
@@ -15,59 +13,10 @@ type SubscriptionProps = {
 } | null;
 
 export default function BillingClient({ subscription }: { subscription: SubscriptionProps }) {
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
   const [interval, setInterval] = useState<"monthly" | "biannual" | "annual">("monthly");
 
   const planType = subscription?.planType || "BASIC";
   const status = subscription?.status || "INACTIVE";
-  
-  const handleUpgrade = (plan: string) => {
-    setLoadingPlan(plan);
-  };
-
-  const createOrder = async (plan: string) => {
-    try {
-      const response = await fetch("/api/paypal/create-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ planType: plan, interval }),
-      });
-
-      const orderData = await response.json();
-      if (orderData.id) {
-        return orderData.id;
-      } else {
-        throw new Error(orderData.error || "Failed to create order");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Could not initiate PayPal checkout");
-      setLoadingPlan(null);
-    }
-  };
-
-  const onApprove = async (data: any) => {
-    try {
-      const response = await fetch("/api/paypal/capture-order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderID: data.orderID, planType: loadingPlan, interval }),
-      });
-
-      const orderData = await response.json();
-      if (orderData.success) {
-        alert("Payment successful! Your subscription is now active.");
-        window.location.reload(); // Refresh to get updated DB state
-      } else {
-        alert("Payment capture failed. Please contact support.");
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Error capturing payment.");
-    } finally {
-      setLoadingPlan(null);
-    }
-  };
 
   const [progress, setProgress] = useState(0);
 
@@ -120,7 +69,7 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
               
               <div className="text-gray-500 flex items-center gap-2 text-sm font-medium">
                 <CreditCard className="w-4 h-4" />
-                {planType === "BASIC" ? "$4.99 / month" : planType === "STANDARD" ? "$9.99 / month" : "$17.99 / month"}
+                {planType === "BASIC" ? "$2.00 / month" : planType === "STANDARD" ? "$4.00 / month" : "$8.00 / month"}
               </div>
             </div>
 
@@ -231,47 +180,21 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
                 Basic email support
               </li>
             </ul>
-            {loadingPlan === 'BASIC' ? (
-              <div className="w-full mt-6 flex flex-col gap-3">
-                <RazorpayCheckout 
-                  planType="BASIC" 
-                  interval={interval} 
-                  buttonText="Pay with Razorpay"
-                  onCancel={() => setLoadingPlan(null)}
-                />
-                <div className="relative text-center my-1">
-                  <span className="bg-white px-2 text-xs font-semibold text-gray-400 uppercase">Or PayPal</span>
-                </div>
-                <div className="w-full relative z-0">
-                  <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "test", currency: "USD" }}>
-                    <PayPalButtons 
-                      createOrder={() => createOrder('BASIC')}
-                      onApprove={onApprove}
-                      onCancel={() => setLoadingPlan(null)}
-                      onError={() => { alert("PayPal encountered an error"); setLoadingPlan(null); }}
-                      style={{ layout: "vertical", shape: "rect", color: "gold" }}
-                    />
-                  </PayPalScriptProvider>
-                </div>
-                <button 
-                  onClick={() => setLoadingPlan(null)} 
-                  className="text-xs text-gray-500 hover:text-gray-700 underline text-center"
-                >
-                  Cancel
-                </button>
-              </div>
-            ) : (
+
+            {planType === 'BASIC' ? (
               <button 
-                onClick={() => handleUpgrade('BASIC')}
-                disabled={planType === 'BASIC'}
-                className={`w-full py-3 px-4 rounded-xl font-bold text-sm transition-colors ${
-                  planType === 'BASIC' 
-                    ? 'border-2 border-gray-200 text-gray-400 cursor-not-allowed' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                disabled
+                className="w-full py-3 px-4 rounded-xl font-bold text-sm border-2 border-gray-200 text-gray-400 cursor-not-allowed mt-auto"
               >
-                {planType === 'BASIC' ? "Active" : "Downgrade to Basic"}
+                Current Plan
               </button>
+            ) : (
+              <RazorpayCheckout 
+                planType="BASIC" 
+                interval={interval} 
+                buttonText="Downgrade to Basic"
+                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 transition-colors mt-auto text-center cursor-pointer"
+              />
             )}
           </div>
 
@@ -311,51 +234,25 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
                 Priority support
               </li>
             </ul>
-              {loadingPlan === 'STANDARD' ? (
-                <div className="w-full mt-6 flex flex-col gap-3">
-                  <RazorpayCheckout 
-                    planType="STANDARD" 
-                    interval={interval} 
-                    buttonText="Pay with Razorpay"
-                    onCancel={() => setLoadingPlan(null)}
-                  />
-                  <div className="relative text-center my-1">
-                    <span className="bg-white px-2 text-xs font-semibold text-gray-400 uppercase">Or PayPal</span>
-                  </div>
-                  <div className="w-full relative z-0">
-                    <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "test", currency: "USD" }}>
-                      <PayPalButtons 
-                        createOrder={() => createOrder('STANDARD')}
-                        onApprove={onApprove}
-                        onCancel={() => setLoadingPlan(null)}
-                        onError={() => { alert("PayPal encountered an error"); setLoadingPlan(null); }}
-                        style={{ layout: "vertical", shape: "rect", color: "gold" }}
-                      />
-                    </PayPalScriptProvider>
-                  </div>
-                  <button 
-                    onClick={() => setLoadingPlan(null)} 
-                    className="text-xs text-gray-500 hover:text-gray-700 underline text-center"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              ) : (
-                <button 
-                  onClick={() => handleUpgrade('STANDARD')}
-                  className={`w-full py-3 px-4 rounded-xl font-bold transition-colors mt-8 ${
-                    planType === 'STANDARD' 
-                      ? 'bg-teal-500 text-white shadow-lg shadow-teal-500/30' 
-                      : 'bg-gray-900 text-white hover:bg-gray-800'
-                  }`}
-                  disabled={planType === 'STANDARD'}
-                >
-                  {planType === 'STANDARD' ? 'Current Plan' : 'Select Standard'}
-                </button>
-              )}
+
+            {planType === 'STANDARD' ? (
+              <button 
+                disabled
+                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-teal-500 text-white shadow-lg shadow-teal-500/30 cursor-not-allowed mt-auto"
+              >
+                Current Plan
+              </button>
+            ) : (
+              <RazorpayCheckout 
+                planType="STANDARD" 
+                interval={interval} 
+                buttonText="Select Standard"
+                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gray-900 hover:bg-gray-800 text-white transition-colors mt-auto text-center cursor-pointer"
+              />
+            )}
           </div>
 
-          {/* Family Plan */}
+          {/* Family / Caretaker Plan */}
           <div className={`bg-gray-900 text-white rounded-3xl border p-6 flex flex-col ${planType === 'FAMILY' ? 'border-teal-500 shadow-md relative' : 'border-gray-800'}`}>
             {planType === 'FAMILY' && (
               <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-teal-500 text-white text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-full">
@@ -387,47 +284,21 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
                 Caretaker admin dashboard
               </li>
             </ul>
-            {loadingPlan === 'FAMILY' ? (
-              <div className="w-full mt-6 flex flex-col gap-3">
-                <RazorpayCheckout 
-                  planType="FAMILY" 
-                  interval={interval} 
-                  buttonText="Pay with Razorpay"
-                  onCancel={() => setLoadingPlan(null)}
-                />
-                <div className="relative text-center my-1">
-                  <span className="bg-gray-900 px-2 text-xs font-semibold text-gray-500 uppercase">Or PayPal</span>
-                </div>
-                <div className="w-full relative z-0">
-                  <PayPalScriptProvider options={{ clientId: process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID || "test", currency: "USD" }}>
-                    <PayPalButtons 
-                      createOrder={() => createOrder('FAMILY')}
-                      onApprove={onApprove}
-                      onCancel={() => setLoadingPlan(null)}
-                      onError={() => { alert("PayPal encountered an error"); setLoadingPlan(null); }}
-                      style={{ layout: "vertical", shape: "rect", color: "gold" }}
-                    />
-                  </PayPalScriptProvider>
-                </div>
-                <button 
-                  onClick={() => setLoadingPlan(null)} 
-                  className="text-xs text-gray-400 hover:text-white underline text-center"
-                >
-                  Cancel
-                </button>
-              </div>
-            ) : (
+
+            {planType === 'FAMILY' ? (
               <button 
-                onClick={() => handleUpgrade('FAMILY')}
-                disabled={planType === 'FAMILY'}
-                className={`w-full py-3 px-4 rounded-xl font-bold text-sm transition-colors mt-8 ${
-                  planType === 'FAMILY' 
-                    ? 'bg-gray-800 text-teal-400 border border-gray-700 cursor-not-allowed' 
-                    : 'bg-white text-gray-900 hover:bg-gray-100'
-                }`}
+                disabled
+                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gray-800 text-teal-400 border border-gray-700 cursor-not-allowed mt-auto"
               >
-                {planType === 'FAMILY' ? "Active" : "Upgrade to Caretaker"}
+                Current Plan
               </button>
+            ) : (
+              <RazorpayCheckout 
+                planType="FAMILY" 
+                interval={interval} 
+                buttonText="Upgrade to Caretaker"
+                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-white hover:bg-gray-100 text-gray-900 transition-colors mt-auto text-center cursor-pointer"
+              />
             )}
           </div>
 
@@ -436,8 +307,9 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
       
       <div className="flex items-center gap-2 text-sm text-gray-500 justify-center pt-8">
         <Shield className="w-4 h-4" />
-        Payments are secured and encrypted.
+        Payments are secured and encrypted by Razorpay.
       </div>
     </div>
   );
 }
+
