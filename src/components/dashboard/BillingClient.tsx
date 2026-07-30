@@ -148,7 +148,7 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Basic Plan */}
+            {/* Basic Plan */}
           <div className={`bg-white rounded-3xl border p-6 flex flex-col ${planType === 'BASIC' ? 'border-teal-500 shadow-md relative' : 'border-gray-200'}`}>
             {planType === 'BASIC' && (
               <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-teal-500 text-white text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-full">
@@ -181,21 +181,16 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
               </li>
             </ul>
 
-            {planType === 'BASIC' ? (
-              <button 
-                disabled
-                className="w-full py-3 px-4 rounded-xl font-bold text-sm border-2 border-gray-200 text-gray-400 cursor-not-allowed mt-auto"
-              >
-                Current Plan
-              </button>
-            ) : (
-              <RazorpayCheckout 
-                planType="BASIC" 
-                interval={interval} 
-                buttonText="Downgrade to Basic"
-                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gray-100 hover:bg-gray-200 text-gray-800 transition-colors mt-auto text-center cursor-pointer"
-              />
-            )}
+            <RazorpayCheckout 
+              planType="BASIC" 
+              interval={interval} 
+              buttonText={planType === 'BASIC' ? "Renew / Extend Basic" : "Downgrade to Basic"}
+              className={`w-full py-3 px-4 rounded-xl font-bold text-sm transition-colors mt-auto text-center cursor-pointer ${
+                planType === 'BASIC'
+                  ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-600/20'
+                  : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
+              }`}
+            />
           </div>
 
           {/* Standard Plan */}
@@ -235,21 +230,16 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
               </li>
             </ul>
 
-            {planType === 'STANDARD' ? (
-              <button 
-                disabled
-                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-teal-500 text-white shadow-lg shadow-teal-500/30 cursor-not-allowed mt-auto"
-              >
-                Current Plan
-              </button>
-            ) : (
-              <RazorpayCheckout 
-                planType="STANDARD" 
-                interval={interval} 
-                buttonText="Select Standard"
-                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gray-900 hover:bg-gray-800 text-white transition-colors mt-auto text-center cursor-pointer"
-              />
-            )}
+            <RazorpayCheckout 
+              planType="STANDARD" 
+              interval={interval} 
+              buttonText={planType === 'STANDARD' ? "Renew / Extend Standard" : "Select Standard"}
+              className={`w-full py-3 px-4 rounded-xl font-bold text-sm transition-colors mt-auto text-center cursor-pointer ${
+                planType === 'STANDARD'
+                  ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-600/20'
+                  : 'bg-gray-900 hover:bg-gray-800 text-white'
+              }`}
+            />
           </div>
 
           {/* Family / Caretaker Plan */}
@@ -285,21 +275,16 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
               </li>
             </ul>
 
-            {planType === 'FAMILY' ? (
-              <button 
-                disabled
-                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-gray-800 text-teal-400 border border-gray-700 cursor-not-allowed mt-auto"
-              >
-                Current Plan
-              </button>
-            ) : (
-              <RazorpayCheckout 
-                planType="FAMILY" 
-                interval={interval} 
-                buttonText="Upgrade to Caretaker"
-                className="w-full py-3 px-4 rounded-xl font-bold text-sm bg-white hover:bg-gray-100 text-gray-900 transition-colors mt-auto text-center cursor-pointer"
-              />
-            )}
+            <RazorpayCheckout 
+              planType="FAMILY" 
+              interval={interval} 
+              buttonText={planType === 'FAMILY' ? "Renew / Extend Caretaker" : "Upgrade to Caretaker"}
+              className={`w-full py-3 px-4 rounded-xl font-bold text-sm transition-colors mt-auto text-center cursor-pointer ${
+                planType === 'FAMILY'
+                  ? 'bg-teal-400 hover:bg-teal-300 text-gray-900 shadow-md shadow-teal-400/20'
+                  : 'bg-white hover:bg-gray-100 text-gray-900'
+              }`}
+            />
           </div>
 
         </div>
