@@ -10,6 +10,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@clerk/nextjs": "^7.6.3",
     "@messagebird/sdk": "^0.2.0",
     "@noble/hashes": "^2.2.0",
     "@paypal/checkout-server-sdk": "^1.0.3",
