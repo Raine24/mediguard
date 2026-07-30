@@ -17,14 +17,14 @@ export default function LoginPage() {
 
   const handleGoogleAuth = () => {
     if (clerkUser) {
-      window.location.href = "/dashboard";
+      window.location.href = "/api/auth/clerk-callback";
     } else if (openSignIn) {
       openSignIn({
-        fallbackRedirectUrl: "/dashboard",
-        forceRedirectUrl: "/dashboard",
+        fallbackRedirectUrl: "/api/auth/clerk-callback",
+        forceRedirectUrl: "/api/auth/clerk-callback",
       });
     } else {
-      window.location.href = "/dashboard";
+      window.location.href = "/api/auth/clerk-callback";
     }
   };
 

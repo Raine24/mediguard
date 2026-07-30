@@ -23,14 +23,14 @@ export default function RegisterPage() {
 
   const handleGoogleAuth = () => {
     if (clerkUser) {
-      window.location.href = "/dashboard";
+      window.location.href = "/api/auth/clerk-callback";
     } else if (openSignUp) {
       openSignUp({
-        fallbackRedirectUrl: "/dashboard",
-        forceRedirectUrl: "/dashboard",
+        fallbackRedirectUrl: "/api/auth/clerk-callback",
+        forceRedirectUrl: "/api/auth/clerk-callback",
       });
     } else {
-      window.location.href = "/dashboard";
+      window.location.href = "/api/auth/clerk-callback";
     }
   };
 
