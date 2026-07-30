@@ -1,26 +1,66 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { currentUser } from "@clerk/nextjs/server";
+
+function normalizePhone(p: string): string {
+  if (!p) return '';
+  const digits = p.replace(/[^\d+]/g, '');
+  if (!digits) return '';
+  return digits.startsWith('+') ? digits : `+${digits}`;
+}
 
 export async function POST(req: Request) {
   try {
     const { phone, code } = await req.json();
 
-    if (!phone || !code) {
-      return NextResponse.json({ error: 'Missing phone or code' }, { status: 400 });
+    if (!code) {
+      return NextResponse.json({ error: 'Missing verification code' }, { status: 400 });
     }
 
-    // Find the latest unverified user with this phone number
-    const user = await prisma.user.findFirst({
-      where: { phone },
-      orderBy: { createdAt: 'desc' },
-      select: { id: true, twoFactorSecret: true }
-    });
+    const cleanPhone = phone ? normalizePhone(phone) : '';
+    const cleanCode = code.trim();
+
+    // 1. Identify logged-in user via NextAuth or Clerk
+    let user = null;
+    const session = await getServerSession(authOptions);
+    if (session?.user?.id) {
+      user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { id: true, twoFactorSecret: true, phone: true }
+      });
+    }
+
+    if (!user) {
+      try {
+        const clerkUser = await currentUser();
+        const email = clerkUser?.emailAddresses?.[0]?.emailAddress;
+        if (email) {
+          user = await prisma.user.findFirst({
+            where: { email: { equals: email, mode: 'insensitive' } },
+            select: { id: true, twoFactorSecret: true, phone: true }
+          });
+        }
+      } catch (e) {
+        console.error("Clerk user lookup error in verify-phone:", e);
+      }
+    }
+
+    // 2. If no active session user, find latest user matching phone
+    if (!user && cleanPhone) {
+      user = await prisma.user.findFirst({
+        where: { OR: [{ phone: cleanPhone }, { phone: phone.trim() }] },
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, twoFactorSecret: true, phone: true }
+      });
+    }
 
     if (!user || !user.twoFactorSecret) {
-      return NextResponse.json({ error: 'Invalid request or code expired' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid request or code expired. Please click "Resend WhatsApp OTP".' }, { status: 400 });
     }
 
-    let payload;
+    let payload: { phone?: string; code: string; expires: number };
     try {
       payload = JSON.parse(user.twoFactorSecret);
     } catch (e) {
@@ -28,31 +68,35 @@ export async function POST(req: Request) {
     }
 
     if (Date.now() > payload.expires) {
-      return NextResponse.json({ error: 'Verification code expired' }, { status: 400 });
+      return NextResponse.json({ error: 'Verification code expired. Please click "Resend WhatsApp OTP".' }, { status: 400 });
     }
 
-    if (payload.code !== code) {
-      return NextResponse.json({ error: 'Invalid verification code' }, { status: 400 });
+    if (payload.code !== cleanCode) {
+      return NextResponse.json({ error: 'Invalid verification code. Please check your WhatsApp.' }, { status: 400 });
     }
 
-    // Revoke this phone number from any other users
-    await prisma.user.updateMany({
-      where: { 
-        phone,
-        id: { not: user.id }
-      },
-      data: {
-        whatsappVerified: false,
-        phone: `revoked_${Date.now()}`
-      }
-    });
+    // Revoke this phone number from any other previous accounts
+    const targetPhone = cleanPhone || payload.phone || user.phone;
+    if (targetPhone) {
+      await prisma.user.updateMany({
+        where: { 
+          phone: targetPhone,
+          id: { not: user.id }
+        },
+        data: {
+          whatsappVerified: false,
+          phone: `revoked_${Date.now()}`
+        }
+      });
+    }
 
-    // Success! Update the user
+    // Success! Update the user as verified
     await prisma.user.update({
       where: { id: user.id },
       data: {
+        phone: targetPhone,
         whatsappVerified: true,
-        twoFactorSecret: null // clear the OTP
+        twoFactorSecret: null // clear the OTP payload
       }
     });
 
