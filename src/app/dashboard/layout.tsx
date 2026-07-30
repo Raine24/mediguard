@@ -30,6 +30,10 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
+  if (!user.whatsappVerified) {
+    redirect("/verify-phone");
+  }
+
   const isSubActive = user.subscription?.status === "ACTIVE";
   const expiryDate = user.subscription?.expiryDate ? new Date(user.subscription.expiryDate) : null;
   const isExpired = !isSubActive || (expiryDate !== null && isAfter(new Date(), expiryDate));
