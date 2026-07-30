@@ -16,7 +16,8 @@ import {
   Ticket
 } from "lucide-react";
 import clsx from "clsx";
-import { signOut } from "next-auth/react";
+import { signOut as nextAuthSignOut } from "next-auth/react";
+import { useClerk } from "@clerk/nextjs";
 import SessionTimeout from "./SessionTimeout";
 import SupportModal from "./SupportModal";
 
@@ -41,6 +42,16 @@ export default function DashboardShell({
 }) {
   const pathname = usePathname();
   const [isSupportOpen, setIsSupportOpen] = useState(false);
+  const { signOut: clerkSignOut } = useClerk();
+
+  const handleLogout = async () => {
+    try {
+      await clerkSignOut();
+    } catch (e) {
+      console.error("Clerk signout error:", e);
+    }
+    await nextAuthSignOut({ callbackUrl: '/login' });
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row pb-16 md:pb-0">
@@ -86,7 +97,7 @@ export default function DashboardShell({
           </button>
           
           <button 
-            onClick={() => signOut({ callbackUrl: '/login' })}
+            onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 font-medium transition-colors"
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-log-out text-red-500"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
@@ -126,7 +137,7 @@ export default function DashboardShell({
             <HelpCircle className="w-5 h-5" />
           </button>
           <button 
-            onClick={() => signOut({ callbackUrl: '/login' })}
+            onClick={handleLogout}
             className="p-2 text-red-600 hover:text-red-700 bg-red-50 rounded-full" 
             aria-label="Log out"
           >

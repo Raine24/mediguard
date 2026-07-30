@@ -80,7 +80,7 @@ export default function VerifyPhonePage() {
 
       setSuccessMsg("WhatsApp verified successfully! Redirecting to dashboard...");
       setTimeout(() => {
-        router.push("/dashboard");
+        window.location.href = "/dashboard";
       }, 1000);
     } catch (err: any) {
       setError(err.message);
