@@ -11,11 +11,34 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
-        twoFactorToken: { label: "2FA Token", type: "text" }
+        twoFactorToken: { label: "2FA Token", type: "text" },
+        isSsoLogin: { label: "SSO Login", type: "text" }
       },
       async authorize(credentials, req) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Missing email or password");
+        if (!credentials?.email) {
+          throw new Error("Missing email");
+        }
+
+        // Handle Google / Clerk SSO Login
+        if (credentials?.isSsoLogin === "true") {
+          const ssoUser = await prisma.user.findFirst({
+            where: { email: { equals: credentials.email, mode: "insensitive" } }
+          });
+
+          if (!ssoUser) {
+            throw new Error("SSO User not found");
+          }
+
+          return {
+            id: ssoUser.id,
+            email: ssoUser.email,
+            name: ssoUser.name,
+            role: ssoUser.role,
+          };
+        }
+
+        if (!credentials?.password) {
+          throw new Error("Missing password");
         }
         
         const user = await prisma.user.findUnique({

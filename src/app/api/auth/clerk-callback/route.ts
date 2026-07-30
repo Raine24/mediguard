@@ -47,11 +47,52 @@ export async function GET(req: Request) {
       });
     }
 
-    if (!user.whatsappVerified) {
-      return NextResponse.redirect(new URL('/verify-phone', req.url));
-    }
+    const targetUrl = !user.whatsappVerified ? '/verify-phone' : '/dashboard';
 
-    return NextResponse.redirect(new URL('/dashboard', req.url));
+    // HTML Auto-Bridge to issue NextAuth session cookie
+    const html = `<!DOCTYPE html>
+<html>
+  <head>
+    <title>Logging in...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-slate-900 min-h-screen flex items-center justify-center font-sans text-white p-4">
+    <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl text-center max-w-sm w-full">
+      <div class="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+      <h2 class="text-lg font-bold text-white mb-1">Authenticating Session</h2>
+      <p class="text-xs text-slate-400">Taking you to MedicINtime...</p>
+    </div>
+    <script>
+      async function syncNextAuthSession() {
+        try {
+          const csrfRes = await fetch('/api/auth/csrf');
+          const csrfData = await csrfRes.json();
+          
+          await fetch('/api/auth/callback/credentials', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({
+              email: ${JSON.stringify(email)},
+              isSsoLogin: 'true',
+              csrfToken: csrfData.csrfToken,
+              json: 'true'
+            })
+          });
+          window.location.href = ${JSON.stringify(targetUrl)};
+        } catch (err) {
+          console.error("NextAuth sync error:", err);
+          window.location.href = ${JSON.stringify(targetUrl)};
+        }
+      }
+      syncNextAuthSession();
+    </script>
+  </body>
+</html>`;
+
+    return new Response(html, {
+      headers: { 'Content-Type': 'text/html' }
+    });
   } catch (error) {
     console.error('Clerk callback error:', error);
     return NextResponse.redirect(new URL('/login', req.url));
