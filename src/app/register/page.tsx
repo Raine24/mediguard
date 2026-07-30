@@ -148,7 +148,7 @@ export default function RegisterPage() {
           {!requiresOtp && (
             <>
               <div className="mb-6">
-                <SignUpButton mode="modal">
+                <SignUpButton mode="modal" fallbackRedirectUrl="/dashboard" forceRedirectUrl="/dashboard">
                   <button 
                     type="button" 
                     className="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-50 text-slate-700 font-bold py-3.5 px-4 rounded-xl border border-slate-300 shadow-sm transition-all text-sm cursor-pointer hover:border-slate-400"
