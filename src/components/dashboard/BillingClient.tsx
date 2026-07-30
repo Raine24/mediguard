@@ -184,8 +184,8 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
             <RazorpayCheckout 
               planType="BASIC" 
               interval={interval} 
-              buttonText={planType === 'BASIC' ? "Renew / Extend Basic" : "Downgrade to Basic"}
-              className={`w-full py-3 px-4 rounded-xl font-bold text-sm transition-colors mt-auto text-center cursor-pointer ${
+              buttonText={planType === 'BASIC' ? "Renew Basic" : "Downgrade to Basic"}
+              className={`w-full py-3.5 px-3 sm:px-4 rounded-xl font-bold text-sm transition-colors mt-auto text-center cursor-pointer ${
                 planType === 'BASIC'
                   ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-600/20'
                   : 'bg-gray-100 hover:bg-gray-200 text-gray-800'
@@ -233,8 +233,8 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
             <RazorpayCheckout 
               planType="STANDARD" 
               interval={interval} 
-              buttonText={planType === 'STANDARD' ? "Renew / Extend Standard" : "Select Standard"}
-              className={`w-full py-3 px-4 rounded-xl font-bold text-sm transition-colors mt-auto text-center cursor-pointer ${
+              buttonText={planType === 'STANDARD' ? "Renew Standard" : "Select Standard"}
+              className={`w-full py-3.5 px-3 sm:px-4 rounded-xl font-bold text-sm transition-colors mt-auto text-center cursor-pointer ${
                 planType === 'STANDARD'
                   ? 'bg-teal-600 hover:bg-teal-700 text-white shadow-md shadow-teal-600/20'
                   : 'bg-gray-900 hover:bg-gray-800 text-white'
@@ -278,8 +278,8 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
             <RazorpayCheckout 
               planType="FAMILY" 
               interval={interval} 
-              buttonText={planType === 'FAMILY' ? "Renew / Extend Caretaker" : "Upgrade to Caretaker"}
-              className={`w-full py-3 px-4 rounded-xl font-bold text-sm transition-colors mt-auto text-center cursor-pointer ${
+              buttonText={planType === 'FAMILY' ? "Renew Caretaker" : "Upgrade to Caretaker"}
+              className={`w-full py-3.5 px-3 sm:px-4 rounded-xl font-bold text-sm transition-colors mt-auto text-center cursor-pointer ${
                 planType === 'FAMILY'
                   ? 'bg-teal-400 hover:bg-teal-300 text-gray-900 shadow-md shadow-teal-400/20'
                   : 'bg-white hover:bg-gray-100 text-gray-900'

@@ -145,20 +145,19 @@ export default function RazorpayCheckout({
       type="button"
       onClick={handleCheckout}
       disabled={loading}
-      className={
-        className ||
-        "w-full py-3.5 px-4 rounded-xl font-bold text-sm bg-teal-600 hover:bg-teal-700 text-white transition-all shadow-md flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
-      }
+      className={`w-full py-3.5 px-3 sm:px-4 rounded-xl font-bold text-sm flex items-center justify-center gap-2 whitespace-nowrap transition-all disabled:opacity-50 cursor-pointer ${
+        className || "bg-teal-600 hover:bg-teal-700 text-white shadow-md"
+      }`}
     >
       {loading ? (
         <>
-          <Loader2 className="w-4 h-4 animate-spin" />
-          <span>Processing...</span>
+          <Loader2 className="w-4 h-4 animate-spin shrink-0" />
+          <span className="truncate">Processing...</span>
         </>
       ) : (
         <>
-          <CreditCard className="w-4 h-4" />
-          <span>{buttonText}</span>
+          <CreditCard className="w-4 h-4 shrink-0" />
+          <span className="truncate">{buttonText}</span>
         </>
       )}
     </button>
