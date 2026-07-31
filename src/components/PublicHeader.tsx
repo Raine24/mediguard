@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function PublicHeader() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -21,6 +22,7 @@ export default function PublicHeader() {
           <Link href="/login" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden md:block transition-colors">Referral Program</Link>
           <Link href="/affiliates" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden md:block transition-colors">Affiliate Program</Link>
           <div className="flex items-center gap-3 ml-2">
+            <LanguageSwitcher />
             <Link href="/login" className="text-[0.9rem] font-semibold text-[#0D3D56] border-[1.5px] border-[#0D3D56] px-[22px] py-[10px] rounded-[50px] hover:bg-[#0D3D56] hover:text-white transition-all hidden sm:inline-flex">Log In</Link>
             <Link href="/register" className="text-[0.9rem] font-semibold bg-[#F4A300] text-[#1C1C1E] px-[22px] py-[10px] rounded-[50px] hover:bg-[#fdb73a] hover:-translate-y-[1px] shadow-[0_4px_16px_rgba(244,163,0,0.3)] hover:shadow-[0_6px_24px_rgba(244,163,0,0.4)] transition-all hidden sm:inline-flex">Get Started</Link>
             <button 
@@ -37,6 +39,10 @@ export default function PublicHeader() {
       {/* Mobile Navigation Dropdown */}
       {mobileMenuOpen && (
         <div className="sm:hidden fixed top-[76px] left-6 right-6 bg-[#FAF8F4]/98 backdrop-blur-[10px] rounded-[24px] p-6 shadow-[0_8px_32px_rgba(13,61,86,.14)] z-[999] border border-[#0D3D56]/10 flex flex-col gap-4">
+          <div className="flex justify-between items-center border-b border-[#0D3D56]/5 pb-3">
+            <span className="font-semibold text-xs text-slate-500 uppercase tracking-wider">Select Language</span>
+            <LanguageSwitcher />
+          </div>
           <Link href="/" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] text-[#1C1C1E] border-b border-[#0D3D56]/5 pb-3">Home</Link>
           <Link href="/#how-it-works" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] text-[#1C1C1E] border-b border-[#0D3D56]/5 pb-3">How It Works</Link>
           <Link href="/#pricing" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] text-[#1C1C1E] border-b border-[#0D3D56]/5 pb-3">Pricing</Link>
