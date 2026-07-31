@@ -2,6 +2,7 @@ import { auth, currentUser } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import crypto from 'crypto';
+import { encode } from 'next-auth/jwt';
 
 export async function GET(req: Request) {
   try {
@@ -10,7 +11,6 @@ export async function GET(req: Request) {
 
     const email = clerkUser?.emailAddresses?.[0]?.emailAddress;
     if (!email) {
-      console.error('Clerk callback error: No email found for user', clerkId);
       return NextResponse.redirect(new URL('/login', req.url));
     }
 
@@ -48,51 +48,37 @@ export async function GET(req: Request) {
     }
 
     const targetUrl = !user.whatsappVerified ? '/verify-phone' : '/dashboard';
+    const redirectResponse = NextResponse.redirect(new URL(targetUrl, req.url));
 
-    // HTML Auto-Bridge to issue NextAuth session cookie
-    const html = `<!DOCTYPE html>
-<html>
-  <head>
-    <title>Logging in...</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body class="bg-slate-900 min-h-screen flex items-center justify-center font-sans text-white p-4">
-    <div class="bg-slate-800 p-8 rounded-3xl border border-slate-700 shadow-2xl text-center max-w-sm w-full">
-      <div class="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-      <h2 class="text-lg font-bold text-white mb-1">Authenticating Session</h2>
-      <p class="text-xs text-slate-400">Taking you to MedicINtime...</p>
-    </div>
-    <script>
-      async function syncNextAuthSession() {
-        try {
-          const csrfRes = await fetch('/api/auth/csrf');
-          const csrfData = await csrfRes.json();
-          
-          await fetch('/api/auth/callback/credentials', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-              email: ${JSON.stringify(email)},
-              isSsoLogin: 'true',
-              csrfToken: csrfData.csrfToken,
-              json: 'true'
-            })
-          });
-          window.location.href = ${JSON.stringify(targetUrl)};
-        } catch (err) {
-          console.error("NextAuth sync error:", err);
-          window.location.href = ${JSON.stringify(targetUrl)};
-        }
-      }
-      syncNextAuthSession();
-    </script>
-  </body>
-</html>`;
-
-    return new Response(html, {
-      headers: { 'Content-Type': 'text/html' }
+    // Encode NextAuth JWT token directly
+    const secret = process.env.NEXTAUTH_SECRET || "mediguard_super_secret_key_12345";
+    const token = await encode({
+      token: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        sub: user.id,
+      },
+      secret,
     });
+
+    const isSecure = req.url.startsWith('https://') || process.env.NODE_ENV === 'production';
+    
+    // Attach NextAuth session cookies directly on the HTTP 307 redirect response
+    redirectResponse.cookies.set(
+      isSecure ? '__Secure-next-auth.session-token' : 'next-auth.session-token',
+      token,
+      {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: isSecure,
+        maxAge: 30 * 24 * 60 * 60, // 30 days
+      }
+    );
+
+    return redirectResponse;
   } catch (error) {
     console.error('Clerk callback error:', error);
     return NextResponse.redirect(new URL('/login', req.url));
