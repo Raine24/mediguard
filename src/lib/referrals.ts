@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { sendWhatsAppMessage } from '@/lib/telnyx';
+import { sendWhatsAppMessage } from '@/lib/whatsapp';
 
 export async function processReferralReward({
   referredUserId,
@@ -126,5 +126,72 @@ export async function processReferralReward({
     }
   } catch (error) {
     console.error("Error processing referral reward:", error);
+  }
+}
+
+export async function processAffiliateCommission({
+  userId,
+  planType,
+  amountPaid,
+  paymentTransactionId,
+}: {
+  userId: string;
+  planType: string;
+  amountPaid: number;
+  paymentTransactionId: string;
+}) {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { referredByCode: true },
+    });
+
+    if (!user?.referredByCode) return;
+
+    const affiliate = await prisma.affiliateProfile.findUnique({
+      where: { refCode: user.referredByCode },
+    });
+
+    if (!affiliate || affiliate.status !== "ACTIVE") return;
+
+    const existingConversions = await prisma.affiliateConversion.count({
+      where: { referredUserId: userId },
+    });
+
+    if (affiliate.commissionType === "RECURRING" || (affiliate.commissionType === "ONE_TIME" && existingConversions === 0)) {
+      let commissionRate = affiliate.customCommissionRate;
+      if (!commissionRate) {
+        const planRateSetting = await prisma.systemSetting.findUnique({
+          where: { key: `affiliate_${planType.toLowerCase()}_rate` },
+        });
+        // 20% fixed default commission rate
+        commissionRate = planRateSetting ? parseFloat(planRateSetting.value) : 20;
+      }
+
+      const commissionAmount = (amountPaid * commissionRate) / 100;
+
+      await prisma.affiliateConversion.create({
+        data: {
+          affiliateId: affiliate.id,
+          referredUserId: userId,
+          planType,
+          paymentAmount: amountPaid,
+          commissionAmount,
+          status: "PENDING",
+          paymentId: paymentTransactionId,
+        },
+      });
+
+      await prisma.affiliateProfile.update({
+        where: { id: affiliate.id },
+        data: {
+          conversions: { increment: existingConversions === 0 ? 1 : 0 },
+          pendingEarnings: { increment: commissionAmount },
+          totalEarnings: { increment: commissionAmount },
+        },
+      });
+    }
+  } catch (error) {
+    console.error("Error processing affiliate commission:", error);
   }
 }

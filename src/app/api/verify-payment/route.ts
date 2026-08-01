@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
-import { processReferralReward } from "@/lib/referrals";
+import { processReferralReward, processAffiliateCommission } from "@/lib/referrals";
 
 export async function POST(req: Request) {
   try {
@@ -84,7 +84,7 @@ export async function POST(req: Request) {
       };
       const amountPaid = basePrices[planType]?.[interval] || 9.00;
 
-      await prisma.paymentTransaction.create({
+      const paymentTx = await prisma.paymentTransaction.create({
         data: {
           userId: session.user.id,
           planType,
@@ -96,7 +96,15 @@ export async function POST(req: Request) {
         }
       });
 
-      // Process referral rewards based on commitment matching rules
+      // Process 20% Affiliate Commission if user was referred by an affiliate
+      await processAffiliateCommission({
+        userId: session.user.id,
+        planType,
+        amountPaid,
+        paymentTransactionId: paymentTx.id,
+      });
+
+      // Process patient referral rewards based on commitment matching rules
       await processReferralReward({
         referredUserId: session.user.id,
         planType,
