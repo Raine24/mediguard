@@ -83,7 +83,7 @@ export default function AffiliateLandingPage() {
                 <div className="w-16 h-16 shrink-0 bg-slate-900 text-white rounded-full flex items-center justify-center text-2xl font-bold">3</div>
                 <div>
                   <h3 className="text-2xl font-bold mb-2 text-slate-800">Earn Commissions</h3>
-                  <p className="text-slate-600 text-lg">When someone clicks your link, signs up, and pays for a subscription, you automatically earn a commission. We handle the payouts directly to your PayPal or Bank Account.</p>
+                  <p className="text-slate-600 text-lg">When someone clicks your link, signs up, and pays for a subscription, you automatically earn a commission. We handle payouts directly to your Bank Account or preferred payout method.</p>
                 </div>
               </div>
             </div>

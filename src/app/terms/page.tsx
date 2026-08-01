@@ -48,7 +48,7 @@ export default function TermsAndConditions() {
 
           <h2 className="text-xl font-bold text-slate-800 mt-8 mb-4">5. Subscription, Free Trials, and Payments</h2>
           <p className="mb-6">
-            MedicINtime offers a 3-day free trial for new users. Following the trial period, access to our active reminder service requires a paid subscription. Payments are processed securely via third-party providers (e.g., PayPal). Subscriptions automatically renew unless canceled prior to the billing cycle date. <strong>All subscription payments are strictly non-refundable.</strong> Please see our <Link href="/refunds" className="text-teal-600 hover:underline">Refund Policy</Link> for detailed information.
+            MedicINtime offers a 3-day free trial for new users. Following the trial period, access to our active reminder service requires a paid subscription. Payments are processed securely via third-party providers (e.g., Razorpay, Credit/Debit Cards, UPI, Netbanking). Subscriptions automatically renew unless canceled prior to the billing cycle date. <strong>All subscription payments are strictly non-refundable.</strong> Please see our <Link href="/refunds" className="text-teal-600 hover:underline">Refund Policy</Link> for detailed information.
           </p>
 
           <h2 className="text-xl font-bold text-slate-800 mt-8 mb-4">6. Partner and Affiliate Programs</h2>

@@ -50,7 +50,7 @@ export default function PrivacyPolicy() {
           </p>
           <ul className="list-disc pl-6 mb-6 space-y-2">
             <li><strong>Messaging Partners:</strong> such as Bird (MessageBird) and Twilio, strictly for the purpose of delivering your reminders securely over WhatsApp or SMS.</li>
-            <li><strong>Payment Processors:</strong> such as PayPal, to securely process your subscription payments. We do not store your raw credit card data on our servers.</li>
+            <li><strong>Payment Processors:</strong> such as Razorpay, to securely process your subscription payments. We do not store your raw credit card data on our servers.</li>
           </ul>
 
           <h2 className="text-xl font-bold text-slate-800 mt-8 mb-4">4. Data Security</h2>
