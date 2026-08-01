@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
+import { processReferralReward } from "@/lib/referrals";
 
 export async function POST(req: Request) {
   try {
@@ -93,6 +94,13 @@ export async function POST(req: Request) {
           gatewayId: actualPaymentId,
           status: "SUCCEEDED"
         }
+      });
+
+      // Process referral rewards based on commitment matching rules
+      await processReferralReward({
+        referredUserId: session.user.id,
+        planType,
+        billingCycle
       });
     }
 
