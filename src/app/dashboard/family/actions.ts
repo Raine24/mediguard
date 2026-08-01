@@ -24,8 +24,8 @@ export async function addFamilyMember(formData: {
     throw new Error("PLAN_LIMIT_REACHED");
   }
 
-  // Family plan typically supports 4 members
-  if (user._count.familyMembers >= 4) {
+  // Caretaker plan supports up to 2 numbers max
+  if (user._count.familyMembers >= 2) {
     throw new Error("MEMBER_LIMIT_REACHED");
   }
 

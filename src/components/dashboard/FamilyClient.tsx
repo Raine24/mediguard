@@ -59,13 +59,13 @@ export default function FamilyClient({
               Upgrade to Family Plan
             </h2>
             <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
-              Add up to 4 family members. They will receive their own WhatsApp reminders on their personal phones, while you can monitor their history from your dashboard.
+              Add up to 2 family members (2 numbers max). They will receive their own WhatsApp reminders on their personal phones, while you can monitor their history from your dashboard.
             </p>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
               <div className="flex items-center gap-2 text-gray-700 font-medium bg-gray-50 px-4 py-2 rounded-xl border border-gray-200">
                 <CheckCircle2 className="w-5 h-5 text-teal-600" />
-                Up to 4 Members
+                Up to 2 Numbers
               </div>
               <div className="flex items-center gap-2 text-gray-700 font-medium bg-gray-50 px-4 py-2 rounded-xl border border-gray-200">
                 <CheckCircle2 className="w-5 h-5 text-teal-600" />
@@ -78,7 +78,7 @@ export default function FamilyClient({
               className="inline-flex items-center justify-center gap-2 bg-teal-600 text-white font-bold text-lg px-8 py-4 rounded-full hover:bg-teal-700 hover:scale-105 transition-all shadow-md"
             >
               <Lock className="w-5 h-5" />
-              Upgrade Now — $17.99/mo
+              Upgrade Now — $16.50/mo
             </Link>
           </div>
         </div>

@@ -34,7 +34,7 @@ export default function FamilyMemberModal({
     } catch (error: any) {
       setStatus("error");
       if (error.message.includes("MEMBER_LIMIT_REACHED")) {
-        setErrorMsg("You have reached the limit of 4 family members.");
+        setErrorMsg("You have reached the limit of 2 family numbers for the Caretaker plan.");
       } else {
         setErrorMsg("Something went wrong. Please try again.");
       }
