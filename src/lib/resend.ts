@@ -9,8 +9,8 @@ export async function sendEmail({
 }) {
   const apiKey = process.env.RESEND_API_KEY;
   
-  // Resend sender email (verified domain or onboarding@resend.dev fallback)
-  const from = process.env.RESEND_FROM_EMAIL || "MedicINtime <onboarding@resend.dev>";
+  // Resend sender email (defaults to support@medicintime.com)
+  const from = process.env.RESEND_FROM_EMAIL || "MedicINtime Support <support@medicintime.com>";
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
