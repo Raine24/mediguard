@@ -97,8 +97,8 @@ export default async function ReferralsPage() {
                           <p className="text-xs text-teal-600 font-medium">{tier.reward}</p>
                         </div>
                       </div>
-                    );
                   })}
+                </div>
               </div>
             </div>
 
