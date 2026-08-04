@@ -41,7 +41,8 @@ export default async function ReferralsPage() {
     });
   }
 
-  const referralLink = `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/ref/${refCode}`;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.NODE_ENV === 'production' ? 'https://medicintime.com' : 'http://localhost:3000');
+  const referralLink = `${baseUrl}/ref/${refCode}`;
   
   const count = user.totalSuccessfulReferrals;
   const tiers = [
