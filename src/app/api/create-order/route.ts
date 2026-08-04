@@ -23,8 +23,8 @@ export async function POST(req: Request) {
       if (planType) {
         const basePricesUSD: Record<string, Record<string, number>> = {
           BASIC: { monthly: 1.75, biannual: 7.00, annual: 15.75 },
-          STANDARD: { monthly: 9.00, biannual: 36.00, annual: 81.00 },
-          FAMILY: { monthly: 16.50, biannual: 66.00, annual: 148.50 },
+          STANDARD: { monthly: 5.00, biannual: 20.00, annual: 45.00 },
+          FAMILY: { monthly: 12.00, biannual: 48.00, annual: 108.00 },
         };
         const usdPrice = basePricesUSD[planType]?.[interval || "monthly"] || 1.75;
 

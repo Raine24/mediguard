@@ -78,7 +78,7 @@ export default function FamilyClient({
               className="inline-flex items-center justify-center gap-2 bg-teal-600 text-white font-bold text-lg px-8 py-4 rounded-full hover:bg-teal-700 hover:scale-105 transition-all shadow-md"
             >
               <Lock className="w-5 h-5" />
-              Upgrade Now — $16.50/mo
+              Upgrade Now — $12.00/mo
             </Link>
           </div>
         </div>
