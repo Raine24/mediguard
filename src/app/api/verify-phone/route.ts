@@ -22,16 +22,29 @@ export async function POST(req: Request) {
     const cleanPhone = phone ? normalizePhone(phone) : '';
     const cleanCode = code.trim();
 
-    // 1. Identify logged-in user via NextAuth or Clerk
     let user = null;
-    const session = await getServerSession(authOptions);
-    if (session?.user?.id) {
-      user = await prisma.user.findUnique({
-        where: { id: session.user.id },
+
+    // 1. Prioritize finding user by the provided phone number (crucial for registration flow)
+    if (cleanPhone) {
+      user = await prisma.user.findFirst({
+        where: { OR: [{ phone: cleanPhone }, { phone: phone.trim() }] },
+        orderBy: { createdAt: 'desc' },
         select: { id: true, twoFactorSecret: true, phone: true }
       });
     }
 
+    // 2. Fallback to session user if no phone provided or user not found by phone
+    if (!user) {
+      const session = await getServerSession(authOptions);
+      if (session?.user?.id) {
+        user = await prisma.user.findUnique({
+          where: { id: session.user.id },
+          select: { id: true, twoFactorSecret: true, phone: true }
+        });
+      }
+    }
+
+    // 3. Fallback to Clerk user
     if (!user) {
       try {
         const clerkUser = await currentUser();
@@ -45,15 +58,6 @@ export async function POST(req: Request) {
       } catch (e) {
         console.error("Clerk user lookup error in verify-phone:", e);
       }
-    }
-
-    // 2. If no active session user, find latest user matching phone
-    if (!user && cleanPhone) {
-      user = await prisma.user.findFirst({
-        where: { OR: [{ phone: cleanPhone }, { phone: phone.trim() }] },
-        orderBy: { createdAt: 'desc' },
-        select: { id: true, twoFactorSecret: true, phone: true }
-      });
     }
 
     if (!user || !user.twoFactorSecret) {
