@@ -99,30 +99,7 @@ export default async function ReferralsPage() {
                       </div>
                     );
                   })}
-                </div>
               </div>
-
-              {currentTierIndex < 3 ? (
-                <div className="mt-8 p-4 bg-teal-50 rounded-lg flex items-center gap-4">
-                  <div className="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center text-teal-600 font-bold shrink-0">
-                    {nextTier.target - count}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">More to go!</p>
-                    <p className="text-sm text-gray-600">Refer {nextTier.target - count} more people to reach your next milestone and earn {nextTier.reward}.</p>
-                  </div>
-                </div>
-              ) : (
-                <div className="mt-8 p-4 bg-yellow-50 rounded-lg flex items-center gap-4">
-                  <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-600 font-bold shrink-0">
-                    <Gift className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">Maximum Rewards Reached!</p>
-                    <p className="text-sm text-gray-600">You are a MedicINtime Champion. You've earned the maximum referral rewards.</p>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Referrals List */}
