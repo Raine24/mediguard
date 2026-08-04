@@ -268,3 +268,13 @@ model Referral {
   referredUser       User     @relation("ReferredBy", fields: [referredUserId], references: [id], onDelete: Cascade)
   referrer           User     @relation("ReferredUsers", fields: [referrerId], references: [id], onDelete: Cascade)
 }
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
