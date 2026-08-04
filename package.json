@@ -13,8 +13,6 @@
     "@clerk/nextjs": "^7.6.3",
     "@messagebird/sdk": "^0.2.0",
     "@noble/hashes": "^2.2.0",
-    "@paypal/checkout-server-sdk": "^1.0.3",
-    "@paypal/react-paypal-js": "^10.0.0",
     "@prisma/client": "^5.22.0",
     "axios": "^1.18.0",
     "bcryptjs": "^3.0.3",
