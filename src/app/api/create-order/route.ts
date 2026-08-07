@@ -22,11 +22,11 @@ export async function POST(req: Request) {
     if (amount === undefined || amount === null) {
       if (planType) {
         const basePricesUSD: Record<string, Record<string, number>> = {
-          BASIC: { monthly: 1.75, biannual: 7.00, annual: 15.75 },
+          BASIC: { monthly: 2.00, biannual: 11.00, annual: 20.00 },
           STANDARD: { monthly: 5.00, biannual: 20.00, annual: 45.00 },
           FAMILY: { monthly: 12.00, biannual: 48.00, annual: 108.00 },
         };
-        const usdPrice = basePricesUSD[planType]?.[interval || "monthly"] || 1.75;
+        const usdPrice = basePricesUSD[planType]?.[interval || "monthly"] || 2.00;
 
         if (currency.toUpperCase() === "INR") {
           // Convert USD to INR (1 USD ≈ 85 INR) in paise (1 INR = 100 paise)

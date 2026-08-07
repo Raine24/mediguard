@@ -78,7 +78,7 @@ export async function POST(req: Request) {
 
       // 2. Record Payment Transaction
       const basePrices: Record<string, Record<string, number>> = {
-        BASIC: { monthly: 1.75, biannual: 7.00, annual: 15.75 },
+        BASIC: { monthly: 2.00, biannual: 11.00, annual: 20.00 },
         STANDARD: { monthly: 5.00, biannual: 20.00, annual: 45.00 },
         FAMILY: { monthly: 12.00, biannual: 48.00, annual: 108.00 },
       };
