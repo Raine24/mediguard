@@ -80,7 +80,7 @@ export async function POST(req: Request) {
       const basePrices: Record<string, Record<string, number>> = {
         BASIC: { monthly: 2.00, biannual: 11.00, annual: 20.00 },
         STANDARD: { monthly: 5.00, biannual: 20.00, annual: 45.00 },
-        FAMILY: { monthly: 12.00, biannual: 48.00, annual: 108.00 },
+        FAMILY: { monthly: 3.50, biannual: 21.00, annual: 40.00 },
       };
       const amountPaid = basePrices[planType]?.[interval] || 5.00;
 
