@@ -45,7 +45,7 @@ export default function ForgotPasswordPage() {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="flex justify-center">
             <img
-              src="https://i.ibb.co/t99SGFg/medicintime-logo.png"
+              src="/logo.png"
               alt="MedicINtime Logo"
               className="h-16 sm:h-20 w-auto object-contain"
             />
