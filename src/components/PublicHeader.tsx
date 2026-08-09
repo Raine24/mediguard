@@ -40,7 +40,7 @@ export default function PublicHeader() {
 
       {/* Mobile Navigation Dropdown */}
       {mobileMenuOpen && (
-        <div className="sm:hidden fixed top-[76px] left-6 right-6 bg-[#FAF8F4]/98 backdrop-blur-[10px] rounded-[24px] p-6 shadow-[0_8px_32px_rgba(13,61,86,.14)] z-[999] border border-[#0D3D56]/10 flex flex-col gap-4">
+        <div className="sm:hidden absolute top-[76px] left-6 right-6 bg-[#FAF8F4]/98 backdrop-blur-[10px] rounded-[24px] p-6 shadow-[0_8px_32px_rgba(13,61,86,.14)] z-[999] border border-[#0D3D56]/10 flex flex-col gap-4">
           <div className="flex justify-between items-center border-b border-[#0D3D56]/5 pb-3">
             <span className="font-semibold text-xs text-slate-500 uppercase tracking-wider">Select Language</span>
             <LanguageSwitcher />

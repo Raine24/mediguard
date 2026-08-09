@@ -13,16 +13,16 @@ export default function ContactUsPage() {
     <>
       <PublicHeader />
       
-      {/* Dark background wrapper resembling the Dribbble design */}
-      <main className="min-h-screen bg-[#111111] relative overflow-hidden py-12 md:py-24 px-4 sm:px-6">
+      {/* Light background wrapper */}
+      <main className="min-h-screen bg-[#FAF8F4] relative overflow-hidden pt-32 pb-12 md:pt-40 md:pb-24 px-4 sm:px-6">
         
-        {/* Background decorative waves (approximate using CSS SVG or simple gradients) */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
+        {/* Background decorative waves */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
           <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,200 Q400,300 800,100 T1600,150" fill="none" stroke="#ffffff" strokeWidth="1" strokeDasharray="10 10"/>
-            <path d="M0,400 Q500,500 1000,200 T2000,250" fill="none" stroke="#ffffff" strokeWidth="1" strokeDasharray="10 10"/>
-            <path d="M-200,600 Q300,700 800,400 T1800,450" fill="none" stroke="#ffffff" strokeWidth="1" strokeDasharray="10 10"/>
-            <path d="M-200,800 Q300,900 800,600 T1800,650" fill="none" stroke="#ffffff" strokeWidth="1" strokeDasharray="10 10"/>
+            <path d="M0,200 Q400,300 800,100 T1600,150" fill="none" stroke="#0D3D56" strokeWidth="2" strokeDasharray="10 10"/>
+            <path d="M0,400 Q500,500 1000,200 T2000,250" fill="none" stroke="#0D3D56" strokeWidth="2" strokeDasharray="10 10"/>
+            <path d="M-200,600 Q300,700 800,400 T1800,450" fill="none" stroke="#0D3D56" strokeWidth="2" strokeDasharray="10 10"/>
+            <path d="M-200,800 Q300,900 800,600 T1800,650" fill="none" stroke="#0D3D56" strokeWidth="2" strokeDasharray="10 10"/>
           </svg>
         </div>
 
