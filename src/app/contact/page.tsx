@@ -29,7 +29,7 @@ export default function ContactUsPage() {
         <div className="max-w-6xl mx-auto bg-white rounded-[2rem] shadow-2xl relative z-10 overflow-hidden">
           
           {/* Content Padding Wrapper */}
-          <div className="p-8 md:p-14">
+          <div className="p-5 sm:p-8 md:p-14">
             
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6 mb-12 border-b border-gray-100 pb-12">

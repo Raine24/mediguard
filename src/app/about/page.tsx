@@ -20,10 +20,7 @@ export default function AboutPage() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
             
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-gray-200 text-sm font-medium text-gray-600 mb-8 shadow-sm">
-                <span className="w-2 h-2 rounded-full bg-teal-500"></span>
-                About MedicINtime
-              </div>
+
               <h1 className="text-5xl lg:text-7xl font-bold text-slate-900 tracking-tight leading-[1.1] mb-6">
                 Simplifying Health Through Care
               </h1>
@@ -32,14 +29,14 @@ export default function AboutPage() {
               </p>
               <Link 
                 href="/register" 
-                className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white bg-gradient-to-r from-teal-500 to-blue-600 rounded-full hover:shadow-lg hover:shadow-teal-500/30 transition-all duration-300"
+                className="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white bg-[#0D3D56] rounded-full hover:shadow-lg hover:shadow-[#0D3D56]/30 transition-all duration-300"
               >
                 Start Free Trial
               </Link>
             </div>
 
             {/* BENTO BOX HERO GRAPHICS */}
-            <div className="relative h-[500px] w-full rounded-3xl p-4 grid grid-cols-2 gap-4">
+            <div className="relative h-auto md:h-[500px] w-full rounded-3xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
               
               {/* Top Left: Progress Circle */}
               <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col items-center justify-center relative overflow-hidden">
@@ -126,19 +123,19 @@ export default function AboutPage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between h-48">
+            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between h-48">
               <p className="text-sm font-medium text-gray-500">Reminders Delivered</p>
               <p className="text-4xl md:text-5xl font-extrabold text-slate-900">2M+</p>
             </div>
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between h-48">
+            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between h-48">
               <p className="text-sm font-medium text-gray-500">Active Patients</p>
               <p className="text-4xl md:text-5xl font-extrabold text-slate-900">25k+</p>
             </div>
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between h-48">
+            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between h-48">
               <p className="text-sm font-medium text-gray-500">Adherence Rate</p>
               <p className="text-4xl md:text-5xl font-extrabold text-slate-900">98%</p>
             </div>
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between h-48">
+            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col justify-between h-48">
               <p className="text-sm font-medium text-gray-500">Partner Clinics</p>
               <p className="text-4xl md:text-5xl font-extrabold text-slate-900">50+</p>
             </div>
@@ -284,67 +281,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* TEAM SECTION */}
-        <section className="py-24 bg-white border-t border-gray-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16">
-              <div className="max-w-md">
-                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Meet the People Behind the Product</h2>
-                <p className="text-gray-600">
-                  We're a diverse group of engineers, designers, and health advocates united by one mission: building technology that makes life simpler and healthier.
-                </p>
-              </div>
-              <div>
-                <Link href="/contact" className="inline-flex items-center justify-center px-6 py-3 bg-red-500 text-white font-bold rounded-lg hover:bg-red-600 transition-colors shadow-sm">
-                  Join Our Team
-                </Link>
-              </div>
-            </div>
 
-            <div className="grid md:grid-cols-3 gap-6">
-              
-              {/* Member 1 */}
-              <div className="relative rounded-3xl overflow-hidden aspect-[3/4] group">
-                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=80" alt="Team Member" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-black/0 flex flex-col justify-end p-8">
-                  <h3 className="text-2xl font-bold text-white mb-1">James Carter</h3>
-                  <p className="text-gray-300 text-sm mb-4">Chief Executive Officer</p>
-                  <div className="flex gap-3">
-                    <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white hover:bg-white hover:text-black cursor-pointer transition-colors">in</div>
-                    <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white hover:bg-white hover:text-black cursor-pointer transition-colors">𝕏</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Member 2 */}
-              <div className="relative rounded-3xl overflow-hidden aspect-[3/4] group">
-                <img src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=600&q=80" alt="Team Member" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-black/0 flex flex-col justify-end p-8">
-                  <h3 className="text-2xl font-bold text-white mb-1">Ethan Malik</h3>
-                  <p className="text-gray-300 text-sm mb-4">Head of Product</p>
-                  <div className="flex gap-3">
-                    <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white hover:bg-white hover:text-black cursor-pointer transition-colors">in</div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Member 3 */}
-              <div className="relative rounded-3xl overflow-hidden aspect-[3/4] group">
-                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80" alt="Team Member" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/0 to-black/0 flex flex-col justify-end p-8">
-                  <h3 className="text-2xl font-bold text-white mb-1">Sophia Bennett</h3>
-                  <p className="text-gray-300 text-sm mb-4">Lead Engineer</p>
-                  <div className="flex gap-3">
-                    <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white hover:bg-white hover:text-black cursor-pointer transition-colors">in</div>
-                    <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur flex items-center justify-center text-white hover:bg-white hover:text-black cursor-pointer transition-colors">gh</div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </section>
 
         {/* FAQ SECTION */}
         <section className="py-24 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
