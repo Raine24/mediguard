@@ -73,13 +73,20 @@ export default function FamilyClient({
               </div>
             </div>
 
-            <Link 
-              href="/dashboard/billing"
-              className="inline-flex items-center justify-center gap-2 bg-teal-600 text-white font-bold text-lg px-8 py-4 rounded-full hover:bg-teal-700 hover:scale-105 transition-all shadow-md"
-            >
-              <Lock className="w-5 h-5" />
-              Upgrade Now — $12.00/mo
-            </Link>
+            <div className="flex flex-col items-center gap-3">
+              <Link 
+                href="/dashboard/billing"
+                className="inline-flex items-center justify-center gap-2 bg-teal-600 text-white font-bold text-lg px-8 py-4 rounded-full hover:bg-teal-700 hover:scale-105 transition-all shadow-md"
+              >
+                <Lock className="w-5 h-5" />
+                Upgrade to Family Plan
+              </Link>
+              <div className="flex flex-wrap justify-center gap-3 mt-1">
+                <span className="bg-teal-50 text-teal-800 px-4 py-1.5 rounded-full text-sm font-semibold border border-teal-100 shadow-sm">Per month....3.5$</span>
+                <span className="bg-teal-50 text-teal-800 px-4 py-1.5 rounded-full text-sm font-semibold border border-teal-100 shadow-sm">Per 6 months...21$</span>
+                <span className="bg-teal-50 text-teal-800 px-4 py-1.5 rounded-full text-sm font-semibold border border-teal-100 shadow-sm">Per 12 months...40$</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

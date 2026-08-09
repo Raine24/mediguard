@@ -47,7 +47,7 @@ export default async function ReferralsPage() {
   const count = user.totalSuccessfulReferrals;
   const tiers = [
     { target: 2, reward: "1 month free" },
-    { target: 6, reward: "Up to 12 months free" },
+    { target: 6, reward: "6 months free" },
     { target: 12, reward: "12 months free guaranteed" }
   ];
 
