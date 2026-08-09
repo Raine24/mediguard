@@ -125,18 +125,6 @@ export default function ContactUsPage() {
                   <div className="space-y-8">
                     <div className="flex items-start gap-4">
                       <div className="mt-1">
-                        <Phone className="w-5 h-5 text-[#D91629]" />
-                      </div>
-                      <div>
-                        <p className="text-xs font-bold text-slate-700 uppercase tracking-wide mb-1">Phone</p>
-                        <p className="text-gray-600 text-sm">
-                          <a href="tel:+1234567890" className="hover:text-[#D91629] transition-colors">+91 98765 43210</a>
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-4">
-                      <div className="mt-1">
                         <MapPin className="w-5 h-5 text-[#D91629]" />
                       </div>
                       <div>
