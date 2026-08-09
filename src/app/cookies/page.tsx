@@ -1,3 +1,5 @@
+import PublicFooter from "@/components/PublicFooter";
+import PublicHeader from "@/components/PublicHeader";
 import Link from "next/link";
 import { Metadata } from "next";
 
@@ -8,7 +10,9 @@ export const metadata: Metadata = {
 
 export default function CookiePolicy() {
   return (
-    <div className="min-h-screen bg-slate-50 py-16 px-4 sm:px-6 lg:px-8">
+    <>
+      <PublicHeader />
+      <div className="min-h-screen bg-slate-50 py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
         
         {/* Header */}
@@ -92,5 +96,7 @@ export default function CookiePolicy() {
 
       </div>
     </div>
+      <PublicFooter />
+    </>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import PublicHeader from "@/components/PublicHeader";
+import PublicFooter from "@/components/PublicFooter";
 import { useState } from "react";
 import Link from "next/link";
 
@@ -377,6 +378,7 @@ export default function PricingPage() {
           </div>
         </section>
       </main>
+      <PublicFooter />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import PublicHeader from "@/components/PublicHeader";
+import PublicFooter from "@/components/PublicFooter";
 import { Metadata } from "next";
 import Link from "next/link";
 import { Users, Target, Lightbulb, Play, Star, ChevronDown, CheckCircle2 } from "lucide-react";
@@ -321,7 +322,7 @@ export default function AboutPage() {
         </section>
 
       </main>
-
+      <PublicFooter />
     </>
   );
 }

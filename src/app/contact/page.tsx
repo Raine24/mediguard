@@ -1,4 +1,5 @@
 import PublicHeader from "@/components/PublicHeader";
+import PublicFooter from "@/components/PublicFooter";
 import { Phone, MapPin, Mail } from "lucide-react";
 import { Metadata } from "next";
 
@@ -191,6 +192,7 @@ export default function ContactUsPage() {
 
         </div>
       </main>
+      <PublicFooter />
     </>
   );
 }
