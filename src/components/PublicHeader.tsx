@@ -16,15 +16,17 @@ export default function PublicHeader() {
         </Link>
         
         <div className="flex items-center gap-6">
-          <Link href="/" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden md:block transition-colors">Home</Link>
-          <Link href="/#how-it-works" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden md:block transition-colors">How it Works</Link>
-          <Link href="/#pricing" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden md:block transition-colors">Pricing</Link>
-          <Link href="/login" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden md:block transition-colors">Referral Program</Link>
-          <Link href="/affiliates" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden md:block transition-colors">Affiliate Program</Link>
+          <Link href="/" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden lg:block transition-colors">Home</Link>
+          <Link href="/#how-it-works" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden lg:block transition-colors">How It Works</Link>
+          <Link href="/about" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden lg:block transition-colors">About</Link>
+          <Link href="/pricing" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden lg:block transition-colors">Pricing</Link>
+          <Link href="/login" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden lg:block transition-colors">Referral Program</Link>
+          <Link href="/affiliates" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden lg:block transition-colors">Affiliate Program</Link>
+          <Link href="/contact" className="text-[0.875rem] font-medium text-[#3a3a3c] hover:text-[#0D3D56] hidden lg:block transition-colors">Contact</Link>
           <div className="flex items-center gap-3 ml-2">
             <LanguageSwitcher />
             <Link href="/login" className="text-[0.9rem] font-semibold text-[#0D3D56] border-[1.5px] border-[#0D3D56] px-[22px] py-[10px] rounded-[50px] hover:bg-[#0D3D56] hover:text-white transition-all hidden sm:inline-flex">Log In</Link>
-            <Link href="/register" className="text-[0.9rem] font-semibold bg-[#F4A300] text-[#1C1C1E] px-[22px] py-[10px] rounded-[50px] hover:bg-[#fdb73a] hover:-translate-y-[1px] shadow-[0_4px_16px_rgba(244,163,0,0.3)] hover:shadow-[0_6px_24px_rgba(244,163,0,0.4)] transition-all hidden sm:inline-flex">Get Started</Link>
+            <Link href="/register" className="text-[0.9rem] font-semibold bg-[#F4A300] text-[#1C1C1E] px-[22px] py-[10px] rounded-[50px] hover:bg-[#fdb73a] hover:-translate-y-[1px] shadow-[0_4px_16px_rgba(244,163,0,0.3)] hover:shadow-[0_6px_24px_rgba(244,163,0,0.4)] transition-all hidden sm:inline-flex">Start Free Trial</Link>
             <button 
               className="sm:hidden p-2 text-[#0D3D56] hover:bg-[#0D3D56]/5 rounded-full transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -45,11 +47,13 @@ export default function PublicHeader() {
           </div>
           <Link href="/" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] text-[#1C1C1E] border-b border-[#0D3D56]/5 pb-3">Home</Link>
           <Link href="/#how-it-works" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] text-[#1C1C1E] border-b border-[#0D3D56]/5 pb-3">How It Works</Link>
-          <Link href="/#pricing" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] text-[#1C1C1E] border-b border-[#0D3D56]/5 pb-3">Pricing</Link>
+          <Link href="/about" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] text-[#1C1C1E] border-b border-[#0D3D56]/5 pb-3">About</Link>
+          <Link href="/pricing" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] text-[#1C1C1E] border-b border-[#0D3D56]/5 pb-3">Pricing</Link>
           <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] text-[#1C1C1E] border-b border-[#0D3D56]/5 pb-3">Referral Program</Link>
           <Link href="/affiliates" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] text-[#1C1C1E] border-b border-[#0D3D56]/5 pb-3">Affiliate Program</Link>
+          <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] text-[#1C1C1E] border-b border-[#0D3D56]/5 pb-3">Contact</Link>
           <Link href="/login" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] text-[#1C1C1E] border-b border-[#0D3D56]/5 pb-3">Log In</Link>
-          <Link href="/register" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] bg-[#F4A300] text-[#1C1C1E] rounded-[50px] py-3 text-center mt-2 shadow-sm">Get Started</Link>
+          <Link href="/register" onClick={() => setMobileMenuOpen(false)} className="font-semibold text-[1.1rem] bg-[#F4A300] text-[#1C1C1E] rounded-[50px] py-3 text-center mt-2 shadow-sm">Start Free Trial</Link>
         </div>
       )}
     </>
