@@ -20,18 +20,44 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "MedicINtime",
-    "operatingSystem": "Web, Mobile, WhatsApp",
-    "applicationCategory": "HealthApplication",
-    "offers": {
-      "@type": "AggregateOffer",
-      "lowPrice": "2.00",
-      "highPrice": "5.00",
-      "priceCurrency": "USD"
-    },
-    "description": "Personalized medication and pill reminders. Receive automated medicine alerts directly to your WhatsApp without needing to download an app.",
-    "url": "https://medicintime.com"
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://medicintime.com/#organization",
+        "name": "MedicINtime",
+        "url": "https://medicintime.com",
+        "logo": "https://medicintime.com/logo.png",
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "contactType": "customer support",
+          "email": "vashishttechnologies@gmail.com"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://medicintime.com/#website",
+        "url": "https://medicintime.com",
+        "name": "MedicINtime",
+        "description": "Smart WhatsApp Medication & Pill Reminders",
+        "publisher": {
+          "@id": "https://medicintime.com/#organization"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://medicintime.com/#software",
+        "name": "MedicINtime",
+        "applicationCategory": "HealthApplication",
+        "operatingSystem": "Web, Mobile, WhatsApp",
+        "offers": {
+          "@type": "AggregateOffer",
+          "lowPrice": "2.00",
+          "highPrice": "40.00",
+          "priceCurrency": "USD"
+        },
+        "description": "Never miss a dose again. MedicINtime delivers automated, personalized medication and pill reminders directly to your WhatsApp. No app download needed."
+      }
+    ]
   }
   </script>
 
