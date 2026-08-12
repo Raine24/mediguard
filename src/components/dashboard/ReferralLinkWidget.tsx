@@ -20,6 +20,31 @@ export default function ReferralLinkWidget({ link }: { link: string }) {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleDownloadQR = () => {
+    if (!qrCodeUrl) return;
+    try {
+      const base64Data = qrCodeUrl.split(',')[1];
+      const byteCharacters = atob(base64Data);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'image/png' });
+      const blobUrl = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = blobUrl;
+      a.download = 'MedicINtime-Referral-QR.png';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(blobUrl);
+    } catch (err) {
+      console.error("Download failed", err);
+    }
+  };
+
   const shareText = `Hi! I use MedicINtime for my medication reminders and it has been amazing. Sign up using my link and never miss a dose again: ${link}`;
   const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(shareText)}`;
 
@@ -32,14 +57,13 @@ export default function ReferralLinkWidget({ link }: { link: string }) {
         ) : (
           <div className="w-32 h-32 bg-gray-200 animate-pulse mb-4 rounded-lg"></div>
         )}
-        <a 
-          href={qrCodeUrl} 
-          download="MedicINtime-Referral-QR.png"
+        <button 
+          onClick={handleDownloadQR}
           className="text-teal-600 font-medium text-sm hover:text-teal-700 flex items-center gap-1"
         >
           <Download className="w-4 h-4" />
           Download QR
-        </a>
+        </button>
       </div>
 
       {/* Link and Share */}
