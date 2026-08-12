@@ -116,6 +116,11 @@ export default function PublicFooter() {
                 <img src="/logo.png" alt="MedicINtime Logo" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
               </div>
               <p className="footer-tagline">Your health, delivered to your favourite chat app. Never miss a dose again.</p>
+              <div style={{ marginTop: '16px', marginBottom: '20px' }}>
+                <div style={{ background: '#fff', padding: '6px', borderRadius: '12px', display: 'inline-block' }}>
+                  <img src="/qr-code.jpg" alt="Scan to visit MedicINtime" style={{ width: '90px', height: '90px', borderRadius: '6px', display: 'block' }} />
+                </div>
+              </div>
               <p className="footer-built">Built by <a href="#" target="_blank" rel="noopener noreferrer">Baker Web Solution</a></p>
             </div>
             
