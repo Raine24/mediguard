@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Ticket, ArrowRight, Clock, CheckCircle2, AlertCircle } from "lucide-react";
+import { Ticket, ArrowRight, Clock, CheckCircle2, AlertCircle, Plus } from "lucide-react";
 import { getUserTickets } from "@/actions/tickets";
+import SupportModal from "@/components/dashboard/SupportModal";
 
 export default function PatientTicketsPage() {
   const [tickets, setTickets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isSupportOpen, setIsSupportOpen] = useState(false);
 
   useEffect(() => {
     async function fetchTickets() {
@@ -41,12 +43,21 @@ export default function PatientTicketsPage() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
-          <Ticket className="w-6 h-6 text-teal-600" />
-          My Support Tickets
-        </h1>
-        <p className="text-gray-600 mt-2">View your past inquiries and continue the conversation with our support team.</p>
+      <div className="mb-8 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-3">
+            <Ticket className="w-6 h-6 text-teal-600" />
+            My Support Tickets
+          </h1>
+          <p className="text-gray-600 mt-2">View your past inquiries and continue the conversation with our support team.</p>
+        </div>
+        <button
+          onClick={() => setIsSupportOpen(true)}
+          className="bg-teal-600 text-white font-semibold py-2.5 px-5 rounded-xl hover:bg-teal-700 transition-colors inline-flex items-center justify-center gap-2 whitespace-nowrap"
+        >
+          <Plus className="w-5 h-5" />
+          Open New Ticket
+        </button>
       </div>
 
       {tickets.length === 0 ? (
@@ -77,6 +88,8 @@ export default function PatientTicketsPage() {
           </div>
         </div>
       )}
+
+      <SupportModal isOpen={isSupportOpen} onClose={() => setIsSupportOpen(false)} />
     </div>
   );
 }
