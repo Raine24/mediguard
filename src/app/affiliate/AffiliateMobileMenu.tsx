@@ -36,9 +36,8 @@ export default function AffiliateMobileMenu() {
         )}
       >
         <div className="p-4 flex items-center justify-between border-b border-slate-800">
-          <Link href="/affiliate/dashboard" className="text-xl font-bold text-white tracking-tight flex items-center gap-2" onClick={() => setIsOpen(false)}>
-            <div className="w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-lg shadow-sm">M</div>
-            <span><span className="text-teal-400">Medic</span>INtime</span>
+          <Link href="/affiliate/dashboard" className="flex items-center" onClick={() => setIsOpen(false)}>
+            <img src="/medicintime-logo.png" alt="MedicINtime" className="h-8 w-auto object-contain" />
           </Link>
           <button 
             onClick={() => setIsOpen(false)}
