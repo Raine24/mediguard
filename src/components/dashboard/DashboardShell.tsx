@@ -59,11 +59,8 @@ export default function DashboardShell({
       
       {/* Desktop Sidebar */}
       <aside className="w-64 bg-white border-r border-gray-200 hidden md:flex flex-col sticky top-0 h-screen">
-        <div className="p-6 border-b border-gray-200 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">
-            M
-          </div>
-          <span className="text-xl font-bold text-gray-900 tracking-tight">MedicINtime</span>
+        <div className="p-6 border-b border-gray-200 flex items-center">
+          <img src="/logo.png" alt="MedicINtime" className="h-8 w-auto object-contain" />
         </div>
         
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
@@ -122,11 +119,8 @@ export default function DashboardShell({
 
       {/* Mobile Top Header */}
       <header className="md:hidden bg-white border-b border-gray-200 sticky top-0 z-30 px-4 h-16 flex items-center justify-between shadow-sm">
-        <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-xl shadow-sm">
-            M
-          </div>
-          <span className="text-xl font-extrabold text-gray-900 tracking-tight">MedicINtime</span>
+        <div className="flex items-center">
+          <img src="/logo.png" alt="MedicINtime" className="h-8 w-auto object-contain" />
         </div>
         <div className="flex items-center gap-2">
           <button 

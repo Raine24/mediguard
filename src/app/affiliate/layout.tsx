@@ -52,9 +52,9 @@ export default async function AffiliateLayout({ children }: { children: React.Re
       {/* Sidebar */}
       <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col hidden md:flex fixed h-full z-10">
         <div className="p-6">
-          <Link href="/affiliate/dashboard" className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-            <div className="w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-lg shadow-sm">M</div>
-            <span><span className="text-teal-400">Medic</span>INtime</span> <span className="text-xs bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded-full ml-1 font-medium">Partner</span>
+          <Link href="/affiliate/dashboard" className="flex items-center gap-2">
+            <img src="/logo.png" alt="MedicINtime" className="h-8 w-auto object-contain" />
+            <span className="text-xs bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded-full ml-1 font-medium">Partner</span>
           </Link>
         </div>
         <nav className="flex-1 px-4 py-4 space-y-2">
@@ -84,9 +84,8 @@ export default async function AffiliateLayout({ children }: { children: React.Re
         <header className="md:hidden bg-white border-b border-slate-200 p-4 flex justify-between items-center sticky top-0 z-20 shadow-sm">
           <div className="flex items-center gap-3">
             <AffiliateMobileMenu />
-            <Link href="/affiliate/dashboard" className="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">M</div>
-              <span><span className="text-teal-600">Medic</span>INtime</span>
+            <Link href="/affiliate/dashboard" className="flex items-center">
+              <img src="/logo.png" alt="MedicINtime" className="h-8 w-auto object-contain" />
             </Link>
           </div>
           <Link href="/api/auth/signout" className="text-slate-600">
