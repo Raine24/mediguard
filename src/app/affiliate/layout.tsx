@@ -3,7 +3,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, Users, CreditCard, Megaphone, LogOut, ShieldAlert, Settings } from "lucide-react";
+import { LayoutDashboard, Users, CreditCard, LogOut, ShieldAlert, Settings } from "lucide-react";
 
 export default async function AffiliateLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
@@ -64,9 +64,6 @@ export default async function AffiliateLayout({ children }: { children: React.Re
           </Link>
           <Link href="/affiliate/dashboard/payouts" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
             <CreditCard className="w-5 h-5" /> Payouts
-          </Link>
-          <Link href="/affiliate/dashboard/marketing" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
-            <Megaphone className="w-5 h-5" /> Marketing Assets
           </Link>
           <Link href="/affiliate/dashboard/settings" className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-800 hover:text-white transition-colors">
             <Settings className="w-5 h-5" /> Settings
