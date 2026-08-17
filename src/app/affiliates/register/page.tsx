@@ -47,15 +47,15 @@ export default function AffiliateRegisterPage() {
                 <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-6">
                   <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
                 </div>
-                <h3 className="text-2xl font-bold text-slate-800 mb-4">Application Received</h3>
+                <h3 className="text-2xl font-bold text-slate-800 mb-4">Account Created!</h3>
                 <p className="text-slate-600 mb-8">
-                  Thank you for applying to become a MedicINtime partner. Our team will review your application and notify you via email once approved.
+                  Welcome to the MedicINtime Affiliate Network! Your partner account is active and ready to use. 
                 </p>
                 <button 
-                  onClick={() => router.push('/')}
-                  className="bg-slate-900 text-white font-medium py-3 px-6 rounded-lg hover:bg-slate-800 transition-colors w-full"
+                  onClick={() => router.push('/login')}
+                  className="bg-teal-600 text-white font-bold py-3 px-6 rounded-lg hover:bg-teal-700 transition-colors w-full"
                 >
-                  Return to Homepage
+                  Log In to Dashboard
                 </button>
               </div>
             ) : (
