@@ -12,6 +12,7 @@ export default function AffiliateRegisterPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [isMedicalCenter, setIsMedicalCenter] = useState(false);
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -65,15 +66,31 @@ export default function AffiliateRegisterPage() {
                   </div>
                 )}
                 
+                <div className="flex items-center justify-between bg-teal-50 p-4 rounded-xl border border-teal-100 mb-6">
+                  <div>
+                    <h4 className="text-teal-900 font-bold text-sm sm:text-base">Are you a Medical Center?</h4>
+                    <p className="text-teal-700 text-xs sm:text-sm">Clinics, Pharmacies, and Hospitals get a 30% commission.</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsMedicalCenter(!isMedicalCenter)}
+                    className={`relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${isMedicalCenter ? 'bg-teal-600' : 'bg-slate-300'}`}
+                  >
+                    <span className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${isMedicalCenter ? 'translate-x-5' : 'translate-x-0'}`} />
+                  </button>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Name */}
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1">Full Name or Organization</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1">
+                      {isMedicalCenter ? "Medical Center Name" : "Full Name or Organization"}
+                    </label>
                     <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
-                        <User className="h-5 w-5" />
+                        {isMedicalCenter ? <Building2 className="h-5 w-5" /> : <User className="h-5 w-5" />}
                       </div>
-                      <input name="name" type="text" required className="pl-10 block w-full rounded-lg border border-slate-300 py-3 px-4 focus:ring-teal-500 focus:border-teal-500 sm:text-sm bg-slate-50" placeholder="John Doe / Clinic Name" />
+                      <input name="name" type="text" required className="pl-10 block w-full rounded-lg border border-slate-300 py-3 px-4 focus:ring-teal-500 focus:border-teal-500 sm:text-sm bg-slate-50" placeholder={isMedicalCenter ? "Clinic Name" : "John Doe / Clinic Name"} />
                     </div>
                   </div>
 
@@ -132,7 +149,14 @@ export default function AffiliateRegisterPage() {
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
                         <Briefcase className="h-5 w-5" />
                       </div>
-                      <select name="promotionMethod" required className="pl-10 block w-full rounded-lg border border-slate-300 py-3 px-4 focus:ring-teal-500 focus:border-teal-500 sm:text-sm bg-slate-50 text-slate-700">
+                      <select 
+                        name="promotionMethod" 
+                        required 
+                        className={`pl-10 block w-full rounded-lg border py-3 px-4 sm:text-sm ${isMedicalCenter ? 'bg-slate-100 border-slate-200 text-slate-500' : 'border-slate-300 focus:ring-teal-500 focus:border-teal-500 bg-slate-50 text-slate-700'}`}
+                        value={isMedicalCenter ? "Clinic, Pharmacy or Hospital" : undefined}
+                        disabled={isMedicalCenter}
+                        onChange={() => {}} // prevent React controlled component warning
+                      >
                         <option value="">Select Method</option>
                         <option value="Social Media">Social Media (Facebook, Twitter, Instagram)</option>
                         <option value="Blog or Website">Blog or Website</option>
@@ -141,6 +165,8 @@ export default function AffiliateRegisterPage() {
                         <option value="Clinic, Pharmacy or Hospital">Clinic, Pharmacy or Hospital</option>
                         <option value="Other">Other</option>
                       </select>
+                      {/* Hidden input to ensure value is submitted when select is disabled/readonly */}
+                      {isMedicalCenter && <input type="hidden" name="promotionMethod" value="Clinic, Pharmacy or Hospital" />}
                     </div>
                     <p className="text-xs text-teal-600 mt-2 font-medium">
                       * Clinics, Pharmacies, and Hospitals are eligible for a special 30% one-time commission rate.
