@@ -21,6 +21,42 @@ export default async function AffiliateDashboardPage() {
     <div>
       <h1 className="text-2xl font-bold text-slate-800 mb-8">Dashboard Overview</h1>
 
+      {/* Referral Link Section */}
+      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-10">
+        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
+          <h3 className="text-lg font-medium text-slate-800">Your Referral Link</h3>
+        </div>
+        <div className="p-6 md:flex gap-8 items-start">
+          <div className="flex-1 mb-6 md:mb-0">
+            <p className="text-slate-600 mb-4">Share this link with your audience. Anyone who signs up and pays within 30 days of clicking will earn you a commission.</p>
+            
+            <div className="flex items-center">
+              <input 
+                type="text" 
+                readOnly 
+                value={refLink} 
+                className="w-full bg-slate-50 border border-slate-300 rounded-l-lg py-3 px-4 text-slate-700 outline-none"
+              />
+              <QRCodeWrapper textToCopy={refLink} />
+            </div>
+            
+            <div className="mt-6 flex gap-3">
+              <a href={`https://wa.me/?text=Get%20medication%20reminders%20on%20WhatsApp%20with%20MedicINtime!%20Sign%20up%20here:%20${encodeURIComponent(refLink)}`} target="_blank" rel="noreferrer" className="text-sm bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-medium transition-colors">
+                Share on WhatsApp
+              </a>
+              <a href={`https://twitter.com/intent/tweet?text=Check%20out%20MedicINtime!&url=${encodeURIComponent(refLink)}`} target="_blank" rel="noreferrer" className="text-sm bg-blue-100 text-blue-700 hover:bg-blue-200 px-4 py-2 rounded-lg font-medium transition-colors">
+                Share on Twitter
+              </a>
+            </div>
+          </div>
+          
+          <div className="flex flex-col items-center justify-center shrink-0 border border-slate-200 rounded-lg p-4 bg-slate-50">
+            <QRCodeWrapper textForQR={refLink} />
+            <p className="text-xs text-slate-500 mt-2 text-center max-w-[150px]">Scan or download to use in clinics</p>
+          </div>
+        </div>
+      </div>
+
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
         <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
@@ -57,42 +93,6 @@ export default async function AffiliateDashboardPage() {
           <div className="text-xs text-slate-500 mt-2 flex justify-between">
             <span>Pending: ${affiliate.pendingEarnings.toFixed(2)}</span>
             <span>All Time: ${affiliate.totalEarnings.toFixed(2)}</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Referral Link Section */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden mb-10">
-        <div className="bg-slate-50 px-6 py-4 border-b border-slate-200">
-          <h3 className="text-lg font-medium text-slate-800">Your Referral Link</h3>
-        </div>
-        <div className="p-6 md:flex gap-8 items-start">
-          <div className="flex-1 mb-6 md:mb-0">
-            <p className="text-slate-600 mb-4">Share this link with your audience. Anyone who signs up and pays within 30 days of clicking will earn you a commission.</p>
-            
-            <div className="flex items-center">
-              <input 
-                type="text" 
-                readOnly 
-                value={refLink} 
-                className="w-full bg-slate-50 border border-slate-300 rounded-l-lg py-3 px-4 text-slate-700 outline-none"
-              />
-              <QRCodeWrapper textToCopy={refLink} />
-            </div>
-            
-            <div className="mt-6 flex gap-3">
-              <a href={`https://wa.me/?text=Get%20medication%20reminders%20on%20WhatsApp%20with%20MedicINtime!%20Sign%20up%20here:%20${encodeURIComponent(refLink)}`} target="_blank" rel="noreferrer" className="text-sm bg-green-100 text-green-700 hover:bg-green-200 px-4 py-2 rounded-lg font-medium transition-colors">
-                Share on WhatsApp
-              </a>
-              <a href={`https://twitter.com/intent/tweet?text=Check%20out%20MedicINtime!&url=${encodeURIComponent(refLink)}`} target="_blank" rel="noreferrer" className="text-sm bg-blue-100 text-blue-700 hover:bg-blue-200 px-4 py-2 rounded-lg font-medium transition-colors">
-                Share on Twitter
-              </a>
-            </div>
-          </div>
-          
-          <div className="flex flex-col items-center justify-center shrink-0 border border-slate-200 rounded-lg p-4 bg-slate-50">
-            <QRCodeWrapper textForQR={refLink} />
-            <p className="text-xs text-slate-500 mt-2 text-center max-w-[150px]">Scan or download to use in clinics</p>
           </div>
         </div>
       </div>

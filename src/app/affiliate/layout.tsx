@@ -3,7 +3,8 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { LayoutDashboard, Users, CreditCard, LogOut, ShieldAlert, Settings } from "lucide-react";
+import { LayoutDashboard, Users, CreditCard, LogOut, ShieldAlert, Settings, Menu, X } from "lucide-react";
+import AffiliateMobileMenu from "./AffiliateMobileMenu";
 
 export default async function AffiliateLayout({ children }: { children: React.ReactNode }) {
   const session = await getServerSession(authOptions);
@@ -52,7 +53,8 @@ export default async function AffiliateLayout({ children }: { children: React.Re
       <aside className="w-64 bg-slate-900 text-slate-300 flex flex-col hidden md:flex fixed h-full z-10">
         <div className="p-6">
           <Link href="/affiliate/dashboard" className="text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-            <span className="text-teal-400">Medi</span>Guard <span className="text-xs bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded-full ml-1 font-medium">Partner</span>
+            <div className="w-8 h-8 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-lg shadow-sm">M</div>
+            <span><span className="text-teal-400">Medic</span>INtime</span> <span className="text-xs bg-teal-500/20 text-teal-300 px-2 py-0.5 rounded-full ml-1 font-medium">Partner</span>
           </Link>
         </div>
         <nav className="flex-1 px-4 py-4 space-y-2">
@@ -79,10 +81,14 @@ export default async function AffiliateLayout({ children }: { children: React.Re
       {/* Main Content */}
       <main className="flex-1 md:ml-64 relative">
         {/* Mobile Header */}
-        <header className="md:hidden bg-white border-b border-slate-200 p-4 flex justify-between items-center">
-          <Link href="/affiliate/dashboard" className="text-xl font-bold text-slate-900 tracking-tight">
-            <span className="text-teal-600">Medi</span>Guard <span className="text-xs bg-teal-100 text-teal-800 px-2 py-0.5 rounded-full">Partner</span>
-          </Link>
+        <header className="md:hidden bg-white border-b border-slate-200 p-4 flex justify-between items-center sticky top-0 z-20 shadow-sm">
+          <div className="flex items-center gap-3">
+            <AffiliateMobileMenu />
+            <Link href="/affiliate/dashboard" className="text-xl font-bold text-slate-900 tracking-tight flex items-center gap-2">
+              <div className="w-8 h-8 rounded-full bg-teal-600 text-white flex items-center justify-center font-bold text-lg shadow-sm">M</div>
+              <span><span className="text-teal-600">Medic</span>INtime</span>
+            </Link>
+          </div>
           <Link href="/api/auth/signout" className="text-slate-600">
             <LogOut className="w-5 h-5" />
           </Link>
