@@ -49,10 +49,14 @@ export async function registerAffiliate(formData: FormData) {
       });
       userId = newUser.id;
     } else {
-      // Update existing user role to include affiliate
+      // Update existing user role to include affiliate and save the password they provided
+      const hashedPassword = await bcrypt.hash(password, 10);
       await prisma.user.update({
         where: { id: userId },
-        data: { role: "AFFILIATE" }
+        data: { 
+          role: "AFFILIATE",
+          password: hashedPassword 
+        }
       });
     }
 
