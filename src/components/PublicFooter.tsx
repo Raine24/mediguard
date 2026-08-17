@@ -113,7 +113,7 @@ export default function PublicFooter() {
           <div className="footer-inner">
             <div>
               <div className="footer-brand-name">
-                <img src="/official-logo.png" alt="MedicINtime Logo" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
+                <img src="/brand-logo.png" alt="MedicINtime Logo" style={{ height: '40px', width: 'auto', objectFit: 'contain' }} />
               </div>
               <p className="footer-tagline">Your health, delivered to your favourite chat app. Never miss a dose again.</p>
               <div style={{ marginTop: '16px', marginBottom: '20px' }}>

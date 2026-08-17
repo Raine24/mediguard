@@ -21,8 +21,8 @@ const files = walk(path.join(process.cwd(), 'src'));
 let changed = 0;
 for (const file of files) {
   const content = fs.readFileSync(file, 'utf8');
-  if (content.includes('/logo.png')) {
-    const updated = content.replace(/\/logo\.png/g, '/official-logo.png');
+  if (content.includes('/official-logo.png')) {
+    const updated = content.replace(/\/official-logo\.png/g, '/brand-logo.png');
     fs.writeFileSync(file, updated, 'utf8');
     changed++;
     console.log(`Updated ${file}`);
