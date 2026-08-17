@@ -115,7 +115,7 @@ export default function RootLayout({
                   "@id": "https://medicintime.com/#organization",
                   "name": "MedicINtime",
                   "url": "https://medicintime.com",
-                  "logo": "https://medicintime.com/brand-logo.png",
+                  "logo": "https://medicintime.com/medicintime-logo.png",
                   "contactPoint": {
                     "@type": "ContactPoint",
                     "contactType": "customer support",
