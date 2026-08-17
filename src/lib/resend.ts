@@ -67,7 +67,7 @@ export async function sendPasswordResetEmail({
       <body>
         <div class="container">
           <div class="header">
-            <img src="https://medicintime.com/logo.png" alt="MedicINtime" class="logo" />
+            <img src="https://medicintime.com/official-logo.png" alt="MedicINtime" class="logo" />
           </div>
           <div class="content">
             <h1 class="h1">Reset Your Password</h1>

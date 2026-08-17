@@ -177,7 +177,7 @@ export default function ResetPasswordPage() {
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="flex justify-center">
             <img
-              src="/logo.png"
+              src="/official-logo.png"
               alt="MedicINtime Logo"
               className="h-16 sm:h-20 w-auto object-contain"
             />
