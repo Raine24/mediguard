@@ -15,12 +15,17 @@ export default function AffiliateLandingPage() {
             <p className="text-xl md:text-2xl text-slate-300 mb-10">
               Join our affiliate program and earn a recurring 20% commission for every patient or family you refer to MedicINtime. Are you a Clinic, Pharmacy, or Hospital? Partner with us and get a special 30% upfront commission for every patient!
             </p>
-            <Link 
-              href="/affiliates/register" 
-              className="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-4 px-8 rounded-lg text-lg transition-colors inline-block"
-            >
-              Apply Now
-            </Link>
+            <div className="flex flex-col items-center justify-center mt-6">
+              <Link 
+                href="/affiliates/register" 
+                className="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-4 px-12 rounded-lg text-lg transition-colors inline-block w-full sm:w-auto"
+              >
+                Apply Now
+              </Link>
+              <p className="mt-4 text-slate-400 text-sm">
+                Existing affiliate? <Link href="/login" className="text-teal-400 hover:text-teal-300 underline font-medium">Login Here</Link>
+              </p>
+            </div>
           </div>
         </div>
 

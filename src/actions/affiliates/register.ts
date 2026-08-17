@@ -78,7 +78,7 @@ export async function registerAffiliate(formData: FormData) {
       data: {
         userId: userId!,
         refCode,
-        status: "PENDING",
+        status: "ACTIVE",
         promotionMethod,
         payoutMethod,
         payoutDetails,
