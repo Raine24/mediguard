@@ -13,7 +13,7 @@ export default function AffiliateLandingPage() {
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">Partner with MedicINtime</h1>
             <p className="text-xl md:text-2xl text-slate-300 mb-10">
-              Join our affiliate program and earn a recurring 20% commission for every patient, family, or clinic you refer to MedicINtime.
+              Join our affiliate program and earn a recurring 20% commission for every patient or family you refer to MedicINtime. Are you a Clinic, Pharmacy, or Hospital? Partner with us and get a special 30% upfront commission for every patient!
             </p>
             <Link 
               href="/affiliates/register" 

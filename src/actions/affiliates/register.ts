@@ -65,6 +65,14 @@ export async function registerAffiliate(formData: FormData) {
       defaultCommissionType = setting.value;
     }
 
+    let finalCommissionType = defaultCommissionType;
+    let customCommissionRate: number | null = null;
+
+    if (promotionMethod === "Clinic, Pharmacy or Hospital") {
+      finalCommissionType = "ONE_TIME";
+      customCommissionRate = 30; // 30%
+    }
+
     // Create the affiliate profile
     await prisma.affiliateProfile.create({
       data: {
@@ -74,7 +82,8 @@ export async function registerAffiliate(formData: FormData) {
         promotionMethod,
         payoutMethod,
         payoutDetails,
-        commissionType: defaultCommissionType,
+        commissionType: finalCommissionType,
+        customCommissionRate,
       }
     });
 

@@ -138,10 +138,13 @@ export default function AffiliateRegisterPage() {
                         <option value="Blog or Website">Blog or Website</option>
                         <option value="WhatsApp Groups">WhatsApp Groups</option>
                         <option value="Healthcare Professional">Healthcare Professional</option>
-                        <option value="Pharmacy or Clinic">Pharmacy or Clinic</option>
+                        <option value="Clinic, Pharmacy or Hospital">Clinic, Pharmacy or Hospital</option>
                         <option value="Other">Other</option>
                       </select>
                     </div>
+                    <p className="text-xs text-teal-600 mt-2 font-medium">
+                      * Clinics, Pharmacies, and Hospitals are eligible for a special 30% one-time commission rate.
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
