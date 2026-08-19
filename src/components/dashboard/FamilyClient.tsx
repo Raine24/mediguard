@@ -82,9 +82,9 @@ export default function FamilyClient({
                 Upgrade to Family Plan
               </Link>
               <div className="flex flex-wrap justify-center gap-3 mt-1">
-                <span className="bg-teal-50 text-teal-800 px-4 py-1.5 rounded-full text-sm font-semibold border border-teal-100 shadow-sm">Per month....3.5$</span>
-                <span className="bg-teal-50 text-teal-800 px-4 py-1.5 rounded-full text-sm font-semibold border border-teal-100 shadow-sm">Per 6 months...21$</span>
-                <span className="bg-teal-50 text-teal-800 px-4 py-1.5 rounded-full text-sm font-semibold border border-teal-100 shadow-sm">Per 12 months...40$</span>
+                <span className="bg-teal-50 text-teal-800 px-4 py-1.5 rounded-full text-sm font-semibold border border-teal-100 shadow-sm">Per month....4.75$</span>
+                <span className="bg-teal-50 text-teal-800 px-4 py-1.5 rounded-full text-sm font-semibold border border-teal-100 shadow-sm">Per 6 months...27$</span>
+                <span className="bg-teal-50 text-teal-800 px-4 py-1.5 rounded-full text-sm font-semibold border border-teal-100 shadow-sm">Per 12 months...52$</span>
               </div>
             </div>
           </div>

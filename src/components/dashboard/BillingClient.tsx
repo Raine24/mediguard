@@ -69,7 +69,7 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
               
               <div className="text-gray-500 flex items-center gap-2 text-sm font-medium">
                 <CreditCard className="w-4 h-4" />
-                {planType === "BASIC" ? "$2.00 / month" : planType === "STANDARD" ? "$5.00 / month" : "$3.50 / month"}
+                {planType === "BASIC" ? "$2.50 / month" : planType === "STANDARD" ? "$5.00 / month" : "$4.75 / month"}
               </div>
             </div>
 
@@ -161,7 +161,7 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
             <h4 className="text-lg font-bold text-gray-900 uppercase">Basic</h4>
             <div className="my-4">
               <span className="text-4xl font-extrabold text-gray-900">
-                ${interval === "monthly" ? "2.00" : interval === "biannual" ? "11.00" : "20.00"}
+                ${interval === "monthly" ? "2.50" : interval === "biannual" ? "14.00" : "27.00"}
               </span>
               <span className="text-gray-500 font-medium">/{interval === "monthly" ? "month" : interval === "biannual" ? "6 months" : "year"}</span>
             </div>
@@ -255,7 +255,7 @@ export default function BillingClient({ subscription }: { subscription: Subscrip
             <h4 className="text-lg font-bold text-teal-400 uppercase">Caretaker</h4>
             <div className="my-4">
               <span className="text-4xl font-extrabold text-white">
-                ${interval === "monthly" ? "3.50" : interval === "biannual" ? "21.00" : "40.00"}
+                ${interval === "monthly" ? "4.75" : interval === "biannual" ? "27.00" : "52.00"}
               </span>
               <span className="text-gray-400 font-medium">/{interval === "monthly" ? "month" : interval === "biannual" ? "6 months" : "year"}</span>
             </div>
