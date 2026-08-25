@@ -98,12 +98,12 @@ export default function SubscriberProfile({ params }: { params: Promise<{ id: st
 
   return (
     <div className="space-y-6 pb-24">
-      <div className="flex justify-between items-center">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <Link href="/admin/subscribers" className="inline-flex items-center gap-2 text-sm font-semibold text-gray-500 hover:text-teal-600 transition-colors">
           <ArrowLeft className="w-4 h-4" />
           Back to Subscribers
         </Link>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {user.subscription?.status !== "ACTIVE" ? (
             <button onClick={() => handleAction("ACTIVATE")} disabled={isPending} className="px-3 py-1.5 bg-green-50 text-green-700 border border-green-200 rounded-lg text-xs font-bold hover:bg-green-100 transition-colors">Activate</button>
           ) : (
@@ -143,11 +143,11 @@ export default function SubscriberProfile({ params }: { params: Promise<{ id: st
                 {user.whatsappVerified && <span title="WhatsApp Verified"><CheckCircle2 className="w-5 h-5 text-green-500" /></span>}
               </div>
               <div className="flex flex-wrap items-center gap-3 mt-2">
-                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 bg-gray-100 px-2.5 py-1 rounded-lg">
-                  <Mail className="w-4 h-4 text-gray-400" /> {user.email}
+                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 bg-gray-100 px-2.5 py-1 rounded-lg break-all">
+                  <Mail className="w-4 h-4 text-gray-400 shrink-0" /> {user.email}
                 </span>
-                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 bg-gray-100 px-2.5 py-1 rounded-lg">
-                  <Phone className="w-4 h-4 text-gray-400" /> {user.phone}
+                <span className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 bg-gray-100 px-2.5 py-1 rounded-lg break-all">
+                  <Phone className="w-4 h-4 text-gray-400 shrink-0" /> {user.phone}
                 </span>
               </div>
             </div>
@@ -209,9 +209,9 @@ export default function SubscriberProfile({ params }: { params: Promise<{ id: st
                 <div className="bg-gray-50 p-4 rounded-2xl border border-gray-100">
                   <h3 className="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3">System Info</h3>
                   <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 text-sm font-medium">User ID</span>
-                      <span className="font-mono text-xs font-bold text-gray-900 bg-gray-200 px-2 py-0.5 rounded">{user.id}</span>
+                    <div className="flex justify-between gap-4">
+                      <span className="text-gray-600 text-sm font-medium whitespace-nowrap">User ID</span>
+                      <span className="font-mono text-xs font-bold text-gray-900 bg-gray-200 px-2 py-0.5 rounded break-all text-right">{user.id}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600 text-sm font-medium">Country</span>
