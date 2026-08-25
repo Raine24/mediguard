@@ -47,20 +47,22 @@ export default function AdminLoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-gray-800 border border-gray-700 rounded-3xl p-8 shadow-2xl">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+      <div className="max-w-md w-full bg-white border border-gray-200 rounded-3xl p-8 shadow-xl">
         <div className="flex flex-col items-center mb-8">
-          <div className="w-16 h-16 bg-teal-500/10 rounded-full flex items-center justify-center mb-4">
-            <Shield className="w-8 h-8 text-teal-400" />
-          </div>
-          <h1 className="text-2xl font-bold text-white">MedicINtime Admin</h1>
-          <p className="text-gray-400 text-sm mt-1">Secure Staff Portal</p>
+          <img 
+            src="https://i.ibb.co/t99SGFg/medicintime-logo.png" 
+            alt="MedicINtime Logo" 
+            className="h-14 w-auto mb-4 object-contain" 
+          />
+          <h1 className="text-2xl font-bold text-gray-900">MedicINtime Admin</h1>
+          <p className="text-gray-500 text-sm mt-1">Secure Staff Portal</p>
         </div>
 
         {error && (
-          <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-            <p className="text-sm text-red-400 leading-relaxed">{error}</p>
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+            <p className="text-sm text-red-600 leading-relaxed">{error}</p>
           </div>
         )}
 
@@ -68,30 +70,30 @@ export default function AdminLoginPage() {
           {step === "CREDENTIALS" ? (
             <>
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Admin Email</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Admin Email</label>
                 <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="email"
                     required
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-gray-900 border border-gray-700 text-white rounded-xl pl-12 pr-4 py-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all outline-none"
+                    className="w-full bg-white border border-gray-300 text-gray-900 rounded-xl pl-12 pr-4 py-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all outline-none"
                     placeholder="you@medicintime.com"
                   />
                 </div>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">Password</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="password"
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full bg-gray-900 border border-gray-700 text-white rounded-xl pl-12 pr-4 py-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all outline-none"
+                    className="w-full bg-white border border-gray-300 text-gray-900 rounded-xl pl-12 pr-4 py-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all outline-none"
                     placeholder="••••••••"
                   />
                 </div>
@@ -99,9 +101,9 @@ export default function AdminLoginPage() {
             </>
           ) : (
             <div className="animate-in fade-in slide-in-from-right-4 duration-300">
-              <label className="block text-sm font-medium text-gray-300 mb-2">Authenticator Code (2FA)</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Authenticator Code (2FA)</label>
               <div className="relative">
-                <Shield className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                <Shield className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="text"
                   required
@@ -109,7 +111,7 @@ export default function AdminLoginPage() {
                   maxLength={6}
                   value={twoFactorToken}
                   onChange={(e) => setTwoFactorToken(e.target.value.replace(/\D/g, ''))}
-                  className="w-full bg-gray-900 border border-gray-700 text-white rounded-xl pl-12 pr-4 py-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all outline-none tracking-widest text-lg font-mono placeholder:tracking-normal placeholder:font-sans"
+                  className="w-full bg-white border border-gray-300 text-gray-900 rounded-xl pl-12 pr-4 py-3 focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all outline-none tracking-widest text-lg font-mono placeholder:tracking-normal placeholder:font-sans"
                   placeholder="000000"
                 />
               </div>
@@ -122,7 +124,7 @@ export default function AdminLoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-teal-500 text-white font-bold py-3.5 px-4 rounded-xl hover:bg-teal-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
+            className="w-full bg-teal-600 text-white font-bold py-3.5 px-4 rounded-xl hover:bg-teal-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-6"
           >
             {loading ? "Authenticating..." : step === "CREDENTIALS" ? "Continue" : "Verify & Login"}
             {!loading && step === "CREDENTIALS" && <ArrowRight className="w-5 h-5" />}
