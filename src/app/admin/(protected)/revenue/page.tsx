@@ -161,7 +161,7 @@ export default function RevenueAndBilling() {
           { id: "overview", label: "Overview & Ledger", icon: TrendingUp },
           { id: "failed", label: "Failed Payments", icon: AlertTriangle },
           { id: "renewals", label: "Upcoming Renewals", icon: Calendar },
-          { id: "invoices", label: "Interserver Invoices", icon: FileText },
+          { id: "invoices", label: "MedicINtime Invoices", icon: FileText },
         ].map(tab => (
           <button
             key={tab.id}
@@ -491,9 +491,9 @@ export default function RevenueAndBilling() {
           <div className="p-6 border-b border-gray-100 bg-blue-50/50">
             <h2 className="text-lg font-bold text-blue-900 flex items-center gap-2">
               <FileText className="w-5 h-5 text-blue-600" />
-              Interserver Billing & Invoices
+              MedicINtime Billing & Invoices
             </h2>
-            <p className="text-sm text-blue-700 mt-1">Platform and infrastructure invoices from Interserver.</p>
+            <p className="text-sm text-blue-700 mt-1">Platform and infrastructure invoices from MedicINtime.</p>
           </div>
           <div className="p-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 border border-gray-100 rounded-xl bg-gray-50 transition-colors hover:bg-gray-100">
@@ -503,7 +503,7 @@ export default function RevenueAndBilling() {
                   <span className="text-lg leading-none mt-0.5">08</span>
                 </div>
                 <div>
-                  <h4 className="font-bold text-gray-900">Interserver</h4>
+                  <h4 className="font-bold text-gray-900">MedicINtime</h4>
                   <p className="text-sm text-gray-500">Website migration (ugxvideos.com) - 2026</p>
                 </div>
               </div>
