@@ -1,3 +1,4 @@
+import { getAppUserId } from "@/lib/auth";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
@@ -11,14 +12,14 @@ export const metadata = {
 };
 
 export default async function ReferralsPage() {
-  const session = await getServerSession(authOptions);
+  const userId = await getAppUserId();
   
-  if (!session?.user?.id) {
+  if (!userId) {
     redirect("/login");
   }
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id: userId },
     include: {
       subscription: true,
       referralsGiven: {

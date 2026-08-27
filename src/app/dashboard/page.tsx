@@ -1,3 +1,4 @@
+import { getAppUserId } from "@/lib/auth";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
@@ -10,11 +11,11 @@ import NextReminderCard from "@/components/dashboard/NextReminderCard";
 import AutoRefresh from "@/components/dashboard/AutoRefresh";
 
 export default async function DashboardHome() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) redirect("/login");
+  const userId = await getAppUserId();
+  if (!userId) redirect("/login");
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id: userId },
     include: {
       subscription: true,
       medicines: {

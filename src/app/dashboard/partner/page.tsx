@@ -1,3 +1,4 @@
+import { getAppUserId } from "@/lib/auth";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { prisma } from "@/lib/prisma";
@@ -5,11 +6,11 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { DollarSign, CheckCircle } from "lucide-react";
 export default async function PartnerProgramPage() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) return redirect("/login");
+  const userId = await getAppUserId();
+  if (!userId) return redirect("/login");
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id: userId },
     include: { affiliateProfile: true }
   });
 

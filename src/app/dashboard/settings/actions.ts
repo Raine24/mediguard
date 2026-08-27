@@ -9,11 +9,11 @@ export async function updateProfile(formData: {
   name: string;
   timezone: string;
 }) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  const userId = await getAppUserId();
+  if (!userId) throw new Error("Unauthorized");
 
   await prisma.user.update({
-    where: { id: session.user.id },
+    where: { id: userId },
     data: {
       name: formData.name,
       timezone: formData.timezone,
@@ -26,8 +26,8 @@ export async function updateProfile(formData: {
 }
 
 export async function requestPasswordReset() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  const userId = await getAppUserId();
+  if (!userId) throw new Error("Unauthorized");
 
   // In a real app, send an email/WhatsApp here.
   // We'll just simulate it.
@@ -36,13 +36,13 @@ export async function requestPasswordReset() {
 }
 
 export async function deactivateAccount() {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  const userId = await getAppUserId();
+  if (!userId) throw new Error("Unauthorized");
 
   // Soft delete or anonymize depending on compliance.
   // For now, we'll just delete the user record to simulate a wipe.
   await prisma.user.delete({
-    where: { id: session.user.id }
+    where: { id: userId }
   });
 
   // Client will handle sign out redirect
@@ -50,8 +50,8 @@ export async function deactivateAccount() {
 }
 
 export async function initiatePhoneChange(newPhone: string) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  const userId = await getAppUserId();
+  if (!userId) throw new Error("Unauthorized");
 
   // Generate 6 digit OTP
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -63,7 +63,7 @@ export async function initiatePhoneChange(newPhone: string) {
   });
 
   await prisma.user.update({
-    where: { id: session.user.id },
+    where: { id: userId },
     data: { twoFactorSecret: payload }
   });
 
@@ -79,11 +79,11 @@ export async function initiatePhoneChange(newPhone: string) {
 }
 
 export async function verifyPhoneChange(code: string) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  const userId = await getAppUserId();
+  if (!userId) throw new Error("Unauthorized");
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id: userId },
     select: { twoFactorSecret: true }
   });
 
@@ -110,7 +110,7 @@ export async function verifyPhoneChange(code: string) {
   await prisma.user.updateMany({
     where: { 
       phone: payload.phone,
-      id: { not: session.user.id }
+      id: { not: userId }
     },
     data: {
       whatsappVerified: false,
@@ -121,7 +121,7 @@ export async function verifyPhoneChange(code: string) {
   // Update the phone number and clear the secret
   try {
     await prisma.user.update({
-      where: { id: session.user.id },
+      where: { id: userId },
       data: {
         phone: payload.phone,
         whatsappVerified: true,

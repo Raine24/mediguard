@@ -10,11 +10,11 @@ export async function addFamilyMember(formData: {
   phone: string;
   relationship: string;
 }) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  const userId = await getAppUserId();
+  if (!userId) throw new Error("Unauthorized");
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id: userId },
     include: { subscription: true, _count: { select: { familyMembers: true } } },
   });
 
@@ -50,19 +50,19 @@ export async function addFamilyMedicine(familyMemberId: string, formData: {
   note: string;
   times: string[];
 }) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  const userId = await getAppUserId();
+  if (!userId) throw new Error("Unauthorized");
 
   // Verify the family member belongs to the current user
   const member = await prisma.familyMember.findFirst({
-    where: { id: familyMemberId, accountHolderId: session.user.id },
+    where: { id: familyMemberId, accountHolderId: userId },
   });
 
   if (!member) throw new Error("Family member not found");
 
   await prisma.medicine.create({
     data: {
-      userId: session.user.id, // Still technically owned by main account holder for billing/dashboard
+      userId: userId, // Still technically owned by main account holder for billing/dashboard
       familyMemberId: member.id, // But explicitly assigned to this family member
       name: formData.name,
       dosage: formData.dosage || null,

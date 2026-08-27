@@ -13,11 +13,11 @@ export async function addMedicine(formData: {
   note: string;
   times: string[];
 }) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  const userId = await getAppUserId();
+  if (!userId) throw new Error("Unauthorized");
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id: userId },
     include: { subscription: true, _count: { select: { medicines: true } } },
   });
 
@@ -60,12 +60,12 @@ export async function addMedicine(formData: {
 }
 
 export async function toggleMedicineStatus(medicineId: string, status: "ACTIVE" | "PAUSED") {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  const userId = await getAppUserId();
+  if (!userId) throw new Error("Unauthorized");
 
   // Ensure user owns this medicine
   const med = await prisma.medicine.findFirst({
-    where: { id: medicineId, userId: session.user.id },
+    where: { id: medicineId, userId: userId },
   });
 
   if (!med) throw new Error("Medicine not found");
@@ -80,12 +80,12 @@ export async function toggleMedicineStatus(medicineId: string, status: "ACTIVE" 
 }
 
 export async function deleteMedicine(medicineId: string) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  const userId = await getAppUserId();
+  if (!userId) throw new Error("Unauthorized");
 
   // Delete will cascade to ReminderTime automatically due to onDelete: Cascade
   await prisma.medicine.deleteMany({
-    where: { id: medicineId, userId: session.user.id },
+    where: { id: medicineId, userId: userId },
   });
 
   revalidatePath("/dashboard");
@@ -103,11 +103,11 @@ export async function editMedicine(
     times: string[];
   }
 ) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) throw new Error("Unauthorized");
+  const userId = await getAppUserId();
+  if (!userId) throw new Error("Unauthorized");
 
   const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
+    where: { id: userId },
     include: { subscription: true },
   });
 
@@ -121,7 +121,7 @@ export async function editMedicine(
 
   // Ensure user owns this medicine
   const med = await prisma.medicine.findFirst({
-    where: { id: medicineId, userId: session.user.id },
+    where: { id: medicineId, userId: userId },
   });
 
   if (!med) throw new Error("Medicine not found");
