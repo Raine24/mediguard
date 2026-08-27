@@ -24,27 +24,16 @@ export async function POST(req: Request) {
 
     let user = null;
 
-    // 1. Prioritize finding user by the provided phone number (crucial for registration flow)
-    if (cleanPhone) {
-      user = await prisma.user.findFirst({
-        where: { OR: [{ phone: cleanPhone }, { phone: phone.trim() }] },
-        orderBy: { createdAt: 'desc' },
+    // 1. Identify logged-in user via NextAuth
+    const session = await getServerSession(authOptions);
+    if (session?.user?.id) {
+      user = await prisma.user.findUnique({
+        where: { id: session.user.id },
         select: { id: true, twoFactorSecret: true, phone: true }
       });
     }
 
-    // 2. Fallback to session user if no phone provided or user not found by phone
-    if (!user) {
-      const session = await getServerSession(authOptions);
-      if (session?.user?.id) {
-        user = await prisma.user.findUnique({
-          where: { id: session.user.id },
-          select: { id: true, twoFactorSecret: true, phone: true }
-        });
-      }
-    }
-
-    // 3. Fallback to Clerk user
+    // 2. Fallback to Clerk user
     if (!user) {
       try {
         const clerkUser = await currentUser();
@@ -59,6 +48,18 @@ export async function POST(req: Request) {
         console.error("Clerk user lookup error in verify-phone:", e);
       }
     }
+
+    // 3. Fallback to finding user by the provided phone number (crucial for normal registration flow where session isn't set yet)
+    if (!user && cleanPhone) {
+      user = await prisma.user.findFirst({
+        where: { OR: [{ phone: cleanPhone }, { phone: phone.trim() }] },
+        orderBy: { createdAt: 'desc' },
+        select: { id: true, twoFactorSecret: true, phone: true }
+      });
+    }
+
+    console.log("[Verify Phone Debug] Inputs:", { phone, cleanPhone, cleanCode });
+    console.log("[Verify Phone Debug] Found User:", user ? { id: user.id, phone: user.phone, hasSecret: !!user.twoFactorSecret } : null);
 
     if (!user || !user.twoFactorSecret) {
       return NextResponse.json({ error: 'Invalid request or code expired. Please click "Resend WhatsApp OTP".' }, { status: 400 });
