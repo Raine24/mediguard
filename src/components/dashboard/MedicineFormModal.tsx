@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from "react";
 import { X, Plus, Clock, Info, Edit2 } from "lucide-react";
+import { X, Plus, Clock, Info, Edit2, AlertCircle } from "lucide-react";
 import { addMedicine, editMedicine } from "@/app/dashboard/medicines/actions";
 
 export type MedicineProps = {
   id: string;
   name: string;
   dosage: string | null;
+  foodContext: string | null;
   daysActive: string;
   note: string | null;
   status: string;
@@ -27,6 +29,7 @@ export default function MedicineFormModal({
 }) {
   const [name, setName] = useState("");
   const [dosage, setDosage] = useState("");
+  const [foodContext, setFoodContext] = useState("NONE");
   const [daysActive, setDaysActive] = useState("EVERY_DAY");
   const [note, setNote] = useState("");
   
@@ -43,11 +46,12 @@ export default function MedicineFormModal({
       if (medicineToEdit) {
         setName(medicineToEdit.name);
         setDosage(medicineToEdit.dosage || "");
+        setFoodContext(medicineToEdit.foodContext || "NONE");
         setDaysActive(medicineToEdit.daysActive);
         setNote(medicineToEdit.note || "");
         setTimes(medicineToEdit.reminders.map(r => r.time));
       } else {
-        setName(""); setDosage(""); setDaysActive("EVERY_DAY"); setNote(""); setTimes([]);
+        setName(""); setDosage(""); setFoodContext("NONE"); setDaysActive("EVERY_DAY"); setNote(""); setTimes([]);
       }
       setStatus("idle");
       setErrorMsg("");
@@ -60,45 +64,42 @@ export default function MedicineFormModal({
   const handleAddTime = () => {
     if (!newTime) return;
     
-    // Check if time already exists and we are not editing it
-    if (times.includes(newTime)) {
-      if (editingTimeIndex === null || times[editingTimeIndex] !== newTime) {
-        return;
-      }
+    // Validate if user has basic plan, they can't add more than 3 times
+    if (isBasicPlan && times.length >= 3 && editingTimeIndex === null) {
+      setStatus("error");
+      setErrorMsg("Basic plan is limited to 3 reminders per medicine.");
+      return;
     }
 
     if (editingTimeIndex !== null) {
-      // Replace the selected time
-      const updatedTimes = [...times];
-      updatedTimes[editingTimeIndex] = newTime;
-      setTimes(updatedTimes.sort());
+      const newTimes = [...times];
+      newTimes[editingTimeIndex] = newTime;
+      setTimes(newTimes.sort());
       setEditingTimeIndex(null);
-      setIsEditMode(false);
     } else {
-      // Add new time
-      if (isBasicPlan && times.length >= 3) {
-        setErrorMsg("Basic plan is limited to 3 reminders per medicine.");
-        return;
+      if (!times.includes(newTime)) {
+        setTimes([...times, newTime].sort());
       }
-      setTimes([...times, newTime].sort());
     }
     setNewTime("");
+    setIsEditMode(false);
   };
 
-  const handleSelectTime = (index: number) => {
-    if (!isEditMode) return;
-    setEditingTimeIndex(index);
+  const handleRemoveTime = (indexToRemove: number) => {
+    setTimes(times.filter((_, idx) => idx !== indexToRemove));
+  };
+
+  const handleEditTime = (index: number) => {
     setNewTime(times[index]);
-  };
-
-  const removeTime = (t: string) => {
-    setTimes(times.filter(x => x !== t));
+    setEditingTimeIndex(index);
+    setIsEditMode(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (times.length === 0) {
-      setErrorMsg("Add at least one reminder time");
+      setStatus("error");
+      setErrorMsg("Please add at least one reminder time.");
       return;
     }
 
@@ -107,9 +108,9 @@ export default function MedicineFormModal({
 
     try {
       if (medicineToEdit) {
-        await editMedicine(medicineToEdit.id, { name, dosage, daysActive, note, times });
+        await editMedicine(medicineToEdit.id, { name, dosage, foodContext, daysActive, note, times });
       } else {
-        await addMedicine({ name, dosage, daysActive, note, times });
+        await addMedicine({ name, dosage, foodContext, daysActive, note, times });
       }
       onClose();
     } catch (error: any) {
@@ -125,48 +126,62 @@ export default function MedicineFormModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex flex-col justify-end md:items-center md:justify-center">
-      <div className="bg-white w-full md:max-w-md md:rounded-2xl rounded-t-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
-          <h2 className="text-xl font-bold text-gray-900">{medicineToEdit ? "Edit Medicine" : "Add Medicine"}</h2>
-          <button 
-            onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 bg-gray-50 rounded-full transition-colors"
-          >
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+          <h2 className="text-xl font-bold text-gray-900">
+            {medicineToEdit ? "Edit Medicine" : "Add Medicine"}
+          </h2>
+          <button onClick={onClose} className="p-2 hover:bg-gray-200 rounded-full text-gray-500 transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto">
+        <div className="p-6 overflow-y-auto flex-1">
           {errorMsg && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm flex gap-2">
-              <Info className="w-5 h-5 shrink-0" />
-              <p>{errorMsg}</p>
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+              <p className="text-sm text-red-600 leading-relaxed">{errorMsg}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Medicine Name *</label>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Paracetamol"
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none"
-              />
-            </div>
+          <form id="medicine-form" onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Medicine Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Paracetamol"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none font-medium"
+                />
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Dosage (Optional)</label>
-              <input
-                type="text"
-                value={dosage}
-                onChange={(e) => setDosage(e.target.value)}
-                placeholder="e.g. 500mg, 1 tablet"
-                className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none"
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Dosage (Optional)</label>
+                <input
+                  type="text"
+                  value={dosage}
+                  onChange={(e) => setDosage(e.target.value)}
+                  placeholder="e.g. 500mg, 1 tablet"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Food Instructions</label>
+                <select
+                  value={foodContext}
+                  onChange={(e) => setFoodContext(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none bg-white"
+                >
+                  <option value="NONE">None (No specific instruction)</option>
+                  <option value="BEFORE_FOOD">Before Food (Empty Stomach)</option>
+                  <option value="WITH_FOOD">With Food / After Food</option>
+                </select>
+              </div>
             </div>
 
             <div>

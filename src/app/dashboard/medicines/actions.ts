@@ -8,6 +8,7 @@ import { revalidatePath } from "next/cache";
 export async function addMedicine(formData: {
   name: string;
   dosage: string;
+  foodContext: string;
   daysActive: string;
   note: string;
   times: string[];
@@ -44,6 +45,7 @@ export async function addMedicine(formData: {
       userId: user.id,
       name: formData.name,
       dosage: formData.dosage || null,
+      foodContext: formData.foodContext || "NONE",
       daysActive: formData.daysActive,
       note: formData.note || null,
       reminders: {
@@ -95,6 +97,7 @@ export async function editMedicine(
   formData: {
     name: string;
     dosage: string;
+    foodContext: string;
     daysActive: string;
     note: string;
     times: string[];
@@ -129,6 +132,7 @@ export async function editMedicine(
     data: {
       name: formData.name,
       dosage: formData.dosage || null,
+      foodContext: formData.foodContext || "NONE",
       daysActive: formData.daysActive,
       note: formData.note || null,
       reminders: {

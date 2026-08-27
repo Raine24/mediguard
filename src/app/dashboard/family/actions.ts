@@ -45,6 +45,7 @@ export async function addFamilyMember(formData: {
 export async function addFamilyMedicine(familyMemberId: string, formData: {
   name: string;
   dosage: string;
+  foodContext: string;
   daysActive: string;
   note: string;
   times: string[];
@@ -65,6 +66,7 @@ export async function addFamilyMedicine(familyMemberId: string, formData: {
       familyMemberId: member.id, // But explicitly assigned to this family member
       name: formData.name,
       dosage: formData.dosage || null,
+      foodContext: formData.foodContext || "NONE",
       daysActive: formData.daysActive,
       note: formData.note || null,
       reminders: {

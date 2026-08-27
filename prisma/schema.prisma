@@ -77,6 +77,7 @@ model Medicine {
   userId         String
   name           String
   dosage         String?
+  foodContext    String?        @default("NONE")
   daysActive     String         @default("EVERY_DAY")
   note           String?
   status         String         @default("ACTIVE")
@@ -109,17 +110,19 @@ model FamilyMember {
 }
 
 model MessageLog {
-  id           String    @id @default(cuid())
-  userId       String
-  type         String
-  channel      String
-  status       String
-  errorReason  String?
-  scheduledFor DateTime?
-  sentAt       DateTime  @default(now())
-  medicineId   String?
-  medicine     Medicine? @relation(fields: [medicineId], references: [id])
-  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id                String    @id @default(cuid())
+  userId            String
+  type              String
+  channel           String
+  status            String
+  interactionStatus String?
+  snoozedUntil      DateTime?
+  errorReason       String?
+  scheduledFor      DateTime?
+  sentAt            DateTime  @default(now())
+  medicineId        String?
+  medicine          Medicine? @relation(fields: [medicineId], references: [id])
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model SupportTicket {

@@ -28,7 +28,7 @@ export async function GET(req: Request) {
       const query = `
         SELECT 
           u.id as "userId", u.phone, u.timezone, 
-          m.id as "medicineId", m.name as "medicineName", m.dosage, 
+          m.id as "medicineId", m.name as "medicineName", m.dosage, m."foodContext", 
           r.id as "reminderId", r.time as "reminderTime"
         FROM "Subscription" s
         JOIN "User" u ON s."userId" = u.id
@@ -42,7 +42,7 @@ export async function GET(req: Request) {
       const result = await client.query(query);
 
       for (const row of result.rows) {
-        const { userId, phone, timezone, medicineId, medicineName, dosage, reminderId, reminderTime } = row;
+        const { userId, phone, timezone, medicineId, medicineName, dosage, foodContext, reminderId, reminderTime } = row;
         
         const userTimezone = timezone || 'UTC';
         let localHour, localMin;
@@ -74,16 +74,25 @@ export async function GET(req: Request) {
           const logRes = await client.query(checkLogQuery, [medicineId, expectedScheduledFor]);
 
           if (logRes.rowCount === 0) {
+            let dosageString = dosage || "1 dose";
+            
+            // Append Food Context for Smart Health Companion feature
+            if (foodContext === 'BEFORE_FOOD') {
+              dosageString += " - Take BEFORE FOOD (Empty Stomach)";
+            } else if (foodContext === 'WITH_FOOD') {
+              dosageString += " - Take WITH FOOD";
+            }
+
             const waResponse = await sendWhatsAppTemplate(
               phone, 
               "medical_alert_reminder_update", 
-              [medicineName, dosage || "1 dose"]
+              [medicineName, dosageString]
             );
             
             const voiceResponse = await initiateVoiceReminderCall(
               phone,
               medicineName,
-              dosage || "1 dose"
+              dosageString
             );
             
             // Log the WhatsApp message

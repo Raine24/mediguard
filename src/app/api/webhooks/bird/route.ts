@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { sendWhatsAppAudio } from "@/lib/bird";
+import { prisma } from "@/lib/prisma";
+import { formatInTimeZone } from "date-fns-tz";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -38,22 +40,72 @@ export async function POST(req: Request) {
     // Ensure phone number has + prefix
     const formattedNumber = fromNumber.startsWith("+") ? fromNumber : `+${fromNumber}`;
 
-    // Stringify the entire message to catch "Play Audio" regardless of nesting
+    // Stringify the entire message to catch text regardless of nesting
     const messageStr = JSON.stringify(message).toLowerCase();
-    console.log("[Webhook] From:", formattedNumber, "| Contains 'play audio':", messageStr.includes("play audio"));
+    console.log("[Webhook] From:", formattedNumber, "| Content:", messageStr);
 
-    // Check if the user tapped "Play Audio"
+    // 1. Play Audio Check
     if (messageStr.includes("play audio")) {
       console.log(`[Webhook] User ${formattedNumber} requested audio. Sending...`);
-
       const audioUrl = "https://medicintime-f3zn.vercel.app/audio.mp3";
-
-      // Send the audio file back
       const response = await sendWhatsAppAudio(formattedNumber, audioUrl);
-
-      console.log("[Webhook] Audio send result:", JSON.stringify(response));
-
       return NextResponse.json({ success: true, audioSent: true, result: response });
+    }
+
+    // 2. Smart Interaction Check (Taken, Skip, Snooze)
+    if (messageStr.includes("taken") || messageStr.includes("skip") || messageStr.includes("snooze")) {
+      const user = await prisma.user.findFirst({ where: { phone: formattedNumber } });
+      
+      if (user) {
+        // Find the most recent REMINDER sent to this user
+        const latestLog = await prisma.messageLog.findFirst({
+          where: { userId: user.id, type: 'REMINDER', channel: 'WHATSAPP' },
+          orderBy: { sentAt: 'desc' }
+        });
+
+        if (latestLog && latestLog.medicineId) {
+          if (messageStr.includes("taken")) {
+            await prisma.messageLog.update({
+              where: { id: latestLog.id },
+              data: { interactionStatus: 'TAKEN' }
+            });
+            console.log(`[Webhook] Marked medicine ${latestLog.medicineId} as TAKEN for ${formattedNumber}`);
+            return NextResponse.json({ success: true, action: "TAKEN" });
+          } 
+          else if (messageStr.includes("skip")) {
+            await prisma.messageLog.update({
+              where: { id: latestLog.id },
+              data: { interactionStatus: 'SKIPPED' }
+            });
+            console.log(`[Webhook] Marked medicine ${latestLog.medicineId} as SKIPPED for ${formattedNumber}`);
+            return NextResponse.json({ success: true, action: "SKIPPED" });
+          } 
+          else if (messageStr.includes("snooze")) {
+            const snoozeMins = 30; // default 30 mins
+            const snoozedTime = new Date();
+            snoozedTime.setMinutes(snoozedTime.getMinutes() + snoozeMins);
+
+            await prisma.messageLog.update({
+              where: { id: latestLog.id },
+              data: { interactionStatus: 'SNOOZED', snoozedUntil: snoozedTime }
+            });
+            
+            const userTimezone = user.timezone || 'UTC';
+            const snoozedTimeString = formatInTimeZone(snoozedTime, userTimezone, 'HH:mm');
+            
+            // Schedule one-off snooze reminder
+            await prisma.reminderTime.create({
+              data: {
+                medicineId: latestLog.medicineId,
+                time: `${snoozedTimeString} (SNOOZE)`
+              }
+            });
+
+            console.log(`[Webhook] Snoozed medicine ${latestLog.medicineId} until ${snoozedTimeString} for ${formattedNumber}`);
+            return NextResponse.json({ success: true, action: "SNOOZED" });
+          }
+        }
+      }
     }
 
     return NextResponse.json({ success: true, ignored: true });

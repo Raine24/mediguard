@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { X, Plus, Clock, Info, Edit2 } from "lucide-react";
+import { X, Plus, Clock, Info, Edit2, AlertCircle } from "lucide-react";
 import { addFamilyMedicine } from "@/app/dashboard/family/actions";
 
 export default function FamilyMedicineModal({ 
@@ -15,6 +15,7 @@ export default function FamilyMedicineModal({
 }) {
   const [name, setName] = useState("");
   const [dosage, setDosage] = useState("");
+  const [foodContext, setFoodContext] = useState("NONE");
   const [daysActive, setDaysActive] = useState("EVERY_DAY");
   const [note, setNote] = useState("");
   
@@ -28,12 +29,6 @@ export default function FamilyMedicineModal({
 
   const handleAddTime = () => {
     if (!newTime) return;
-    
-    if (times.includes(newTime)) {
-      if (editingTimeIndex === null || times[editingTimeIndex] !== newTime) {
-        return;
-      }
-    }
 
     if (editingTimeIndex !== null) {
       const updatedTimes = [...times];
@@ -42,26 +37,28 @@ export default function FamilyMedicineModal({
       setEditingTimeIndex(null);
       setIsEditMode(false);
     } else {
-      setTimes([...times, newTime].sort());
+      if (!times.includes(newTime)) {
+        setTimes([...times, newTime].sort());
+      }
     }
     setNewTime("");
   };
 
-  const handleSelectTime = (index: number) => {
-    if (!isEditMode) return;
-    setEditingTimeIndex(index);
-    setNewTime(times[index]);
+  const removeTime = (t: string) => {
+    setTimes(times.filter((x) => x !== t));
   };
 
-  const removeTime = (t: string) => {
-    if (times.length <= 1) return;
-    setTimes(times.filter(x => x !== t));
+  const handleEditTime = (index: number) => {
+    setNewTime(times[index]);
+    setEditingTimeIndex(index);
+    setIsEditMode(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (times.length === 0) {
-      setErrorMsg("Add at least one reminder time");
+      setStatus("error");
+      setErrorMsg("Please add at least one reminder time");
       return;
     }
 
@@ -69,10 +66,10 @@ export default function FamilyMedicineModal({
     setErrorMsg("");
 
     try {
-      await addFamilyMedicine(familyMemberId, { name, dosage, daysActive, note, times });
+      await addFamilyMedicine(familyMemberId, { name, dosage, foodContext, daysActive, note, times });
       
       // Reset form
-      setName(""); setDosage(""); setDaysActive("EVERY_DAY"); setNote(""); setTimes(["08:00"]);
+      setName(""); setDosage(""); setFoodContext("NONE"); setDaysActive("EVERY_DAY"); setNote(""); setTimes(["08:00"]);
       setStatus("idle");
       setEditingTimeIndex(null);
       setIsEditMode(false);
@@ -86,49 +83,63 @@ export default function FamilyMedicineModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-50 flex flex-col justify-end md:items-center md:justify-center">
-      <div className="bg-white w-full md:max-w-md md:rounded-2xl rounded-t-3xl shadow-xl overflow-hidden flex flex-col max-h-[90vh]">
-        <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-gray-900/60 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl w-full max-w-xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
           <h2 className="text-xl font-bold text-gray-900">Add Medicine</h2>
           <button 
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 bg-gray-50 rounded-full transition-colors"
+            className="p-2 hover:bg-gray-200 rounded-full text-gray-500 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <div className="p-6 overflow-y-auto">
+        <div className="p-6 overflow-y-auto flex-1">
           {errorMsg && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm flex gap-2">
-              <Info className="w-5 h-5 shrink-0" />
-              <p>{errorMsg}</p>
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+              <p className="text-sm text-red-600 leading-relaxed">{errorMsg}</p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Medicine Name *</label>
-              <input
-                type="text"
-                required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base"
-                placeholder="e.g. Lisinopril"
-              />
-            </div>
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-5">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Medicine Name *</label>
+                <input
+                  type="text"
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base"
+                  placeholder="e.g. Amlodipine"
+                />
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Dosage (Optional)</label>
-              <input
-                type="text"
-                value={dosage}
-                onChange={(e) => setDosage(e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base"
-                placeholder="e.g. 10mg or 2 tablets"
-              />
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Dosage (Optional)</label>
+                <input
+                  type="text"
+                  value={dosage}
+                  onChange={(e) => setDosage(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base"
+                  placeholder="e.g. 10mg or 2 tablets"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Food Instructions</label>
+                <select
+                  value={foodContext}
+                  onChange={(e) => setFoodContext(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none bg-white"
+                >
+                  <option value="NONE">None (No specific instruction)</option>
+                  <option value="BEFORE_FOOD">Before Food (Empty Stomach)</option>
+                  <option value="WITH_FOOD">With Food / After Food</option>
+                </select>
+              </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Reminder Times *</label>
