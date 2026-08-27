@@ -47,7 +47,7 @@ export async function processReferralReward({
     // 5. Determine Referrer's commitment (in months)
     let referrerMonths = 1;
     if (referrer.subscription) {
-      const subDateDiff = referrer.subscription.expiryDate.getTime() - (referrer.subscription.startDate?.getTime() || Date.now());
+      const subDateDiff = referrer.subscription.expiryDate?.getTime() - (referrer.subscription.startDate?.getTime() || Date.now());
       const subDays = subDateDiff / (1000 * 60 * 60 * 24);
       if (subDays >= 300) referrerMonths = 12;
       else if (subDays >= 150) referrerMonths = 6;

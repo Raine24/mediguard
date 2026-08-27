@@ -28,7 +28,7 @@ export async function GET(req: Request) {
       const query = `
         SELECT 
           u.id as "userId", u.phone, u.timezone, 
-          m.id as "medicineId", m.name as "medicineName", m.dosage, m."foodContext", 
+          m.id as "medicineId", m.name as "medicineName", m.dosage, m."foodContext", m."daysActive", 
           r.id as "reminderId", r.time as "reminderTime"
         FROM "Subscription" s
         JOIN "User" u ON s."userId" = u.id
@@ -42,7 +42,7 @@ export async function GET(req: Request) {
       const result = await client.query(query);
 
       for (const row of result.rows) {
-        const { userId, phone, timezone, medicineId, medicineName, dosage, foodContext, reminderId, reminderTime } = row;
+        const { userId, phone, timezone, medicineId, medicineName, dosage, foodContext, daysActive, reminderId, reminderTime } = row;
         
         const userTimezone = timezone || 'UTC';
         let localHour, localMin;
@@ -54,8 +54,22 @@ export async function GET(req: Request) {
           continue;
         }
 
+        
         const currentMins = localHour * 60 + localMin;
         const userDateString = formatInTimeZone(now, userTimezone, 'yyyy-MM-dd');
+        const userDayStr = formatInTimeZone(now, userTimezone, 'EEE').toUpperCase(); // SUN, MON, TUE, etc.
+
+        // Check if medicine should be active today
+        let isActiveToday = true;
+        if (daysActive === 'WEEKDAYS' && (userDayStr === 'SAT' || userDayStr === 'SUN')) isActiveToday = false;
+        if (daysActive === 'WEEKENDS' && userDayStr !== 'SAT' && userDayStr !== 'SUN') isActiveToday = false;
+        if (daysActive.startsWith('CUSTOM:')) {
+          const customDays = daysActive.split(':')[1].split(',');
+          if (!customDays.includes(userDayStr)) isActiveToday = false;
+        }
+
+        if (!isActiveToday) continue;
+
 
         const isSnooze = reminderTime.includes('(SNOOZE)');
         const cleanReminderTime = reminderTime.replace(' (SNOOZE)', '');

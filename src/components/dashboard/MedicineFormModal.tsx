@@ -30,6 +30,7 @@ export default function MedicineFormModal({
   const [dosage, setDosage] = useState("");
   const [foodContext, setFoodContext] = useState("NONE");
   const [daysActive, setDaysActive] = useState("EVERY_DAY");
+  const [customDays, setCustomDays] = useState<string[]>([]);
   const [note, setNote] = useState("");
   
   const [times, setTimes] = useState<string[]>([]);
@@ -47,10 +48,15 @@ export default function MedicineFormModal({
         setDosage(medicineToEdit.dosage || "");
         setFoodContext(medicineToEdit.foodContext || "NONE");
         setDaysActive(medicineToEdit.daysActive);
+        if (medicineToEdit.daysActive.startsWith('CUSTOM:')) {
+          setCustomDays(medicineToEdit.daysActive.split(':')[1].split(','));
+        } else {
+          setCustomDays([]);
+        }
         setNote(medicineToEdit.note || "");
         setTimes(medicineToEdit.reminders.map(r => r.time));
       } else {
-        setName(""); setDosage(""); setFoodContext("NONE"); setDaysActive("EVERY_DAY"); setNote(""); setTimes([]);
+        setName(""); setDosage(""); setFoodContext("NONE"); setDaysActive("EVERY_DAY"); setNote(""); setTimes([]); setCustomDays([]);
       }
       setStatus("idle");
       setErrorMsg("");
@@ -210,7 +216,7 @@ export default function MedicineFormModal({
                   <button
                     type="button"
                     onClick={handleAddTime}
-                    className="flex-1 sm:flex-none px-4 py-3 bg-teal-50 text-teal-700 border border-teal-200 rounded-xl hover:bg-teal-100 font-semibold flex items-center justify-center gap-2 transition-colors"
+                    className="flex-1 sm:flex-none px-4 py-3 bg-blue-800 text-white border border-blue-900 rounded-xl hover:bg-blue-900 font-semibold flex items-center justify-center gap-2 transition-colors"
                   >
                     <Plus className="w-5 h-5" />
                     Save Time
@@ -241,7 +247,7 @@ export default function MedicineFormModal({
                   {times.map((t, index) => (
                     <div 
                       key={t} 
-                      onClick={() => handleSelectTime(index)}
+                      onClick={() => handleEditTime(index)}
                       className={`flex items-center gap-1.5 border px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
                         isEditMode ? 'cursor-pointer hover:ring-2 hover:ring-blue-300' : ''
                       } ${
@@ -256,7 +262,7 @@ export default function MedicineFormModal({
                         type="button" 
                         onClick={(e) => {
                           e.stopPropagation();
-                          removeTime(t);
+                          handleRemoveTime(index);
                         }}
                         className={`ml-1 focus:outline-none ${editingTimeIndex === index ? 'text-blue-200 hover:text-white' : 'text-teal-600 hover:text-teal-900'}`}
                       >
@@ -270,22 +276,50 @@ export default function MedicineFormModal({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Days Active</label>
+              
               <div className="grid grid-cols-2 gap-2">
-                {["EVERY_DAY", "WEEKDAYS", "WEEKENDS", "CUSTOM"].map((opt) => (
-                  <button
-                    key={opt}
-                    type="button"
-                    onClick={() => setDaysActive(opt)}
-                    className={`py-2 px-3 text-sm font-medium rounded-lg border text-center transition-colors ${
-                      daysActive === opt 
-                        ? "bg-teal-50 border-teal-600 text-teal-700" 
-                        : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
-                    }`}
-                  >
-                    {opt.replace("_", " ")}
-                  </button>
-                ))}
+                {["EVERY_DAY", "WEEKDAYS", "WEEKENDS", "CUSTOM"].map((opt) => {
+                  const isSelected = opt === "CUSTOM" ? daysActive.startsWith("CUSTOM") : daysActive === opt;
+                  return (
+                    <button
+                      key={opt}
+                      type="button"
+                      onClick={() => setDaysActive(opt === "CUSTOM" ? (customDays.length > 0 ? `CUSTOM:${customDays.join(',')}` : "CUSTOM") : opt)}
+                      className={`py-2 px-3 text-sm font-medium rounded-lg border text-center transition-colors ${
+                        isSelected 
+                          ? "bg-teal-50 border-teal-600 text-teal-700" 
+                          : "bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+                      }`}
+                    >
+                      {opt.replace("_", " ")}
+                    </button>
+                  );
+                })}
               </div>
+              
+              {daysActive.startsWith("CUSTOM") && (
+                <div className="mt-3 grid grid-cols-7 gap-1">
+                  {['SUN','MON','TUE','WED','THU','FRI','SAT'].map(day => {
+                    const isSelected = customDays.includes(day);
+                    return (
+                      <button
+                        key={day}
+                        type="button"
+                        onClick={() => {
+                          const newDays = isSelected ? customDays.filter(d => d !== day) : [...customDays, day];
+                          setCustomDays(newDays);
+                          setDaysActive(`CUSTOM:${newDays.join(',')}`);
+                        }}
+                        className={`py-2 text-xs font-semibold rounded border transition-colors ${
+                          isSelected ? "bg-blue-800 text-white border-blue-900" : "bg-white border-gray-300 text-gray-500 hover:bg-gray-50"
+                        }`}
+                      >
+                        {day}
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
             </div>
 
             <div>
@@ -303,7 +337,7 @@ export default function MedicineFormModal({
               <button
                 type="submit"
                 disabled={status === "submitting"}
-                className="w-full bg-teal-600 text-white font-semibold py-3.5 px-4 rounded-xl hover:bg-teal-700 disabled:opacity-50 transition-colors flex justify-center items-center"
+                className="w-full bg-blue-900 text-white font-semibold py-3.5 px-4 rounded-xl hover:bg-blue-950 disabled:opacity-50 transition-colors flex justify-center items-center"
               >
                 {status === "submitting" ? "Saving..." : "Save Medicine"}
               </button>
