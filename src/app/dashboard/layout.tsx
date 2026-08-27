@@ -86,10 +86,6 @@ export default async function DashboardLayout({
     redirect("/login");
   }
 
-  if (user.role === "AFFILIATE") {
-    redirect("/affiliate/dashboard");
-  }
-
   if (!user.whatsappVerified) {
     redirect("/verify-phone");
   }

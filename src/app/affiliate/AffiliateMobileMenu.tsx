@@ -71,6 +71,15 @@ export default function AffiliateMobileMenu() {
               </Link>
             );
           })}
+          <div className="pt-4 mt-4 border-t border-slate-800">
+            <Link 
+              href="/dashboard"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-3 px-3 py-3 rounded-lg hover:bg-slate-800 hover:text-white transition-colors font-medium"
+            >
+              <LayoutDashboard className="w-5 h-5" /> Patient View
+            </Link>
+          </div>
         </nav>
       </div>
     </>
