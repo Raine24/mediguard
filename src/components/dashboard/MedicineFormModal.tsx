@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Plus, Clock, Info, Edit2 } from "lucide-react";
 import { X, Plus, Clock, Info, Edit2, AlertCircle } from "lucide-react";
 import { addMedicine, editMedicine } from "@/app/dashboard/medicines/actions";
 
@@ -146,7 +145,6 @@ export default function MedicineFormModal({
           )}
 
           <form id="medicine-form" onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-5">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Medicine Name *</label>
                 <input
