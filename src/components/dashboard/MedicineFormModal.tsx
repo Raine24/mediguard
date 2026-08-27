@@ -211,6 +211,7 @@ export default function MedicineFormModal({
               <div className="flex flex-col sm:flex-row gap-2 mb-3">
                 <input
                   type="time"
+                  onClick={(e) => { try { (e.target as any).showPicker(); } catch(err) {} }}
                   value={newTime}
                   onChange={(e) => setNewTime(e.target.value)}
                   className="w-full sm:flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base bg-white"
@@ -256,7 +257,7 @@ export default function MedicineFormModal({
                       } ${
                         editingTimeIndex === index 
                           ? 'bg-blue-800 text-white border-blue-900' 
-                          : 'bg-teal-50 text-teal-700 border-teal-200'
+                          : 'bg-blue-800 text-white border-blue-900'
                       }`}
                     >
                       <Clock className="w-4 h-4" />
@@ -267,7 +268,7 @@ export default function MedicineFormModal({
                           e.stopPropagation();
                           handleRemoveTime(index);
                         }}
-                        className={`ml-1 focus:outline-none ${editingTimeIndex === index ? 'text-blue-200 hover:text-white' : 'text-teal-600 hover:text-teal-900'}`}
+                        className={`ml-1 focus:outline-none ${editingTimeIndex === index ? 'text-blue-200 hover:text-white' : 'text-blue-200 hover:text-white'}`}
                       >
                         <X className="w-4 h-4" />
                       </button>
