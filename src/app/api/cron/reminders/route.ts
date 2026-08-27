@@ -57,13 +57,16 @@ export async function GET(req: Request) {
         const currentMins = localHour * 60 + localMin;
         const userDateString = formatInTimeZone(now, userTimezone, 'yyyy-MM-dd');
 
-        const [remHour, remMin] = reminderTime.split(':').map(Number);
+        const isSnooze = reminderTime.includes('(SNOOZE)');
+        const cleanReminderTime = reminderTime.replace(' (SNOOZE)', '');
+
+        const [remHour, remMin] = cleanReminderTime.split(':').map(Number);
         const reminderMins = remHour * 60 + remMin;
 
         // Check if the reminder is due (current time is >= reminder time)
         // and we are within a 60-minute window
         if (currentMins >= reminderMins && currentMins < reminderMins + 60) {
-          const expectedScheduledFor = new Date(`${userDateString}T${reminderTime}:00.000Z`);
+          const expectedScheduledFor = new Date(`${userDateString}T${cleanReminderTime}:00.000Z`);
 
           // Check if we already sent THIS SPECIFIC reminder today
           const checkLogQuery = `
