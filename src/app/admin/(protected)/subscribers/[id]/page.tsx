@@ -8,7 +8,7 @@ import {
   CheckCircle2, XCircle, Send, Plus, Download, Clock, List
 } from "lucide-react";
 import { getSubscriberProfile, addAdminNote } from "@/actions/admin/subscriberProfile";
-import { bulkUpdateSubscriptions, bulkDeleteAccounts, resetUserPassword } from "@/actions/admin/subscribers";
+import { bulkUpdateSubscriptions, bulkDeleteAccounts, resetUserPassword, extendSubscription } from "@/actions/admin/subscribers";
 import { useRouter } from "next/navigation";
 
 type ProfileData = NonNullable<Awaited<ReturnType<typeof getSubscriberProfile>>>;
@@ -65,16 +65,20 @@ export default function SubscriberProfile({ params }: { params: Promise<{ id: st
   ];
 
   const handleAction = (action: "ACTIVATE" | "DEACTIVATE" | "EXTEND") => {
-    let days = 0;
+    let months = 0;
     if (action === "EXTEND") {
-      const p = prompt("How many days to extend the renewal date by?");
+      const p = prompt("How many months to extend the subscription by?");
       if (!p) return;
-      days = parseInt(p, 10);
-      if (isNaN(days)) return alert("Invalid number of days");
+      months = parseInt(p, 10);
+      if (isNaN(months) || months <= 0) return alert("Invalid number of months");
     }
 
     startTransition(async () => {
-      await bulkUpdateSubscriptions([user.id], action, days);
+      if (action === "EXTEND") {
+        await extendSubscription(user.id, months);
+      } else {
+        await bulkUpdateSubscriptions([user.id], action, 0);
+      }
       fetchProfile();
     });
   };
@@ -109,7 +113,7 @@ export default function SubscriberProfile({ params }: { params: Promise<{ id: st
           ) : (
             <button onClick={() => handleAction("DEACTIVATE")} disabled={isPending} className="px-3 py-1.5 bg-gray-50 text-gray-700 border border-gray-200 rounded-lg text-xs font-bold hover:bg-gray-100 transition-colors">Deactivate</button>
           )}
-          <button onClick={() => handleAction("EXTEND")} disabled={isPending} className="px-3 py-1.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 transition-colors">Extend Subs</button>
+          <button onClick={() => handleAction("EXTEND")} disabled={isPending} className="px-3 py-1.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg text-xs font-bold hover:bg-blue-100 transition-colors">Extend Duration</button>
           <Link href={`/admin/messages?tab=broadcast`} className="px-3 py-1.5 bg-purple-50 text-purple-700 border border-purple-200 rounded-lg text-xs font-bold hover:bg-purple-100 transition-colors inline-flex items-center gap-1"><Send className="w-3 h-3" /> Message</Link>
           <button 
             onClick={() => {

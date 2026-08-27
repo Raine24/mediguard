@@ -197,3 +197,19 @@ export async function resetUserPassword(userId: string, newPassword: string) {
     return { error: e.message || "Failed to reset password" };
   }
 }
+
+export async function extendSubscription(userId: string, months: number) {
+  const user = await prisma.user.findUnique({ where: { id: userId }, include: { subscription: true } });
+  if (!user || !user.subscription) return { error: 'User or subscription not found' };
+
+  let newExpiry = user.subscription.expiryDate && user.subscription.expiryDate > new Date() ? new Date(user.subscription.expiryDate) : new Date();
+  newExpiry.setMonth(newExpiry.getMonth() + months);
+
+  await prisma.subscription.update({
+    where: { id: user.subscription.id },
+    data: { expiryDate: newExpiry, status: 'ACTIVE' }
+  });
+  revalidatePath('/admin');
+  revalidatePath(`/admin/subscribers/${userId}`);
+  return { success: true };
+}
