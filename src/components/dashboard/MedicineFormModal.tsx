@@ -180,7 +180,6 @@ export default function MedicineFormModal({
                   <option value="WITH_FOOD">With Food / After Food</option>
                 </select>
               </div>
-            </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Frequency</label>
