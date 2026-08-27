@@ -19,7 +19,7 @@ export default async function AdminLayout({
       <AdminSidebar userRole={session.user.role} userName={session.user.name || "Admin"} />
       <div className="flex-1 overflow-auto bg-gray-50/50 relative w-full">
         {/* Main Content Area */}
-        <main className="p-4 md:p-8 max-w-[1600px] mx-auto w-full">
+        <main className="p-4 pt-24 md:p-8 md:pt-8 max-w-[1600px] mx-auto w-full">
           {children}
         </main>
       </div>
