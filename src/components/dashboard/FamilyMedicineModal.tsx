@@ -19,6 +19,7 @@ export default function FamilyMedicineModal({
   const [daysActive, setDaysActive] = useState("EVERY_DAY");
   const [customDays, setCustomDays] = useState<string[]>([]);
   const [note, setNote] = useState("");
+  const [voiceCallEnabled, setVoiceCallEnabled] = useState(false);
   
   const [times, setTimes] = useState<string[]>(["08:00"]);
   const [newTime, setNewTime] = useState("");
@@ -67,10 +68,10 @@ export default function FamilyMedicineModal({
     setErrorMsg("");
 
     try {
-      await addFamilyMedicine(familyMemberId, { name, dosage, foodContext, daysActive, note, times });
+      await addFamilyMedicine(familyMemberId, { name, dosage, foodContext, daysActive, note, times, voiceCallEnabled });
       
       // Reset form
-      setName(""); setDosage(""); setFoodContext("NONE"); setDaysActive("EVERY_DAY"); setNote(""); setTimes(["08:00"]); setCustomDays([]);
+      setName(""); setDosage(""); setFoodContext("NONE"); setDaysActive("EVERY_DAY"); setNote(""); setVoiceCallEnabled(false); setTimes(["08:00"]); setCustomDays([]);
       setStatus("idle");
       setEditingTimeIndex(null);
       setIsEditMode(false);
@@ -269,6 +270,18 @@ export default function FamilyMedicineModal({
                 placeholder="e.g. Take with food"
               />
             </div>
+
+            <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl bg-gray-50/50">
+              <div>
+                <label className="block text-sm font-semibold text-gray-900">Voice Call Alerts</label>
+                <p className="text-xs text-gray-500 mt-0.5">Receive an automated phone call for this medicine's reminders.</p>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" className="sr-only peer" checked={voiceCallEnabled} onChange={(e) => setVoiceCallEnabled(e.target.checked)} />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-teal-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-teal-600"></div>
+              </label>
+            </div>
+
 
             <div className="pt-4 border-t border-gray-100">
               <button

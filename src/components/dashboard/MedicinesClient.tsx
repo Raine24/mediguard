@@ -10,6 +10,8 @@ type MedicineProps = {
   name: string;
   dosage: string | null;
   daysActive: string;
+  foodContext: string | null;
+  voiceCallEnabled: boolean;
   note: string | null;
   status: string;
   reminders: { time: string }[];

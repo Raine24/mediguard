@@ -28,7 +28,7 @@ export async function GET(req: Request) {
       const query = `
         SELECT 
           u.id as "userId", u.phone, u.timezone, 
-          m.id as "medicineId", m.name as "medicineName", m.dosage, m."foodContext", m."daysActive", 
+          m.id as "medicineId", m.name as "medicineName", m.dosage, m."foodContext", m."daysActive", m."voiceCallEnabled", 
           r.id as "reminderId", r.time as "reminderTime"
         FROM "Subscription" s
         JOIN "User" u ON s."userId" = u.id
@@ -42,7 +42,7 @@ export async function GET(req: Request) {
       const result = await client.query(query);
 
       for (const row of result.rows) {
-        const { userId, phone, timezone, medicineId, medicineName, dosage, foodContext, daysActive, reminderId, reminderTime } = row;
+        const { userId, phone, timezone, medicineId, medicineName, dosage, foodContext, daysActive, voiceCallEnabled, reminderId, reminderTime } = row;
         
         const userTimezone = timezone || 'UTC';
         let localHour, localMin;
@@ -106,11 +106,14 @@ export async function GET(req: Request) {
               [medicineName, dosageString]
             );
             
-            const voiceResponse = await initiateVoiceReminderCall(
+            let voiceResponse: any = { status: "skipped" };
+            if (voiceCallEnabled) {
+              voiceResponse = await initiateVoiceReminderCall(
               phone,
               medicineName,
               dosageString
-            );
+              );
+            }
             
             // Log the WhatsApp message
             await client.query(`

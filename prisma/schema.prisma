@@ -79,6 +79,7 @@ model Medicine {
   dosage         String?
   foodContext    String?        @default("NONE")
   daysActive     String         @default("EVERY_DAY")
+  voiceCallEnabled Boolean      @default(false)
   note           String?
   status         String         @default("ACTIVE")
   createdAt      DateTime       @default(now())

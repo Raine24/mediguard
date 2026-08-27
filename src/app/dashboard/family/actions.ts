@@ -49,6 +49,7 @@ export async function addFamilyMedicine(familyMemberId: string, formData: {
   daysActive: string;
   note: string;
   times: string[];
+  voiceCallEnabled?: boolean;
 }) {
   const userId = await getAppUserId();
   if (!userId) throw new Error("Unauthorized");

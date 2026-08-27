@@ -12,6 +12,7 @@ export async function addMedicine(formData: {
   daysActive: string;
   note: string;
   times: string[];
+  voiceCallEnabled?: boolean;
 }) {
   const userId = await getAppUserId();
   if (!userId) throw new Error("Unauthorized");
@@ -101,6 +102,7 @@ export async function editMedicine(
     daysActive: string;
     note: string;
     times: string[];
+    voiceCallEnabled?: boolean;
   }
 ) {
   const userId = await getAppUserId();
