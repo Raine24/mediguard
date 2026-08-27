@@ -28,7 +28,7 @@ export async function GET(req: Request) {
       const query = `
         SELECT 
           u.id as "userId", u.phone, u.timezone, 
-          m.id as "medicineId", m.name as "medicineName", m.dosage, m."foodContext", m."daysActive", m."voiceCallEnabled", 
+          m.id as "medicineId", m.name as "medicineName", m.dosage, m."foodContext", m."daysActive", m."voiceCallEnabled", m.note, 
           r.id as "reminderId", r.time as "reminderTime"
         FROM "Subscription" s
         JOIN "User" u ON s."userId" = u.id
@@ -42,7 +42,7 @@ export async function GET(req: Request) {
       const result = await client.query(query);
 
       for (const row of result.rows) {
-        const { userId, phone, timezone, medicineId, medicineName, dosage, foodContext, daysActive, voiceCallEnabled, reminderId, reminderTime } = row;
+        const { userId, phone, timezone, medicineId, medicineName, dosage, foodContext, daysActive, voiceCallEnabled, note, reminderId, reminderTime } = row;
         
         const userTimezone = timezone || 'UTC';
         let localHour, localMin;
@@ -94,11 +94,17 @@ export async function GET(req: Request) {
             let dosageString = dosage || "1 dose";
             
             // Append Food Context for Smart Health Companion feature
+            
             if (foodContext === 'BEFORE_FOOD') {
               dosageString += " - Take BEFORE FOOD (Empty Stomach)";
             } else if (foodContext === 'WITH_FOOD') {
               dosageString += " - Take WITH FOOD";
             }
+            
+            if (note) {
+              dosageString += " - Note: " + note;
+            }
+
 
             const waResponse = await sendWhatsAppTemplate(
               phone, 
