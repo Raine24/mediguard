@@ -47,8 +47,8 @@ export async function GET(req: Request) {
       });
     }
 
-    const targetUrl = !user.whatsappVerified ? '/verify-phone' : '/dashboard';
-    const redirectResponse = NextResponse.redirect(new URL(targetUrl, req.url));
+    const isSecure = req.url.startsWith('https://') || process.env.NODE_ENV === 'production';
+    const cookieName = isSecure ? '__Secure-next-auth.session-token' : 'next-auth.session-token';
 
     // Encode NextAuth JWT token directly
     const secret = process.env.NEXTAUTH_SECRET || "mediguard_super_secret_key_12345";
@@ -61,22 +61,25 @@ export async function GET(req: Request) {
         sub: user.id,
       },
       secret,
+      salt: cookieName,
     });
 
-    const isSecure = req.url.startsWith('https://') || process.env.NODE_ENV === 'production';
-    
+    const targetUrl = !user.whatsappVerified ? '/verify-phone' : '/dashboard';
+    const redirectResponse = NextResponse.redirect(new URL(targetUrl, req.url));
+
     // Attach NextAuth session cookies directly on the HTTP 307 redirect response
-    redirectResponse.cookies.set(
-      isSecure ? '__Secure-next-auth.session-token' : 'next-auth.session-token',
-      token,
-      {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        secure: isSecure,
-        maxAge: 30 * 24 * 60 * 60, // 30 days
-      }
-    );
+    redirectResponse.cookies.set(cookieName, token, {
+      httpOnly: true,
+      sameSite: 'lax',
+      path: '/',
+      secure: isSecure,
+      maxAge: 30 * 24 * 60 * 60, // 30 days
+    });
+
+    // Clear chunked cookies if they exist to prevent old session bleed
+    for (let i = 0; i < 5; i++) {
+      redirectResponse.cookies.delete(`${cookieName}.${i}`);
+    }
 
     return redirectResponse;
   } catch (error) {
