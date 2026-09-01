@@ -78,11 +78,11 @@ export async function POST(req: Request) {
 
       // 2. Record Payment Transaction
       const basePrices: Record<string, Record<string, number>> = {
-        BASIC: { monthly: 2.00, biannual: 11.00, annual: 20.00 },
-        STANDARD: { monthly: 5.00, biannual: 20.00, annual: 45.00 },
-        FAMILY: { monthly: 3.50, biannual: 21.00, annual: 40.00 },
+        BASIC: { monthly: 3.75, biannual: 21.00, annual: 40.00 },
+        STANDARD: { monthly: 6.50, biannual: 36.00, annual: 70.00 },
+        FAMILY: { monthly: 10.00, biannual: 55.00, annual: 108.00 },
       };
-      const amountPaid = basePrices[planType]?.[interval] || 5.00;
+      const amountPaid = basePrices[planType]?.[interval] || 3.75;
 
       const paymentTx = await prisma.paymentTransaction.create({
         data: {

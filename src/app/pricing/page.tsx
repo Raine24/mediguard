@@ -305,7 +305,7 @@ export default function PricingPage() {
                 <div className="pricing-price">
                   <span className="pricing-currency">$</span>
                   <span className="pricing-amount">
-                    {interval === 'monthly' ? "2.50" : interval === 'biannual' ? "14.00" : "27.00"}
+                    {interval === 'monthly' ? "3.75" : interval === 'biannual' ? "21.00" : "40.00"}
                   </span>
                   <span className="pricing-period"> / {interval === 'annual' ? 'year' : interval === 'biannual' ? '6 months' : 'month'}</span>
                 </div>
@@ -328,7 +328,7 @@ export default function PricingPage() {
                 <div className="pricing-price">
                   <span className="pricing-currency">$</span>
                   <span className="pricing-amount">
-                    {interval === 'monthly' ? "5.00" : interval === 'biannual' ? "20.00" : "45.00"}
+                    {interval === 'monthly' ? "6.50" : interval === 'biannual' ? "36.00" : "70.00"}
                   </span>
                   <span className="pricing-period"> / {interval === 'annual' ? 'year' : interval === 'biannual' ? '6 months' : 'month'}</span>
                 </div>
@@ -352,7 +352,7 @@ export default function PricingPage() {
                 <div className="pricing-price">
                   <span className="pricing-currency">$</span>
                   <span className="pricing-amount">
-                    {interval === 'monthly' ? "4.75" : interval === 'biannual' ? "27.00" : "52.00"}
+                    {interval === 'monthly' ? "10.00" : interval === 'biannual' ? "55.00" : "108.00"}
                   </span>
                   <span className="pricing-period"> / {interval === 'annual' ? 'year' : interval === 'biannual' ? '6 months' : 'month'}</span>
                 </div>
