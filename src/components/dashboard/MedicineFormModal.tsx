@@ -42,6 +42,47 @@ export default function MedicineFormModal({
 
   const [status, setStatus] = useState<"idle" | "submitting" | "error">("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [isScanning, setIsScanning] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleScan = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsScanning(true);
+    setErrorMsg("");
+
+    try {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = async () => {
+        const base64 = reader.result;
+        try {
+          const res = await fetch('/api/scan-medicine', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ imageBase64: base64 })
+          });
+          const data = await res.json();
+          if (data.success) {
+            if (data.data.name) setName(data.data.name);
+            if (data.data.dose) setDosage(data.data.dose);
+          } else {
+            setErrorMsg(data.error || "Failed to scan medicine.");
+          }
+        } catch (err) {
+          setErrorMsg("Error communicating with scanner.");
+        } finally {
+          setIsScanning(false);
+          if (fileInputRef.current) fileInputRef.current.value = "";
+        }
+      };
+    } catch (err) {
+      setIsScanning(false);
+      setErrorMsg("Failed to process image.");
+    }
+  };
+
 
   useEffect(() => {
     if (isOpen) {
@@ -156,14 +197,39 @@ export default function MedicineFormModal({
           <form id="medicine-form" onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Medicine Name *</label>
-                <input
-                  type="text"
-                  required
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Paracetamol"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none font-medium"
-                />
+                <div className="flex items-center gap-2">
+                  <div className="relative flex-1">
+                    <input
+                      type="text"
+                      required
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="e.g. Paracetamol"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none font-medium pr-12"
+                    />
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    capture="environment"
+                    ref={fileInputRef}
+                    onChange={handleScan}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isScanning}
+                    className="flex shrink-0 items-center justify-center gap-2 px-4 py-3 bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200 rounded-xl font-semibold transition-colors disabled:opacity-50"
+                  >
+                    {isScanning ? (
+                      <div className="w-5 h-5 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Camera className="w-5 h-5" />
+                    )}
+                    <span className="hidden sm:inline">{isScanning ? "Scanning..." : "Scan Pack"}</span>
+                  </button>
+                </div>
               </div>
 
               <div>
