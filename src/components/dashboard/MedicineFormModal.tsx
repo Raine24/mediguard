@@ -208,22 +208,22 @@ export default function MedicineFormModal({
                 <label className="block text-sm font-medium text-gray-700">Reminder Times *</label>
                 <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-md">{times.length} {times.length === 1 ? 'time' : 'times'} set</span>
               </div>
-              <div className="flex flex-col sm:flex-row gap-2 mb-3">
+              <div className="flex items-center border border-gray-300 rounded-xl bg-white overflow-hidden mb-3">
                 <input
                   type="time"
                   onClick={(e) => { try { (e.target as any).showPicker(); } catch(err) {} }}
                   value={newTime}
                   onChange={(e) => setNewTime(e.target.value)}
-                  className="w-full sm:flex-1 px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-teal-500 focus:border-teal-500 text-base bg-white"
+                  className="flex-1 px-4 py-3 border-0 focus:ring-0 focus:outline-none text-base bg-transparent min-w-0"
                 />
-                <div className="flex gap-2">
+                <div className="flex border-l border-gray-300">
                   <button
                     type="button"
                     onClick={handleAddTime}
-                    className="flex-1 sm:flex-none px-4 py-3 bg-blue-800 text-white border border-blue-900 rounded-xl hover:bg-blue-900 font-semibold flex items-center justify-center gap-2 transition-colors"
+                    className="px-3 py-3 bg-blue-800 text-white hover:bg-blue-900 font-semibold flex items-center justify-center gap-1.5 transition-colors text-sm whitespace-nowrap"
                   >
-                    <Plus className="w-5 h-5" />
-                    Save Time
+                    <Plus className="w-4 h-4" />
+                    <span className="hidden sm:inline">Save</span>
                   </button>
                   <button
                     type="button"
@@ -234,14 +234,14 @@ export default function MedicineFormModal({
                         setNewTime("");
                       }
                     }}
-                    className={`flex-1 sm:flex-none px-4 py-3 rounded-xl font-medium flex items-center justify-center gap-2 transition-colors ${
+                    className={`px-3 py-3 font-medium flex items-center justify-center gap-1.5 transition-colors text-sm whitespace-nowrap border-l ${
                       isEditMode 
-                        ? "bg-blue-800 text-white border-blue-800 hover:bg-blue-900" 
-                        : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                        ? "bg-blue-800 text-white hover:bg-blue-900 border-blue-700" 
+                        : "bg-gray-50 text-gray-700 hover:bg-gray-100 border-gray-300"
                     }`}
                   >
                     <Edit2 className="w-4 h-4" />
-                    {isEditMode ? "Cancel Edit" : "Edit Time"}
+                    <span className="hidden sm:inline">{isEditMode ? "Cancel" : "Edit"}</span>
                   </button>
                 </div>
               </div>
