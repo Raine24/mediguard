@@ -163,7 +163,6 @@ export default function FamilyMedicineModal({
                   <input
                     type="file"
                     accept="image/*"
-                    capture="environment"
                     ref={fileInputRef}
                     onChange={handleScan}
                     className="hidden"
@@ -172,10 +171,10 @@ export default function FamilyMedicineModal({
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isScanning}
-                    className="flex shrink-0 items-center justify-center gap-2 px-4 py-3 bg-teal-50 text-teal-700 hover:bg-teal-100 border border-teal-200 rounded-xl font-semibold transition-colors disabled:opacity-50"
+                    className="flex shrink-0 items-center justify-center gap-2 px-4 py-3 bg-blue-800 text-white hover:bg-blue-900 border border-blue-900 rounded-xl font-semibold transition-colors disabled:opacity-50"
                   >
                     {isScanning ? (
-                      <div className="w-5 h-5 border-2 border-teal-500 border-t-transparent rounded-full animate-spin" />
+                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
                     ) : (
                       <Camera className="w-5 h-5" />
                     )}
