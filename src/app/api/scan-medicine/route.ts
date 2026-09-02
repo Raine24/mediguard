@@ -27,9 +27,9 @@ export async function POST(req: NextRequest) {
     // Remove the data URI prefix if present (e.g. data:image/jpeg;base64,)
     const base64Data = imageBase64.replace(/^data:image\/(png|jpeg|jpg|webp);base64,/, "");
 
-    // Using claude-3-5-sonnet-20240620 for robust vision support
+    // Using claude-3-5-sonnet-latest for the latest supported vision model
     const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20240620",
+      model: "claude-3-5-sonnet-latest",
       max_tokens: 300,
       system: "You are a specialized medical assistant. Your job is to extract the medicine name and dosage from an image of a medicine package. You must return ONLY a JSON object with two keys: 'name' and 'dose'. If you cannot find one of the details, leave the string empty. Do not include any markdown formatting, backticks, or other text outside the JSON object.",
       messages: [
