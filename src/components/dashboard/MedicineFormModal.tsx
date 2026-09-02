@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { X, Plus, Clock, Info, Edit2, AlertCircle } from "lucide-react";
+import React, { useState, useEffect, useRef, ChangeEvent } from "react";
+import { X, Plus, Clock, Info, Edit2, AlertCircle, Camera } from "lucide-react";
 import { addMedicine, editMedicine } from "@/app/dashboard/medicines/actions";
 
 export type MedicineProps = {

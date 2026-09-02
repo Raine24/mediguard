@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useRef } from "react";
-import { X, Plus, Clock, Info, Edit2, AlertCircle } from "lucide-react";
+import React, { useState, useRef, ChangeEvent } from "react";
+import { X, Plus, Clock, Info, Edit2, AlertCircle, Camera } from "lucide-react";
 import { addFamilyMedicine } from "@/app/dashboard/family/actions";
 
 export default function FamilyMedicineModal({ 
