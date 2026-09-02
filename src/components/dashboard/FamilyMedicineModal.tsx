@@ -160,6 +160,7 @@ export default function FamilyMedicineModal({
                       className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all outline-none font-medium pr-12"
                     />
                   </div>
+                  <span className="text-sm text-gray-500 font-medium px-1">or</span>
                   <input
                     type="file"
                     accept="image/*"
