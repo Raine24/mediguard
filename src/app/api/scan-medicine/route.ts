@@ -24,12 +24,19 @@ export async function POST(req: NextRequest) {
       apiKey: process.env.ANTHROPIC_API_KEY,
     });
 
-    // Remove the data URI prefix if present (e.g. data:image/jpeg;base64,)
-    const base64Data = imageBase64.replace(/^data:image\/(png|jpeg|jpg|webp);base64,/, "");
+    // Extract media type from data URI (default to image/jpeg)
+    let mediaType: "image/jpeg" | "image/png" | "image/gif" | "image/webp" = "image/jpeg";
+    const match = imageBase64.match(/^data:(image\/(jpeg|png|gif|webp));base64,/i);
+    if (match) {
+      mediaType = match[1].toLowerCase() as any;
+    }
 
-    // Using claude-3-5-sonnet-latest for the latest supported vision model
+    // Remove the data URI prefix if present
+    const base64Data = imageBase64.replace(/^data:image\/[a-zA-Z0-9.+_-]+;base64,/, "");
+
+    // Using active Claude 4.5 vision model (claude-haiku-4-5-20251001)
     const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-latest",
+      model: "claude-haiku-4-5-20251001",
       max_tokens: 300,
       system: "You are a specialized medical assistant. Your job is to extract the medicine name and dosage from an image of a medicine package. You must return ONLY a JSON object with two keys: 'name' and 'dose'. If you cannot find one of the details, leave the string empty. Do not include any markdown formatting, backticks, or other text outside the JSON object.",
       messages: [
@@ -40,7 +47,7 @@ export async function POST(req: NextRequest) {
               type: "image",
               source: {
                 type: "base64",
-                media_type: "image/jpeg",
+                media_type: mediaType,
                 data: base64Data,
               },
             },
@@ -60,12 +67,16 @@ export async function POST(req: NextRequest) {
 
     let parsed = { name: "", dose: "" };
     try {
-      // Try to parse the response as JSON (sometimes it still wraps in markdown)
-      const cleaned = content.text.replace(/```json\n|\n```/g, "").trim();
-      parsed = JSON.parse(cleaned);
+      // Find JSON block even if model includes commentary or markdown
+      const jsonMatch = content.text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        parsed = JSON.parse(jsonMatch[0]);
+      } else {
+        throw new Error("No JSON found");
+      }
     } catch (e) {
       console.error("Failed to parse Claude JSON response:", content.text);
-      throw new Error("Failed to parse extracted medicine details");
+      throw new Error("Could not extract medicine details. Please enter manually.");
     }
 
     return NextResponse.json({ success: true, data: parsed });

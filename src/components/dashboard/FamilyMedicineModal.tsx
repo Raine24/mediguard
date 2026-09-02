@@ -53,6 +53,9 @@ export default function FamilyMedicineModal({
           if (data.success) {
             if (data.data.name) setName(data.data.name);
             if (data.data.dose) setDosage(data.data.dose);
+            if (!data.data.name && !data.data.dose) {
+              setErrorMsg("Could not clearly read medicine details from the photo. Please enter them manually or try a clearer shot.");
+            }
           } else {
             setErrorMsg(data.error || "Failed to scan medicine.");
           }
