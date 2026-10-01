@@ -27,39 +27,63 @@ export async function POST(req: Request) {
 
     // Extract the sender's phone number
     // Bird uses sender.contact (singular object) for inbound messages
-    const fromNumber =
+    const identifierValue =
       message.sender?.contact?.identifierValue ||
       message.sender?.contacts?.[0]?.identifierValue ||
       message.meta?.extraInformation?.phonenumber;
 
-    if (!fromNumber) {
-      console.log("[Webhook] Could not extract sender phone. Sender:", JSON.stringify(message.sender));
+    if (!identifierValue) {
+      console.log("[Webhook] Could not extract sender ID. Sender:", JSON.stringify(message.sender));
       return NextResponse.json({ success: false, error: "Missing sender" });
     }
 
-    // Ensure phone number has + prefix
-    const formattedNumber = fromNumber.startsWith("+") ? fromNumber : `+${fromNumber}`;
+    // Ensure phone number has + prefix if it looks like a phone
+    const formattedSenderId = (identifierValue.match(/^\d+$/) && identifierValue.length >= 10) 
+      ? (identifierValue.startsWith("+") ? identifierValue : `+${identifierValue}`)
+      : identifierValue; // PSIDs stay as is
 
     // Stringify the entire message to catch text regardless of nesting
     const messageStr = JSON.stringify(message).toLowerCase();
-    console.log("[Webhook] From:", formattedNumber, "| Content:", messageStr);
+    console.log("[Webhook] From:", formattedSenderId, "| Content:", messageStr);
+
+    // 0. Handle Messenger Opt-in via m.me?ref=USER_ID
+    // When using an m.me link, Bird often passes the ref payload inside the message text or postback
+    const refMatch = messageStr.match(/(?:ref[=:]|payload[":])([a-z0-9-]{20,})/i); // UUID match for user.id
+    if (refMatch && refMatch[1] && formattedSenderId.length > 13) {
+      const userId = refMatch[1];
+      console.log(`[Webhook] Linking Messenger PSID ${formattedSenderId} to User ${userId}`);
+      await prisma.user.update({
+        where: { id: userId },
+        data: { messengerId: formattedSenderId }
+      });
+      // Optionally reply via Bird Messenger API here (but for simplicity we just link it)
+      return NextResponse.json({ success: true, linked: true });
+    }
 
     // 1. Play Audio Check
     if (messageStr.includes("play audio")) {
-      console.log(`[Webhook] User ${formattedNumber} requested audio. Sending...`);
+      console.log(`[Webhook] User ${formattedSenderId} requested audio. Sending...`);
       const audioUrl = "https://medicintime-f3zn.vercel.app/audio.mp3";
-      const response = await sendWhatsAppAudio(formattedNumber, audioUrl);
+      const response = await sendWhatsAppAudio(formattedSenderId, audioUrl);
       return NextResponse.json({ success: true, audioSent: true, result: response });
     }
 
     // 2. Smart Interaction Check (Taken, Skip, Snooze)
     if (messageStr.includes("taken") || messageStr.includes("skip") || messageStr.includes("snooze")) {
-      const user = await prisma.user.findFirst({ where: { phone: formattedNumber } });
+      // Find user by either phone OR messengerId
+      const user = await prisma.user.findFirst({ 
+        where: { 
+          OR: [
+            { phone: formattedSenderId },
+            { messengerId: formattedSenderId }
+          ]
+        } 
+      });
       
       if (user) {
-        // Find the most recent REMINDER sent to this user
+        // Find the most recent REMINDER sent to this user on ANY channel
         const latestLog = await prisma.messageLog.findFirst({
-          where: { userId: user.id, type: 'REMINDER', channel: 'WHATSAPP' },
+          where: { userId: user.id, type: 'REMINDER' },
           orderBy: { sentAt: 'desc' }
         });
 
@@ -69,7 +93,7 @@ export async function POST(req: Request) {
               where: { id: latestLog.id },
               data: { interactionStatus: 'TAKEN' }
             });
-            console.log(`[Webhook] Marked medicine ${latestLog.medicineId} as TAKEN for ${formattedNumber}`);
+            console.log(`[Webhook] Marked medicine ${latestLog.medicineId} as TAKEN for ${formattedSenderId}`);
             return NextResponse.json({ success: true, action: "TAKEN" });
           } 
           else if (messageStr.includes("skip")) {
@@ -77,7 +101,7 @@ export async function POST(req: Request) {
               where: { id: latestLog.id },
               data: { interactionStatus: 'SKIPPED' }
             });
-            console.log(`[Webhook] Marked medicine ${latestLog.medicineId} as SKIPPED for ${formattedNumber}`);
+            console.log(`[Webhook] Marked medicine ${latestLog.medicineId} as SKIPPED for ${formattedSenderId}`);
             return NextResponse.json({ success: true, action: "SKIPPED" });
           } 
           else if (messageStr.includes("snooze")) {
@@ -101,7 +125,7 @@ export async function POST(req: Request) {
               }
             });
 
-            console.log(`[Webhook] Snoozed medicine ${latestLog.medicineId} until ${snoozedTimeString} for ${formattedNumber}`);
+            console.log(`[Webhook] Snoozed medicine ${latestLog.medicineId} until ${snoozedTimeString} for ${formattedSenderId}`);
             return NextResponse.json({ success: true, action: "SNOOZED" });
           }
         }
