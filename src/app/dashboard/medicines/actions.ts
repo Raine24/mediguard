@@ -48,6 +48,7 @@ export async function addMedicine(formData: {
       dosage: formData.dosage || null,
       foodContext: formData.foodContext || "NONE",
       daysActive: formData.daysActive,
+      voiceCallEnabled: formData.voiceCallEnabled || false,
       note: formData.note || null,
       reminders: {
         create: formData.times.map((time) => ({ time })),
@@ -136,6 +137,7 @@ export async function editMedicine(
       dosage: formData.dosage || null,
       foodContext: formData.foodContext || "NONE",
       daysActive: formData.daysActive,
+      voiceCallEnabled: formData.voiceCallEnabled || false,
       note: formData.note || null,
       reminders: {
         deleteMany: {}, // Clear all existing reminders
