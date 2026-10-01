@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { sendWhatsAppTemplate } from '@/lib/bird';
+import { initiateVoiceReminderCall } from '@/lib/telnyx';
 import { formatInTimeZone } from 'date-fns-tz';
 import { Client } from 'pg';
 import { randomUUID } from 'crypto';
@@ -123,8 +124,7 @@ export async function GET(req: Request) {
             
             let voiceResponse: any = { status: "skipped" };
             if (voiceCallEnabled) {
-              const { sendVoiceReminder } = await import('@/lib/bird');
-              voiceResponse = await sendVoiceReminder(
+              voiceResponse = await initiateVoiceReminderCall(
                 phone,
                 medicineName,
                 dosageString
