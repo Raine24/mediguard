@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth/next";
+import TimezoneAutoUpdater from "@/components/dashboard/TimezoneAutoUpdater";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
 import DashboardShell from "@/components/dashboard/DashboardShell";
@@ -104,6 +105,7 @@ export default async function DashboardLayout({
 
   return (
     <DashboardShell user={shellUser}>
+      <TimezoneAutoUpdater currentDbTimezone={user.timezone || "UTC"} />
       <SubscriptionGuard isExpired={isExpired}>
         {children}
       </SubscriptionGuard>
