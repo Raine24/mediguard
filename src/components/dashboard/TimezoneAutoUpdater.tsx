@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from "react";
-import { updateTimezoneAction } from "./timezone-action";
+import { updateTimezoneAction } from "@/app/dashboard/timezone-action";
 
 export default function TimezoneAutoUpdater({ currentDbTimezone }: { currentDbTimezone: string | null }) {
   const updated = useRef(false);
