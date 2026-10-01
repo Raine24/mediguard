@@ -27,7 +27,7 @@ export async function GET(req: Request) {
     try {
       const query = `
         SELECT 
-          u.id as "userId", u.phone, u.timezone, 
+          u.id as "userId", u.phone, u.timezone, u."preferredChannel", u."messengerId",
           m.id as "medicineId", m.name as "medicineName", m.dosage, m."foodContext", m."daysActive", m."voiceCallEnabled", m.note, 
           r.id as "reminderId", r.time as "reminderTime"
         FROM "Subscription" s
@@ -36,13 +36,13 @@ export async function GET(req: Request) {
         JOIN "ReminderTime" r ON r."medicineId" = m.id
         WHERE s.status = 'ACTIVE' 
           AND (s."expiryDate" > NOW() OR s."expiryDate" IS NULL)
-          AND u."whatsappVerified" = true
+          AND (u."whatsappVerified" = true OR (u."preferredChannel" = 'MESSENGER' AND u."messengerId" IS NOT NULL))
           AND m.status = 'ACTIVE'
       `;
       const result = await client.query(query);
 
       for (const row of result.rows) {
-        const { userId, phone, timezone, medicineId, medicineName, dosage, foodContext, daysActive, voiceCallEnabled, note, reminderId, reminderTime } = row;
+        const { userId, phone, timezone, preferredChannel, messengerId, medicineId, medicineName, dosage, foodContext, daysActive, voiceCallEnabled, note, reminderId, reminderTime } = row;
         
         const userTimezone = timezone || 'UTC';
         let localHour, localMin;
@@ -106,31 +106,42 @@ export async function GET(req: Request) {
             }
 
 
-            const waResponse = await sendWhatsAppTemplate(
-              phone, 
-              "medical_alert_reminder_update", 
-              [medicineName, dosageString]
-            );
+            let msgResponse: any = { status: 'skipped' };
+            let usedChannel = 'WHATSAPP';
+
+            if (preferredChannel === 'MESSENGER' && messengerId) {
+              usedChannel = 'MESSENGER';
+              const text = `💊 REMINDER: It's time to take your ${medicineName}.\n\nDosage: ${dosageString}\n\nReply with "Taken", "Skip", or "Snooze".`;
+              const { sendMessengerMessage } = await import('@/lib/messenger');
+              msgResponse = await sendMessengerMessage(messengerId, text);
+            } else {
+              msgResponse = await sendWhatsAppTemplate(
+                phone, 
+                "medical_alert_reminder_update", 
+                [medicineName, dosageString]
+              );
+            }
             
             let voiceResponse: any = { status: "skipped" };
             if (voiceCallEnabled) {
               voiceResponse = await initiateVoiceReminderCall(
-              phone,
-              medicineName,
-              dosageString
+                phone,
+                medicineName,
+                dosageString
               );
             }
             
-            // Log the WhatsApp message
+            // Log the Text Message (WhatsApp or Messenger)
             await client.query(`
               INSERT INTO "MessageLog" (id, "userId", "medicineId", type, channel, status, "errorReason", "scheduledFor", "sentAt")
-              VALUES ($1, $2, $3, 'REMINDER', 'WHATSAPP', $4, $5, $6, $7)
+              VALUES ($1, $2, $3, 'REMINDER', $4, $5, $6, $7, $8)
             `, [
               randomUUID(), 
               userId, 
               medicineId, 
-              waResponse.status !== 'failed' ? 'DELIVERED' : 'FAILED', 
-              waResponse.status !== 'failed' ? null : waResponse.error, 
+              usedChannel,
+              msgResponse.status !== 'failed' ? 'DELIVERED' : 'FAILED', 
+              msgResponse.status !== 'failed' ? null : msgResponse.error, 
               expectedScheduledFor, 
               now
             ]);
@@ -153,7 +164,8 @@ export async function GET(req: Request) {
               userId, 
               medicine: medicineName, 
               time: reminderTime, 
-              waSuccess: waResponse.status !== 'failed',
+              msgSuccess: msgResponse.status !== 'failed',
+              channel: usedChannel,
               voiceSuccess: voiceResponse.status !== 'failed' 
             });
 

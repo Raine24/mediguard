@@ -281,11 +281,12 @@ export default function SubscriberProfile({ params }: { params: Promise<{ id: st
                     <th className="px-6 py-3">Medicine</th>
                     <th className="px-6 py-3">Channel</th>
                     <th className="px-6 py-3">Status</th>
+                    <th className="px-6 py-3">Response</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
                   {user.messageLogs.length === 0 ? (
-                    <tr><td colSpan={5} className="text-center py-8 text-gray-500">No logs found.</td></tr>
+                    <tr><td colSpan={6} className="text-center py-8 text-gray-500">No logs found.</td></tr>
                   ) : (
                     user.messageLogs.map(log => (
                       <tr key={log.id} className="hover:bg-gray-50">
@@ -295,6 +296,12 @@ export default function SubscriberProfile({ params }: { params: Promise<{ id: st
                         <td className="px-6 py-3"><span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-bold">{log.channel}</span></td>
                         <td className="px-6 py-3">
                           {log.status === "DELIVERED" ? <span className="text-green-600 font-bold flex items-center gap-1"><CheckCircle2 className="w-4 h-4"/> Delivered</span> : <span className="text-red-600 font-bold flex items-center gap-1" title={log.errorReason || ""}><XCircle className="w-4 h-4"/> Failed</span>}
+                        </td>
+                        <td className="px-6 py-3 font-bold text-xs">
+                          {log.interactionStatus === "TAKEN" && <span className="text-green-600">Taken</span>}
+                          {log.interactionStatus === "SKIPPED" && <span className="text-red-500">Skipped</span>}
+                          {log.interactionStatus === "SNOOZED" && <span className="text-orange-500">Snoozed</span>}
+                          {!log.interactionStatus && <span className="text-gray-400">-</span>}
                         </td>
                       </tr>
                     ))

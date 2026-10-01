@@ -138,6 +138,7 @@ export default function MessageCentre() {
                     <th className="px-6 py-4">Type & Channel</th>
                     <th className="px-6 py-4">Status</th>
                     <th className="px-6 py-4 w-1/3">Error / Medicine</th>
+                    <th className="px-6 py-4">Response</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
@@ -165,9 +166,15 @@ export default function MessageCentre() {
                         {msg.medicine && <div className="font-semibold text-gray-700 mb-1">Med: {msg.medicine.name}</div>}
                         {msg.errorReason && <div className="text-red-500 font-medium truncate max-w-xs">{msg.errorReason}</div>}
                       </td>
+                      <td className="px-6 py-4 font-bold text-xs">
+                        {msg.interactionStatus === "TAKEN" && <span className="text-green-600">Taken</span>}
+                        {msg.interactionStatus === "SKIPPED" && <span className="text-red-500">Skipped</span>}
+                        {msg.interactionStatus === "SNOOZED" && <span className="text-orange-500">Snoozed</span>}
+                        {!msg.interactionStatus && <span className="text-gray-400">-</span>}
+                      </td>
                     </tr>
                   ))}
-                  {logs.length === 0 && <tr><td colSpan={5} className="text-center py-12 text-gray-500 font-medium">No messages found.</td></tr>}
+                  {logs.length === 0 && <tr><td colSpan={6} className="text-center py-12 text-gray-500 font-medium">No messages found.</td></tr>}
                 </tbody>
               </table>
             </div>

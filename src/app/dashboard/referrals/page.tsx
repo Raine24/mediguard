@@ -72,39 +72,6 @@ export default async function ReferralsPage() {
           <div className="lg:col-span-2 space-y-8">
             <ReferralLinkWidget link={referralLink} />
 
-            {/* Progress Tracker */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-6">Your Progress</h3>
-              
-              <div className="relative pt-8 pb-4">
-                {/* Progress Line */}
-                <div className="absolute top-10 left-0 w-full h-2 bg-gray-100 rounded-full overflow-hidden">
-                  <div 
-                    className="h-full bg-teal-500 transition-all duration-1000"
-                    style={{ width: `${Math.min(100, (count / 12) * 100)}%` }}
-                  ></div>
-                </div>
-
-                {/* Milestones */}
-                <div className="relative flex justify-between">
-                  {tiers.map((tier, index) => {
-                    const isReached = count >= tier.target;
-                    return (
-                      <div key={tier.target} className="flex flex-col items-center">
-                        <div className={`w-6 h-6 rounded-full flex items-center justify-center mb-3 z-10 border-4 box-content ${isReached ? 'bg-teal-600 border-teal-100' : 'bg-white border-gray-200'}`}>
-                          {isReached && <CheckCircle className="w-4 h-4 text-white" />}
-                        </div>
-                        <div className="text-center">
-                          <p className="font-bold text-gray-900">{tier.target} Referrals</p>
-                          <p className="text-xs text-teal-600 font-medium">{tier.reward}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-
             {/* Referrals List */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
               <div className="p-6 border-b border-gray-200">

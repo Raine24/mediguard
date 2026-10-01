@@ -15,5 +15,17 @@ export default async function SettingsPage() {
 
   if (!user) redirect("/login");
 
-  return <SettingsClient user={user} />;
+  return (
+    <SettingsClient 
+      user={{
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        timezone: user.timezone,
+        preferredChannel: user.preferredChannel,
+        messengerId: user.messengerId,
+      }} 
+    />
+  );
 }

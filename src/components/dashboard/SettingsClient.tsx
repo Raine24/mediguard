@@ -6,15 +6,19 @@ import { updateProfile, requestPasswordReset, deactivateAccount, initiatePhoneCh
 import { signOut } from "next-auth/react";
 
 type UserProps = {
+  id: string;
   name: string;
   email: string;
   phone: string;
   timezone: string;
+  preferredChannel: string;
+  messengerId?: string | null;
 };
 
 export default function SettingsClient({ user }: { user: UserProps }) {
   const [name, setName] = useState(user.name);
   const [timezone, setTimezone] = useState(user.timezone);
+  const [preferredChannel, setPreferredChannel] = useState(user.preferredChannel || "WHATSAPP");
   
   const [status, setStatus] = useState<"idle" | "saving" | "success">("idle");
   const [pwdStatus, setPwdStatus] = useState<"idle" | "saving" | "success">("idle");
@@ -30,7 +34,7 @@ export default function SettingsClient({ user }: { user: UserProps }) {
     e.preventDefault();
     setStatus("saving");
     try {
-      await updateProfile({ name, timezone });
+      await updateProfile({ name, timezone, preferredChannel });
       setStatus("success");
       setTimeout(() => setStatus("idle"), 3000);
     } catch (e) {
@@ -250,6 +254,57 @@ export default function SettingsClient({ user }: { user: UserProps }) {
                 className="w-full px-4 py-3 border border-gray-200 bg-gray-50 text-gray-500 rounded-xl cursor-not-allowed"
               />
             </div>
+          </div>
+          
+          <div className="border-t border-gray-100 pt-5 mt-5">
+            <h3 className="text-sm font-bold text-gray-900 mb-3">Notification Preferences</h3>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 flex-1">
+                <input 
+                  type="radio" 
+                  name="preferredChannel" 
+                  value="WHATSAPP"
+                  checked={preferredChannel === "WHATSAPP"}
+                  onChange={(e) => setPreferredChannel(e.target.value)}
+                  className="w-5 h-5 text-teal-600 focus:ring-teal-500" 
+                />
+                <span className="font-medium text-gray-900">WhatsApp</span>
+              </label>
+              <label className="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-gray-50 flex-1">
+                <input 
+                  type="radio" 
+                  name="preferredChannel" 
+                  value="MESSENGER"
+                  checked={preferredChannel === "MESSENGER"}
+                  onChange={(e) => setPreferredChannel(e.target.value)}
+                  className="w-5 h-5 text-teal-600 focus:ring-teal-500" 
+                />
+                <div className="flex flex-col">
+                  <span className="font-medium text-gray-900">Facebook Messenger</span>
+                  {user.messengerId && (
+                    <span className="text-xs text-green-600 font-semibold mt-0.5 flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3" /> Connected
+                    </span>
+                  )}
+                </div>
+              </label>
+            </div>
+            
+            {preferredChannel === "MESSENGER" && !user.messengerId && (
+              <div className="mt-4 p-4 bg-blue-50 border border-blue-100 rounded-xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p className="text-sm text-blue-800 font-medium">
+                  You need to connect your Messenger account to receive reminders there.
+                </p>
+                <a 
+                  href={`https://m.me/MedicINtime?ref=${user.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer" 
+                  className="shrink-0 bg-[#0084FF] text-white px-5 py-2 rounded-lg font-semibold hover:bg-[#0073e6] transition-colors"
+                >
+                  Connect Messenger
+                </a>
+              </div>
+            )}
           </div>
 
           <div className="pt-4 flex items-center gap-4">

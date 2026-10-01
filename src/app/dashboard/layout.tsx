@@ -92,7 +92,8 @@ export default async function DashboardLayout({
 
   const isSubActive = user.subscription?.status === "ACTIVE";
   const expiryDate = user.subscription?.expiryDate ? new Date(user.subscription.expiryDate) : null;
-  const isExpired = !isSubActive || (expiryDate !== null && isAfter(new Date(), expiryDate));
+  const isAdmin = ["SUPER_ADMIN", "ADMIN", "SUPPORT_AGENT"].includes(user.role);
+  const isExpired = !isAdmin && (!isSubActive || (expiryDate !== null && isAfter(new Date(), expiryDate)));
 
   const shellUser = {
     id: user.id,

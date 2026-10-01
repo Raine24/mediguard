@@ -8,16 +8,27 @@ import { revalidatePath } from "next/cache";
 export async function updateProfile(formData: {
   name: string;
   timezone: string;
+  preferredChannel?: string;
+  messengerId?: string;
 }) {
   const userId = await getAppUserId();
   if (!userId) throw new Error("Unauthorized");
 
+  const dataToUpdate: any = {
+    name: formData.name,
+    timezone: formData.timezone,
+  };
+  
+  if (formData.preferredChannel) {
+    dataToUpdate.preferredChannel = formData.preferredChannel;
+  }
+  if (formData.messengerId !== undefined) {
+    dataToUpdate.messengerId = formData.messengerId;
+  }
+
   await prisma.user.update({
     where: { id: userId },
-    data: {
-      name: formData.name,
-      timezone: formData.timezone,
-    },
+    data: dataToUpdate,
   });
 
   revalidatePath("/dashboard");

@@ -24,6 +24,8 @@ model User {
   twoFactorEnabled         Boolean                @default(false)
   twoFactorSecret          String?
   whatsappVerified         Boolean                @default(false)
+  preferredChannel         String                 @default("WHATSAPP")
+  messengerId              String?                @unique
   referredByCode           String?
   referralCode             String?                @unique
   freeMonthsApplied        Int                    @default(0)
